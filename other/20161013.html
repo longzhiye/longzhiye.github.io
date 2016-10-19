@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="../stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="../stylesheets/print.css" media="print">
+
+    <title>使用Git向GitHub提交代码</title>
+  </head>
+
+  <body>
+
+	<div class="container">
+      <section id="main_content">
+
+<h2>
+<p></p>
+<a class="anchor" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>使用Git向GitHub提交代码</h2>
+
+
+<p>下载对应的Git工具,地址:<a href="https://git-scm.com/downloads">https://git-scm.com/downloads</a></p>
+<p>打开命令提示附输入</p>
+<p style="color:#ff0000">git --version</p>
+<img src="../images/20161013/20161013143224.png"/>
+<p>说明git安装成功</p>
+
+<p>配置git</p>
+<p style="color:#ff0000">git config --global user.email "github邮箱"</p>
+<img src="../images/20161013/20161013145003.png"/>
+
+<p style="color:#ff0000">git config --global user.name "github名字"</p>
+<img src="../images/20161013/20161013145003.png"/>
+
+<p>配置ssh</p>
+<p>打开文件夹</p>
+<p style="color:#ff0000">cd ~/.ssh</p>
+<img src="../images/20161013/20161013145823.png"></img>
+<p>如果出现以上提示，则还需要进行下面两步操作，手动创建相应文件夹</p>
+<p style="color:#ff0000">cd ~</p>
+<p style="color:#ff0000">mkdir .ssh</p>
+<img src="../images/20161013/20161013150346.png"/>
+<p style="color:#ff0000">ssh-keygen -t rsa -C "你的gtihub的邮箱"</p>
+<img src="../images/20161013/20161013150155.png"/>
+
+<p>下面开始配置Github</p>
+<img src="../images/20161013/20161013151128.png"/>
+<p>vim打开该文件，将里面的内容全部复制出来</p>
+<p>打开自己Github的设置,添加如下相应的内容</p>
+<img src="../images/20161013/20161013132812.png"/>
+<p>在自己的Github上找到想要修改的仓库，如果没有的话就新建一个，点击头像旁边的加号 add new ,选择new Repository，名字随便填写</p>
+<img src="../images/20161013/20161013133043.png"/>
+<p>创建一个对应的项目路径，并且初始化git</p>
+<p style="color:#ff0000">git init</p>
+<img src="../images/20161013/20161013152617.png"/>
+<p style="color:#ff0000">git clone 你的仓库地址</p>
+<img src="../images/20161013/20161013152726.png"/>
+
+<p>项目就已经导入到本地中，下面请尽情地挥霍你的才华</p>
+
+<p>提交代码</p>
+<p>检测当前状态</p>
+<p>同步远程服务器代码</p>
+<p style="color:#ff0000">git pull</p>
+<img src="../images/20161013/20161013153412.png"/>
+<p style="color:#ff0000">git status</p>
+<img src="../images/20161013/20161013153019.png"/>
+<p>修改内容先添加到本地仓库</p>
+<p style="color:#ff0000">git add -a</p>
+<p>修改内容提交到本地仓库</p>
+<p style="color:#ff0000">commit -m '提交说明'</p>
+<img src="../images/20161013/20161013153531.png"/>
+<p>提交到远程仓库,期间会提示你输入Github账户名和密码</p>
+<p style="color:#ff0000">git push -u origin master</p>
+<img src="../images/20161013/20161013153729.png"/>
+
+
+</div>
+
+</body>
+</html>
