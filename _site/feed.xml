@@ -5,9 +5,24 @@
     <description>龙之叶博客</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 19 Feb 2017 16:19:32 +0800</pubDate>
-    <lastBuildDate>Sun, 19 Feb 2017 16:19:32 +0800</lastBuildDate>
+    <pubDate>Sun, 19 Feb 2017 16:27:14 +0800</pubDate>
+    <lastBuildDate>Sun, 19 Feb 2017 16:27:14 +0800</lastBuildDate>
     <generator>Jekyll v3.4.0</generator>
+    
+      <item>
+        <title>LibLongzhiye正式开源了</title>
+        <description>&lt;p&gt;附上GitHub地址,欢迎大家关注，收藏。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/longzhiye/LibLongzhiye&quot;&gt;https://github.com/longzhiye/LibLongzhiye&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Fri, 10 Feb 2017 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/20170210/</link>
+        <guid isPermaLink="true">http://localhost:4000/20170210/</guid>
+        
+        <category>Android</category>
+        
+        
+      </item>
     
       <item>
         <title>Android编码规范</title>
