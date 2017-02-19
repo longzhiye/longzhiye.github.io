@@ -1,29 +1,135 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>龙之叶</title>
-    <description>1111A Material Design inspired Jekyll theme</description>
+    <title>龙之叶博客</title>
+    <description>龙之叶博客</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 19 Feb 2017 14:10:08 +0800</pubDate>
-    <lastBuildDate>Sun, 19 Feb 2017 14:10:08 +0800</lastBuildDate>
+    <pubDate>Sun, 19 Feb 2017 15:04:30 +0800</pubDate>
+    <lastBuildDate>Sun, 19 Feb 2017 15:04:30 +0800</lastBuildDate>
     <generator>Jekyll v3.4.0</generator>
     
       <item>
-        <title>博客正式开通了</title>
-        <description>&lt;p&gt;我是一名Android开发者，热爱开源，热爱分享，写博客更多的是想分享自己平时开发中碰到的各种坑，以及自己的生活感悟。特别是受到&lt;a href=&quot;http://stormzhang.com/android/2016/03/04/why-i-keep-writing-blog&quot;&gt;stormzhang的一篇博客&lt;/a&gt;的影响， 才下定决心来做这件事。&lt;/p&gt;
+        <title>20161114</title>
+        <description>
+</description>
+        <pubDate>Mon, 14 Nov 2016 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/20161114/</link>
+        <guid isPermaLink="true">http://localhost:4000/20161114/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>使用Git向GitHub提交代码</title>
+        <description>&lt;h3 id=&quot;安装git&quot;&gt;安装Git&lt;/h3&gt;
 
-&lt;h2 id=&quot;坚持&quot;&gt;坚持&lt;/h2&gt;
+&lt;p&gt;下载对应的Git工具,&lt;a href=&quot;https://git-scm.com/downloads&quot;&gt;附下载地址&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;开博客容易，想坚持写下来却非常困难。有志者事竟成，相信自己一定可以坚持下来。&lt;img src=&quot;http://localhost:4000/images/20160815/1.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;打开命令提示附输入&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;git --version
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/20161013/20161013143224.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;说明git安装成功&lt;/p&gt;
+
+&lt;h3 id=&quot;配置git&quot;&gt;配置Git&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;git config --global user.email &quot;github邮箱&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/20161013/20161013144929.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;git config --global user.name &quot;github名字&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/20161013/20161013145003.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;配置ssh&quot;&gt;配置ssh&lt;/h3&gt;
+
+&lt;p&gt;打开文件夹&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;cd ~/.ssh
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/20161013/20161013145823.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如果出现以上提示，则还需要进行下面两步操作，手动创建相应文件夹&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;cd ~
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;mkdir .ssh
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/20161013/20161013150346.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;ssh-keygen -t rsa -C &quot;你的gtihub的邮箱&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/20161013/20161013150155.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;下面开始配置github&quot;&gt;下面开始配置Github&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/20161013/20161013151128.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;vim打开该文件，将里面的内容全部复制出来&lt;/p&gt;
+
+&lt;p&gt;打开自己Github的设置,添加如下相应的内容&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/20161013/20161013132812.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在自己的Github上找到想要修改的仓库，如果没有的话就新建一个，点击头像旁边的加号 add new ,选择new Repository，名字随便填写&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/20161013/20161013133043.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;创建一个对应的项目路径，并且初始化git&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;git init
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/20161013/20161013152617.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;git clone 你的仓库地址
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/20161013/20161013152726.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;项目就已经导入到本地中下面请尽情地挥霍你的才华&quot;&gt;项目就已经导入到本地中，下面请尽情地挥霍你的才华&lt;/h3&gt;
+
+&lt;p&gt;提交代码&lt;/p&gt;
+
+&lt;p&gt;检测当前状态&lt;/p&gt;
+
+&lt;p&gt;同步远程服务器代码&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;git pull
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/20161013/20161013153412.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;git status
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/20161013/20161013153019.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;修改内容先添加到本地仓库&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;git add -a
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;修改内容提交到本地仓库&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;commit -m '提交说明'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/20161013/20161013153531.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;提交到远程仓库,期间会提示你输入Github账户名和密码&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;git push -u origin master
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/20161013/20161013153729.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 </description>
         <pubDate>Thu, 13 Oct 2016 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/1/</link>
-        <guid isPermaLink="true">http://localhost:4000/1/</guid>
+        <link>http://localhost:4000/20161013/</link>
+        <guid isPermaLink="true">http://localhost:4000/20161013/</guid>
         
-        <category>blog</category>
+        <category>Git</category>
         
-        <category>test</category>
+        <category>GitHub</category>
         
         
       </item>
@@ -34,11 +140,17 @@
 
 &lt;h2 id=&quot;坚持&quot;&gt;坚持&lt;/h2&gt;
 
-&lt;p&gt;开博客容易，想坚持写下来却非常困难。有志者事竟成，相信自己一定可以坚持下来。&lt;img src=&quot;http://localhost:4000/images/20160815/1.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;开博客容易，想坚持写下来却非常困难。有志者事竟成，相信自己一定可以坚持下来。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/images/20160815/1.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 </description>
         <pubDate>Mon, 15 Aug 2016 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/1/</link>
-        <guid isPermaLink="true">http://localhost:4000/1/</guid>
+        <link>http://localhost:4000/20160815/</link>
+        <guid isPermaLink="true">http://localhost:4000/20160815/</guid>
+        
+        <category>blog</category>
+        
+        <category>test</category>
         
         
       </item>
