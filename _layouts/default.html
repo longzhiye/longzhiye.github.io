@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+  {% include head.html %}
+
+  <body>
+
+    {% if page.path contains '_posts' %}
+      {% assign words = content | number_of_words %}
+      {% if words <= 90 %}
+      {% assign reading-time = "1m" %}
+      {% elsif words < 270 %}
+      {% assign reading-time = "1m" %}
+      {% else %}
+      {% assign reading-time = words | divided_by:180 | append:"m" %}
+      {% endif %}
+    {% endif %}
+
+    {% include header.html %}
+
+    <a class="paper-button {% if page.home == true %}btn-left" href="#home"{% else %}btn-down" href="{{site.baseurl}}/"{% endif %}></a>
+
+    <section class="page-content">
+        {{ content }}
+    </section>
+
+    {% include footer.html %}
+
+  </body>
+
+</html>

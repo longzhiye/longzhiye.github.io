@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width initial-scale=1">
+
+  <title>A Post with a Video</title>
+  <meta name="description" content=" ">
+
+  <link rel="stylesheet" href="/_assets/css/main.css">
+  <link rel="canonical" href="http://localhost:4000/video-post/">
+  <link rel="alternate" type="application/atom+xml" title="龙之叶" href="http://localhost:4000/feed.xml" />
+</head>
+
+
+  <body>
+
+    
+
+    <div id="bg-blur"></div>
+<div class="content-wrap">
+<header>
+  <div class="wrapper">
+    <p class="post-meta">1m read ● 3 January 2015</p>
+    <h1>A Post with a Video</h1>
+  </div>
+</header>
+
+  <nav>
+    <div class="navToggle">
+      <div class="icon-left"></div>
+      <div class="icon-right"></div>
+    </div>
+    <div class="nav-title">龙之叶</div>
+    <ul>
+      <li><a href="/">Home</a></li>
+      
+      <li><a  href="/about/">About</a></li>
+      
+    </ul>
+  </nav>
+
+
+    <a class="paper-button btn-down" href="/"></a>
+
+    <section class="page-content">
+        <iframe width="560" height="315" src="//www.youtube.com/embed/SU3kYxJmWuQ" frameborder="0"> </iframe>
+
+<p>Video embeds are responsive and scale with the width of the main content block with the help of <a href="http://fitvidsjs.com/">FitVids</a>.</p>
+
+<p>Not sure if this only effects Kramdown or if it’s an issue with Markdown in general. But adding YouTube video embeds causes errors when building your Jekyll site. To fix add a space between the <code class="highlighter-rouge">&lt;iframe&gt;</code> tags and remove <code class="highlighter-rouge">allowfullscreen</code>. Example below:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;iframe</span> <span class="na">width=</span><span class="s">"560"</span> <span class="na">height=</span><span class="s">"315"</span> <span class="na">src=</span><span class="s">"//www.youtube.com/embed/SU3kYxJmWuQ"</span> <span class="na">frameborder=</span><span class="s">"0"</span><span class="nt">&gt;</span> <span class="nt">&lt;/iframe&gt;</span></code></pre></figure>
+
+
+<div id="post-nav" class="clearfix">
+  
+  <a rel="previous" id="previous_link" href="/sample-post/">Sample Post</a>
+  
+  
+  <a rel="next" id="next_link" href="/another-readability-post0/">Isn't this animation sweet?2 &raquo;</a>
+  
+</div>
+
+    </section>
+
+    <footer>
+  <ul class="social">
+  <li><a href="http://twitter.com/JoshuaRaichur"><span class="icon-twitter"></span></a></li>
+  <li><a href="http://github.com/raichur"><span class="icon-github"></span></a></li>
+  <li><a href="http://dribbble.com/geek"><span class="icon-dribbble"></span></a></li>
+  <li><a href="http://instagram.com/xpl.ore"><span class="icon-instagram"></span></a></li>
+  <li><a href="mailto:hello@joshuaraichur.com"><span class="icon-drafts"></span></a></li>
+  </ul>
+  <p>Made with <span class="icon-favorite pulse"></span> by <a href="http://joshuaraichur.com">Joshua Raichur</a>. <a href="http://github.com/raichur/material-jekyll">Fork the source.</a></p>
+</footer>
+
+</div> <!-- End content wrap -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="/_assets/js/main.js"></script>
+
+
+  </body>
+
+</html>
