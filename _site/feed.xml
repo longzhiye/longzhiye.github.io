@@ -5,17 +5,207 @@
     <description>龙之叶博客</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 19 Feb 2017 15:04:30 +0800</pubDate>
-    <lastBuildDate>Sun, 19 Feb 2017 15:04:30 +0800</lastBuildDate>
+    <pubDate>Sun, 19 Feb 2017 15:34:04 +0800</pubDate>
+    <lastBuildDate>Sun, 19 Feb 2017 15:34:04 +0800</lastBuildDate>
     <generator>Jekyll v3.4.0</generator>
     
       <item>
-        <title>20161114</title>
-        <description>
+        <title>Linux文件双向实时同步rsync + inotify</title>
+        <description>&lt;p&gt;服务器:192.168.24.31&lt;/p&gt;
+
+&lt;p&gt;客户端:192.168.22.167&lt;/p&gt;
+
+&lt;h2 id=&quot;一配置rsync服务端和客户端都需要进行相同的配置&quot;&gt;一.配置rsync(服务端和客户端都需要进行相同的配置)&lt;/h2&gt;
+
+&lt;p&gt;1.配置 /etc/rsyncd.conf (如果没有该文件，就新建文件)，写入如下内容&lt;/p&gt;
+
+&lt;div class=&quot;language-vim highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;strict modes &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; yes
+#rsync default port
+uid &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; root #守护进程的用户权限
+gid &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; root
+port &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;873&lt;/span&gt; #rsync使用的端口，默认&lt;span class=&quot;m&quot;&gt;873&lt;/span&gt;
+logfile &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/var/&lt;/span&gt;log/rsyncd&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;log # 日志位置
+pidfile &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/var/&lt;/span&gt;run/rsyncd&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;pid # 进程号存放位置
+max connections &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; # 客户端最大连接数目
+auth users &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; backup&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; user #授权用户
+secrets &lt;span class=&quot;k&quot;&gt;file&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/etc/&lt;/span&gt;rsyncd&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;secrets #授权用户密码文件位置
+use chroot &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; yes
+read &lt;span class=&quot;k&quot;&gt;only&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; no # no客户端可上传文件&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;yes只读
+write &lt;span class=&quot;k&quot;&gt;only&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; no # no客户端可下载文件&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;yes不能下载
+
+#&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;modules&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; each path responding &lt;span class=&quot;k&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;a&lt;/span&gt; module
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;appbackup&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; # 要同步的模块名
+path &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/home/&lt;/span&gt;software&lt;span class=&quot;sr&quot;&gt;/rsync/&lt;/span&gt;test1 # 要同步的目录
+auth user &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; user # 登陆系统使用的用户名，没有默认为匿名。
+#hosts allow&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;9&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;122&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;24&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;2.配置密码文件&lt;/p&gt;
+
+&lt;p&gt;密码文件为配置文件中所写的文件/etc/rsyncd.secrets格式为账户:密码，写入如下内容&lt;/p&gt;
+
+&lt;div class=&quot;language-vim highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;user&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;123&lt;/span&gt;
+backup&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;123&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;3.修改配置文件和密码文件的权限&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;[root@localhost ~]#chmod 600 /etc/rsyncd.conf
+[root@localhost ~]#chmod 600 /etc/rsyncd.secrets
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;4.启动守护进程&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;[root@localhost ~]#rsync --daemon --config=/etc/rsyncd.conf
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;5.检查rsync是否启动&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;[root@localhost ~]#lsof -i :873 或
+[root@localhost ~]#netstat -an |grep 873&amp;lt;/a&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;二客户端配置&quot;&gt;二.客户端配置&lt;/h2&gt;
+
+&lt;p&gt;1.新建密码文件&lt;/p&gt;
+
+&lt;p&gt;在/home/longzhiye/softWare/rsync目录下新建一个密码文件&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;[root@localhost ~]#vi /home/longzhiye/softWare/rsync/rsyncd.secrets
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;写入如下内容&lt;/p&gt;
+
+&lt;div class=&quot;language-vim highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;user&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;123&lt;/span&gt;
+backup&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;123&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;2.修改密码文件的权限&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;[root@localhost ~]chown root.root /home/longzhiye/softWare/rsync/rsyncd.secrets
+[root@localhost ~]#chmod 600 /home/longzhiye/softWare/rsync/rsyncd.secrets
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3.测试下载和上传功能&lt;/p&gt;
+
+&lt;p&gt;从服务器上下载文件&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;[root@localhost ~]#rsync -avz --password-file=/home/longzhiye/softWare/rsync/rsyncd.secrets user@192.168.24.31::appbackup /home/longzhiye/softWare/rsync/test1/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上传文件到服务器&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;[root@localhost ~]#rsync -avz --password-file=/home/longzhiye/softWare/rsync/rsyncd.secrets /home/longzhiye/softWare/rsync/test1/ user@192.168.24.31::appbackup
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;至此就实现了手动同步的功能&lt;/p&gt;
+
+&lt;h2 id=&quot;三inotify-安装实现自动同步功能只在服务端操作&quot;&gt;三.inotify 安装，实现自动同步功能(只在服务端操作)&lt;/h2&gt;
+
+&lt;p&gt;1.查看是否支持&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;[root@localhost ~]#ll /proc/sys/fs/inotify
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;执行结果:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;total 0
+-rw-r--r--. 1 root root 0 Nov 29 05:34 max_queued_events
+-rw-r--r--. 1 root root 0 Nov 29 05:34 max_user_instances
+-rw-r--r--. 1 root root 0 Nov 29 05:34 max_user_watches
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2.下载安装inotify&lt;/p&gt;
+
+&lt;p&gt;2.1下载源码包&lt;/p&gt;
+
+&lt;p&gt;下载地址:&lt;a href=&quot;http://inotify-tools.sourceforge.net&quot;&gt;http://inotify-tools.sourceforge.net&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;笔者分享个百度云下载地址:&lt;a href=&quot;http://pan.baidu.com/s/1qXYV7Fe&quot;&gt;http://pan.baidu.com/s/1qXYV7Fe&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;2.2上传到服务器的任意路径,解压安装包&lt;/p&gt;
+
+&lt;p&gt;切换到上传文件位置,解压安装包&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;[root@localhost ~]# tar zxvf inotify-tools-3.14
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;进入该目录执行安装操作&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;[root@localhost ~]#cd inotify-tools-3.14
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;[root@localhost ~]#./configure --prefix=/usr/local/inotify
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;提示:/usr/local/inotify为安装路径,可自行修改&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;[root@localhost ~]#make
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;编译&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;[root@localhost ~]#make install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;安装&lt;/p&gt;
+
+&lt;p&gt;3.配置inotify&lt;/p&gt;
+
+&lt;p&gt;3.1.新建文件 rsync.sh 并赋予执行权限，文件名、位置随便，写入如下内容&lt;/p&gt;
+
+&lt;div class=&quot;language-vim highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#&lt;span class=&quot;p&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/bin/&lt;/span&gt;bash
+#同步接收方ip
+client&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;192&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;168&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;22&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;167&lt;/span&gt;
+src&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/home/&lt;/span&gt;longzhiye&lt;span class=&quot;sr&quot;&gt;/softWare/&lt;/span&gt;rsync&lt;span class=&quot;sr&quot;&gt;/test1/&lt;/span&gt;
+#同步接收方配置的rsync模块名
+dest&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;appbackup
+#同步接收方鉴权时的用户
+user&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;user
+&lt;span class=&quot;sr&quot;&gt;/home/&lt;/span&gt;longzhiye&lt;span class=&quot;sr&quot;&gt;/softWare/&lt;/span&gt;inotify&lt;span class=&quot;sr&quot;&gt;/bin/&lt;/span&gt;inotifywait &lt;span class=&quot;p&quot;&gt;-&lt;/span&gt;mrq &lt;span class=&quot;p&quot;&gt;--&lt;/span&gt;timefmt &lt;span class=&quot;s1&quot;&gt;'%d/%m/%y %H:%M'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;--&lt;/span&gt;format &lt;span class=&quot;s1&quot;&gt;'%T %w%f%e'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;e&lt;/span&gt; modify&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;delete&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;create&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;move&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;attrib $src &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; read &lt;span class=&quot;k&quot;&gt;files&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+&lt;span class=&quot;sr&quot;&gt;/usr/&lt;/span&gt;bin&lt;span class=&quot;sr&quot;&gt;/rsync -vzrtopgq --delete --progress --password-file=/&lt;/span&gt;home&lt;span class=&quot;sr&quot;&gt;/longzhiye/&lt;/span&gt;rsyncpasswd&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;secrets $src $user@$client&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;$dest
+done
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;3.2.修改文件执行权限&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;[root@localhost ~]#chmod +x ~/rsync.sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3.3.在家目录下新建一个rsyncpasswd.secrets文件,内容为刚才新建文件中用户对应的对应密码，写入如下内容&lt;/p&gt;
+
+&lt;div class=&quot;language-vim highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;m&quot;&gt;123&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;修改对应的权限&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;[root@localhost ~]#chmod 600 ～/rsyncpasswd.secrets
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;4.运行rsync.sh&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-linux&quot;&gt;[root@localhost ~]#sh ~/rsync.sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;5.测试&lt;/p&gt;
+
+&lt;p&gt;在/home/software/rsync/test1下新建、修改、删除文件，客户端查看是否可以自动同步所进行的操作&lt;/p&gt;
+
+&lt;p&gt;至此单向实时同步已经实现，再重复设置另一端就能实现双向实时同步&lt;/p&gt;
 </description>
         <pubDate>Mon, 14 Nov 2016 00:00:00 +0800</pubDate>
         <link>http://localhost:4000/20161114/</link>
         <guid isPermaLink="true">http://localhost:4000/20161114/</guid>
+        
+        <category>Linux</category>
+        
+        <category>rsync</category>
+        
+        <category>inotify</category>
         
         
       </item>

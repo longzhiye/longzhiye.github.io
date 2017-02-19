@@ -1,1 +1,264 @@
+<!DOCTYPE html>
+<html>
 
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width initial-scale=1">
+
+  <title>Linux文件双向实时同步rsync + inotify</title>
+  <meta name="description" content="服务器:192.168.24.31">
+
+  <link rel="stylesheet" href="/_assets/css/main.css">
+  <link rel="canonical" href="http://localhost:4000/20161114/">
+  <link rel="alternate" type="application/atom+xml" title="龙之叶博客" href="http://localhost:4000/feed.xml" />
+</head>
+
+
+  <body>
+
+    
+
+    <div id="bg-blur"></div>
+<div class="content-wrap">
+<header>
+  <div class="wrapper">
+    <p class="post-meta">2m read ● 14 November 2016</p>
+    <h1>Linux文件双向实时同步rsync + inotify</h1>
+  </div>
+</header>
+
+  <nav>
+    <div class="navToggle">
+      <div class="icon-left"></div>
+      <div class="icon-right"></div>
+    </div>
+    <div class="nav-title">龙之叶博客</div>
+    <ul>
+      <li><a href="/">首页</a></li>
+      
+      <li><a  href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+
+
+    <a class="paper-button btn-down" href="/"></a>
+
+    <section class="page-content">
+        <p>服务器:192.168.24.31</p>
+
+<p>客户端:192.168.22.167</p>
+
+<h2 id="一配置rsync服务端和客户端都需要进行相同的配置">一.配置rsync(服务端和客户端都需要进行相同的配置)</h2>
+
+<p>1.配置 /etc/rsyncd.conf (如果没有该文件，就新建文件)，写入如下内容</p>
+
+<div class="language-vim highlighter-rouge"><pre class="highlight"><code>strict modes <span class="p">=</span> yes
+#rsync default port
+uid <span class="p">=</span> root #守护进程的用户权限
+gid <span class="p">=</span> root
+port <span class="p">=</span> <span class="m">873</span> #rsync使用的端口，默认<span class="m">873</span>
+logfile <span class="p">=</span> <span class="sr">/var/</span>log/rsyncd<span class="p">.</span>log # 日志位置
+pidfile <span class="p">=</span> <span class="sr">/var/</span>run/rsyncd<span class="p">.</span>pid # 进程号存放位置
+max connections <span class="p">=</span> <span class="m">4</span> # 客户端最大连接数目
+auth users <span class="p">=</span> backup<span class="p">,</span> user #授权用户
+secrets <span class="k">file</span> <span class="p">=</span> <span class="sr">/etc/</span>rsyncd<span class="p">.</span>secrets #授权用户密码文件位置
+use chroot <span class="p">=</span> yes
+read <span class="k">only</span> <span class="p">=</span> no # no客户端可上传文件<span class="p">,</span>yes只读
+write <span class="k">only</span> <span class="p">=</span> no # no客户端可下载文件<span class="p">,</span>yes不能下载
+
+#<span class="p">[</span>modules<span class="p">]</span> each path responding <span class="k">to</span> <span class="k">a</span> module
+<span class="p">[</span>appbackup<span class="p">]</span> # 要同步的模块名
+path <span class="p">=</span> <span class="sr">/home/</span>software<span class="sr">/rsync/</span>test1 # 要同步的目录
+auth user <span class="p">=</span> user # 登陆系统使用的用户名，没有默认为匿名。
+#hosts allow<span class="p">=</span><span class="m">9</span><span class="p">.</span><span class="m">4</span><span class="p">.</span><span class="m">122</span><span class="p">.</span><span class="m">24</span>
+</code></pre>
+</div>
+
+<p>2.配置密码文件</p>
+
+<p>密码文件为配置文件中所写的文件/etc/rsyncd.secrets格式为账户:密码，写入如下内容</p>
+
+<div class="language-vim highlighter-rouge"><pre class="highlight"><code>user<span class="p">:</span><span class="m">123</span>
+backup<span class="p">:</span><span class="m">123</span>
+</code></pre>
+</div>
+
+<p>3.修改配置文件和密码文件的权限</p>
+
+<pre><code class="language-linux">[root@localhost ~]#chmod 600 /etc/rsyncd.conf
+[root@localhost ~]#chmod 600 /etc/rsyncd.secrets
+</code></pre>
+
+<p>4.启动守护进程</p>
+
+<pre><code class="language-linux">[root@localhost ~]#rsync --daemon --config=/etc/rsyncd.conf
+</code></pre>
+
+<p>5.检查rsync是否启动</p>
+
+<pre><code class="language-linux">[root@localhost ~]#lsof -i :873 或
+[root@localhost ~]#netstat -an |grep 873&lt;/a&gt;
+</code></pre>
+
+<h2 id="二客户端配置">二.客户端配置</h2>
+
+<p>1.新建密码文件</p>
+
+<p>在/home/longzhiye/softWare/rsync目录下新建一个密码文件</p>
+
+<pre><code class="language-linux">[root@localhost ~]#vi /home/longzhiye/softWare/rsync/rsyncd.secrets
+</code></pre>
+
+<p>写入如下内容</p>
+
+<div class="language-vim highlighter-rouge"><pre class="highlight"><code>user<span class="p">:</span><span class="m">123</span>
+backup<span class="p">:</span><span class="m">123</span>
+</code></pre>
+</div>
+
+<p>2.修改密码文件的权限</p>
+
+<pre><code class="language-linux">[root@localhost ~]chown root.root /home/longzhiye/softWare/rsync/rsyncd.secrets
+[root@localhost ~]#chmod 600 /home/longzhiye/softWare/rsync/rsyncd.secrets
+</code></pre>
+
+<p>3.测试下载和上传功能</p>
+
+<p>从服务器上下载文件</p>
+
+<pre><code class="language-linux">[root@localhost ~]#rsync -avz --password-file=/home/longzhiye/softWare/rsync/rsyncd.secrets user@192.168.24.31::appbackup /home/longzhiye/softWare/rsync/test1/
+</code></pre>
+
+<p>上传文件到服务器</p>
+<pre><code class="language-linux">[root@localhost ~]#rsync -avz --password-file=/home/longzhiye/softWare/rsync/rsyncd.secrets /home/longzhiye/softWare/rsync/test1/ user@192.168.24.31::appbackup
+</code></pre>
+
+<p>至此就实现了手动同步的功能</p>
+
+<h2 id="三inotify-安装实现自动同步功能只在服务端操作">三.inotify 安装，实现自动同步功能(只在服务端操作)</h2>
+
+<p>1.查看是否支持</p>
+
+<pre><code class="language-linux">[root@localhost ~]#ll /proc/sys/fs/inotify
+</code></pre>
+
+<p>执行结果:</p>
+
+<pre><code class="language-linux">total 0
+-rw-r--r--. 1 root root 0 Nov 29 05:34 max_queued_events
+-rw-r--r--. 1 root root 0 Nov 29 05:34 max_user_instances
+-rw-r--r--. 1 root root 0 Nov 29 05:34 max_user_watches
+</code></pre>
+
+<p>2.下载安装inotify</p>
+
+<p>2.1下载源码包</p>
+
+<p>下载地址:<a href="http://inotify-tools.sourceforge.net">http://inotify-tools.sourceforge.net</a></p>
+
+<p>笔者分享个百度云下载地址:<a href="http://pan.baidu.com/s/1qXYV7Fe">http://pan.baidu.com/s/1qXYV7Fe</a></p>
+
+<p>2.2上传到服务器的任意路径,解压安装包</p>
+
+<p>切换到上传文件位置,解压安装包</p>
+
+<pre><code class="language-linux">[root@localhost ~]# tar zxvf inotify-tools-3.14
+</code></pre>
+
+<p>进入该目录执行安装操作</p>
+
+<pre><code class="language-linux">[root@localhost ~]#cd inotify-tools-3.14
+</code></pre>
+<pre><code class="language-linux">[root@localhost ~]#./configure --prefix=/usr/local/inotify
+</code></pre>
+
+<p>提示:/usr/local/inotify为安装路径,可自行修改</p>
+
+<pre><code class="language-linux">[root@localhost ~]#make
+</code></pre>
+
+<p>编译</p>
+
+<pre><code class="language-linux">[root@localhost ~]#make install
+</code></pre>
+
+<p>安装</p>
+
+<p>3.配置inotify</p>
+
+<p>3.1.新建文件 rsync.sh 并赋予执行权限，文件名、位置随便，写入如下内容</p>
+
+<div class="language-vim highlighter-rouge"><pre class="highlight"><code>#<span class="p">!</span><span class="sr">/bin/</span>bash
+#同步接收方ip
+client<span class="p">=</span><span class="m">192</span><span class="p">.</span><span class="m">168</span><span class="p">.</span><span class="m">22</span><span class="p">.</span><span class="m">167</span>
+src<span class="p">=</span><span class="sr">/home/</span>longzhiye<span class="sr">/softWare/</span>rsync<span class="sr">/test1/</span>
+#同步接收方配置的rsync模块名
+dest<span class="p">=</span>appbackup
+#同步接收方鉴权时的用户
+user<span class="p">=</span>user
+<span class="sr">/home/</span>longzhiye<span class="sr">/softWare/</span>inotify<span class="sr">/bin/</span>inotifywait <span class="p">-</span>mrq <span class="p">--</span>timefmt <span class="s1">'%d/%m/%y %H:%M'</span> <span class="p">--</span>format <span class="s1">'%T %w%f%e'</span> <span class="p">-</span><span class="k">e</span> modify<span class="p">,</span>delete<span class="p">,</span>create<span class="p">,</span>move<span class="p">,</span>attrib $src <span class="p">|</span> <span class="k">while</span> read <span class="k">files</span>
+<span class="k">do</span>
+<span class="sr">/usr/</span>bin<span class="sr">/rsync -vzrtopgq --delete --progress --password-file=/</span>home<span class="sr">/longzhiye/</span>rsyncpasswd<span class="p">.</span>secrets $src $user@$client<span class="p">::</span>$dest
+done
+</code></pre>
+</div>
+
+<p>3.2.修改文件执行权限</p>
+
+<pre><code class="language-linux">[root@localhost ~]#chmod +x ~/rsync.sh
+</code></pre>
+
+<p>3.3.在家目录下新建一个rsyncpasswd.secrets文件,内容为刚才新建文件中用户对应的对应密码，写入如下内容</p>
+
+<div class="language-vim highlighter-rouge"><pre class="highlight"><code><span class="m">123</span>
+</code></pre>
+</div>
+
+<p>修改对应的权限</p>
+
+<pre><code class="language-linux">[root@localhost ~]#chmod 600 ～/rsyncpasswd.secrets
+</code></pre>
+
+<p>4.运行rsync.sh</p>
+
+<pre><code class="language-linux">[root@localhost ~]#sh ~/rsync.sh
+</code></pre>
+
+<p>5.测试</p>
+
+<p>在/home/software/rsync/test1下新建、修改、删除文件，客户端查看是否可以自动同步所进行的操作</p>
+
+<p>至此单向实时同步已经实现，再重复设置另一端就能实现双向实时同步</p>
+
+
+<div id="post-nav" class="clearfix">
+  
+  <a rel="previous" id="previous_link" href="/20161013/">使用Git向GitHub提交代码</a>
+  
+  
+</div>
+
+    </section>
+
+    <footer>
+  <ul class="social">
+  
+  <li><a href="http://github.com/longzhiye"><span class="icon-github"></span></a></li>
+  
+  
+  <li><a href="mailto:longzhiye163@163.com"><span class="icon-drafts"></span></a></li>
+  </ul>
+  <p><span class="icon-favorite pulse"></span>龙之叶版权所有</p>
+</footer>
+
+</div> <!-- End content wrap -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="/_assets/js/main.js"></script>
+
+
+  </body>
+
+</html>
