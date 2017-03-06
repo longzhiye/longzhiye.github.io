@@ -1,13 +1,7 @@
-# Material Jekyll
+# 龙之叶
 
-A simple [Jekyll](http://jekyllrb.com) theme inspired by Google's new visual language, [Material Design](http://www.google.com/design/spec/material-design/introduction.html).
-
-<img src="/_assets/images/nav.png">
-<img src="/_assets/images/home.png">
-
-
-## Setup:
-
-1. Clone this repo
-2. Edit the `_config.yml` file
-3. Run `jekyll serve -w`
+* 自由主义者，不喜欢被束缚
+* 喜欢折腾各种东西，尤其是手机，因此与Android结缘
+* 自我感觉有点帅，原谅我的自恋
+* G粉一枚，喜欢开源，热爱分享，尤其是技术
+* 三流大学毕业，不断自学
