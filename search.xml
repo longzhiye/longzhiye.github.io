@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>Linux(Ubuntu)自定义命令的使用</title>
+      <link href="/2023/08/20/2023-08-20/"/>
+      <url>/2023/08/20/2023-08-20/</url>
+      
+        <content type="html"><![CDATA[<p>Linux如何自定义自己的命令呢？修改 系统中的 ~/.bashrc 文件即可</p><p>在这个文件最后面使用alias命令重定义命令。</p><p>例如：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Custom <span class="built_in">command</span> begin</span></span><br><span class="line"></span><br><span class="line">alias androidq=&#x27;cd /home/longzhiye/mount/project/androidq/&#x27;</span><br><span class="line">alias androidt=&#x27;cd /home/longzhiye/mount/project/androidt/&#x27;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Custom <span class="built_in">command</span> end</span></span><br></pre></td></tr></table></figure><p>修改完成之后要使用命令<strong>source  ~/.bashrc</strong>刷新</p><p>测试结果如下:</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">longzhiye@longzhiye-laptop:~$ androidt</span><br><span class="line">longzhiye@longzhiye-laptop:~/mount/project/androidt$ </span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 技术 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Linux </tag>
+            
+            <tag> Android </tag>
+            
+            <tag> Ubuntu </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Android 13 取色引擎详解</title>
       <link href="/2023/08/19/2023-08-19/"/>
       <url>/2023/08/19/2023-08-19/</url>
