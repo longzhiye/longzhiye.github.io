@@ -1,0 +1,144 @@
+diff --git a/sprd.mocor13.androidT/frameworks/base/packages/SystemUI/src/com/android/systemui/navigationbar/NavigationBarController.java b/sprd.mocor13.androidT/frameworks/base/packages/SystemUI/src/com/android/systemui/navigationbar/NavigationBarController.java
+old mode 100644
+new mode 100755
+index 5c8d2212cef..ffd22dc73b1
+--- a/sprd.mocor13.androidT/frameworks/base/packages/SystemUI/src/com/android/systemui/navigationbar/NavigationBarController.java
++++ b/sprd.mocor13.androidT/frameworks/base/packages/SystemUI/src/com/android/systemui/navigationbar/NavigationBarController.java
+@@ -496,4 +496,15 @@ public class NavigationBarController implements
+             mNavigationBars.valueAt(i).dump(pw);
+         }
+     }
++
++    /**
++     * Create by yeruilai 2024-8-22 10:23:59 
++     */
++    public void removeNavigationBars() {
++        Display[] displays = mDisplayManager.getDisplays();
++        for (Display display : displays) {
++            removeNavigationBar(display.getDisplayId());
++        }
++    }
++
+ }
+diff --git a/sprd.mocor13.androidT/frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/phone/CentralSurfacesImpl.java b/sprd.mocor13.androidT/frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/phone/CentralSurfacesImpl.java
+index f76470badf1..94cca11834b 100755
+--- a/sprd.mocor13.androidT/frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/phone/CentralSurfacesImpl.java
++++ b/sprd.mocor13.androidT/frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/phone/CentralSurfacesImpl.java
+@@ -286,6 +286,15 @@ import dagger.Lazy;
+ public class CentralSurfacesImpl extends CoreStartable implements
+         CentralSurfaces {
+ 
++    // Create by yeruilai 2024-8-22 10:19:38 Dynamically display hidden navigation bar and status bar
++    private static final String ACTION_HIDE_STATUS_BAR = "com.systemui.statusbar.hide";
++    private static final String ACTION_SHOW_STATUS_BAR = "com.systemui.statusbar.show";
++    private static final String SYS_PROPERTY_STATUS_BAR = "persist.sys.statusbar.enable";
++    private static final String ACTION_HIDE_NAVIGATION_BAR = "com.systemui.navigationbar.hide";
++    private static final String ACTION_SHOW_NAVIGATION_BAR = "com.systemui.navigationbar.show";
++    private static final String SYS_PROPERTY_NAVIGATION_BAR = "persist.sys.navigationbar.enable";
++    
++
+     private static final String BANNER_ACTION_CANCEL =
+             "com.android.systemui.statusbar.banner_action_cancel";
+     private static final String BANNER_ACTION_SETUP =
+@@ -1522,6 +1531,12 @@ public class CentralSurfacesImpl extends CoreStartable implements
+             filter.addAction(UnisocPowerManagerUtil.ACTION_POWEREX_SAVE_MODE_CHANGED);
+         }
+         /* @} */
++        // Create by yeruilai 2024-8-22 10:19:38 Dynamically display hidden navigation bar and status bar
++        filter.addAction(ACTION_HIDE_STATUS_BAR);
++        filter.addAction(ACTION_SHOW_STATUS_BAR);
++        filter.addAction(ACTION_HIDE_NAVIGATION_BAR);
++        filter.addAction(ACTION_SHOW_NAVIGATION_BAR);
++
+         mBroadcastDispatcher.registerReceiver(mBroadcastReceiver, filter, null, UserHandle.ALL);
+     }
+ 
+@@ -2543,8 +2558,8 @@ public class CentralSurfacesImpl extends CoreStartable implements
+     @Override
+     public void createAndAddWindows(@Nullable RegisterStatusBarResult result) {
+         makeStatusBarView(result);
+-        mNotificationShadeWindowController.attach();
+         mStatusBarWindowController.attach();
++        mNotificationShadeWindowController.attach();
+     }
+ 
+     // called by makeStatusbar and also by PhoneStatusBarView
+@@ -2870,6 +2885,29 @@ public class CentralSurfacesImpl extends CoreStartable implements
+                     && mDataSaverController.isDataSaverEnabled()) {
+                 mDataSaverController.setDataSaverEnabled(false);
+             }
++            // Create by yeruilai 2024-8-22 10:19:38 Dynamically display hidden navigation bar and status bar
++             else if(ACTION_HIDE_STATUS_BAR.equals(action)){
++                android.util.Log.d("yeruilai","yeruilai:action=" + ACTION_HIDE_STATUS_BAR);
++
++                mStatusBarWindowController.hideStatusBar();
++                SystemProperties.set(SYS_PROPERTY_STATUS_BAR, "false");
++            } else if(ACTION_SHOW_STATUS_BAR.equals(action)){
++                android.util.Log.d("yeruilai","yeruilai:action=" + ACTION_SHOW_STATUS_BAR);
++
++                mStatusBarWindowController.showStatusBar();
++                SystemProperties.set(SYS_PROPERTY_STATUS_BAR, "true");
++            } else if(ACTION_HIDE_NAVIGATION_BAR.equals(action)){
++                android.util.Log.d("yeruilai","yeruilai:action=" + ACTION_HIDE_NAVIGATION_BAR);
++
++                mNavigationBarController.removeNavigationBars();
++                SystemProperties.set(SYS_PROPERTY_NAVIGATION_BAR, "false");
++            } else if(ACTION_SHOW_NAVIGATION_BAR.equals(action)){
++                android.util.Log.d("yeruilai","yeruilai:action=" + ACTION_SHOW_NAVIGATION_BAR);
++
++                createNavigationBar(null);
++                SystemProperties.set(SYS_PROPERTY_NAVIGATION_BAR, "true");
++            }
++
+             /* @} */
+             Trace.endSection();
+         }
+diff --git a/sprd.mocor13.androidT/frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/window/StatusBarWindowController.java b/sprd.mocor13.androidT/frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/window/StatusBarWindowController.java
+old mode 100644
+new mode 100755
+index e0d780a5fcd..08b4628f4c5
+--- a/sprd.mocor13.androidT/frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/window/StatusBarWindowController.java
++++ b/sprd.mocor13.androidT/frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/window/StatusBarWindowController.java
+@@ -316,4 +316,42 @@ public class StatusBarWindowController {
+             mLpChanged.privateFlags &= ~PRIVATE_FLAG_FORCE_SHOW_STATUS_BAR;
+         }
+     }
++
++    /**
++     * Create by yeruilai 2024-8-22 10:23:59 
++     */
++    private void apply(State state,boolean isHideStatus) {
++        if (!mIsAttached) {
++            return;
++        }
++        applyForceStatusBarVisibleFlag(state);
++        if (!isHideStatus){
++            applyHeight(state);
++        }
++        if (mLp != null && mLp.copyFrom(mLpChanged) != 0) {
++            mWindowManager.updateViewLayout(mStatusBarWindowView, mLp);
++        }
++    }
++
++    /**
++     * Create by yeruilai 2024-8-22 10:23:59 
++     */
++    public void showStatusBar(){
++        apply(mCurrentState);
++        mStatusBarWindowView.setVisibility(View.VISIBLE);
++    }
++
++    /**
++     * Create by yeruilai 2024-8-22 10:23:59 
++     */
++    public void hideStatusBar(){
++        mStatusBarWindowView.setVisibility(View.GONE);
++        mLpChanged.height = 0;
++        for (int rot = Surface.ROTATION_0; rot <= Surface.ROTATION_270; rot++) {
++            mLpChanged.paramsForRotation[rot].height = 0;
++        }
++        apply(mCurrentState,true);
++    }
++
++
+ }

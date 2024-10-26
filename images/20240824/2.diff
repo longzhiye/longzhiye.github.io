@@ -1,0 +1,20 @@
+diff --git a/sprd.mocor13.androidT/system/sepolicy/public/platform_app.te b/sprd.mocor13.androidT/system/sepolicy/public/platform_app.te
+index 3f689d82481..21a1f30d29f 100755
+--- a/sprd.mocor13.androidT/system/sepolicy/public/platform_app.te
++++ b/sprd.mocor13.androidT/system/sepolicy/public/platform_app.te
+@@ -7,3 +7,5 @@ allow platform_app system_app_data_file:dir r_dir_perms;
+ allow platform_app system_app_data_file:file r_file_perms;
+ #redstone
+ type platform_app, domain;
++
++allow platform_app system_prop:property_service set;
+diff --git a/sprd.mocor13.androidT/system/sepolicy/prebuilts/api/33.0/public/platform_app.te b/sprd.mocor13.androidT/system/sepolicy/prebuilts/api/33.0/public/platform_app.te
+index 3f689d82481..21a1f30d29f 100755
+--- a/sprd.mocor13.androidT/system/sepolicy/prebuilts/api/33.0/public/platform_app.te
++++ b/sprd.mocor13.androidT/system/sepolicy/prebuilts/api/33.0/public/platform_app.te
+@@ -7,3 +7,5 @@ allow platform_app system_app_data_file:dir r_dir_perms;
+ allow platform_app system_app_data_file:file r_file_perms;
+ #redstone
+ type platform_app, domain;
++
++allow platform_app system_prop:property_service set;
