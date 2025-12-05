@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>Android11最全适配实践指南 | 龙之叶的博客</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="alternate" href="/atom.xml" title="龙之叶的博客" type="application/atom+xml">
+  <meta name="description" content="Android11最全适配实践指南">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android11最全适配实践指南">
+<meta property="og:url" content="http://longzhiye.top/2022/09/03/2022-09-03/index.html">
+<meta property="og:site_name" content="龙之叶的博客">
+<meta property="og:description" content="Android11最全适配实践指南">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://longzhiye.top/images/20220903/20220903001.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20220903/20220903002.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20220903/20220903003.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20220903/20220903004.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20220903/20220903005.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20220903/20220903006.jpg">
+<meta property="article:published_time" content="2022-09-02T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-04T08:39:58.944Z">
+<meta property="article:author" content="龙之叶">
+<meta property="article:tag" content="Android">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://longzhiye.top/images/20220903/20220903001.jpg">
+
+  <meta name="keywords" content=",Android">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="龙之叶的博客">
+  <meta name="msapplication-starturl" content="http://longzhiye.top/2022/09/03/2022-09-03/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="龙之叶的博客">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <link rel="canonical" href="http://longzhiye.top/2022/09/03/2022-09-03/">
+  
+
+  
+  
+
+  
+  
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/custom.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(!a){document.getElementsByTagName("body")[0].className+=" mdui-drawer-body-left"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">龙之叶的博客</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+	<!--
+    <a href="/atom.xml" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'RSS'}"><i class="mdui-icon material-icons">rss_feed</i></a>
+	-->
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(a){document.getElementById("sidebar").className+=" mdui-drawer-close"};</script>
+  <div class="mdui-grid-tile">
+    <img src="/images/banner.png" style="height: 160px;">
+    <img src="/images/avatar.png" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;background-color:#fff;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">龙之叶</div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>生命不息，折腾不止</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:longzhiye163@163.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'longzhiye163@163.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-0");if(a){document.getElementsByClassName("mdui-collapse-item")[0].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">archive</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2025/10/">十月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/09/">九月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/08/">八月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/07/">七月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/06/">六月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/03/">三月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/02/">二月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/01/">一月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/10/">十月 2024<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/09/">九月 2024<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/08/">八月 2024<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/03/">三月 2024<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/02/">二月 2024<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/01/">一月 2024<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/12/">十二月 2023<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/11/">十一月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/10/">十月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/09/">九月 2023<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/08/">八月 2023<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/06/">六月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/05/">五月 2023<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/04/">四月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/03/">三月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/02/">二月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/09/">九月 2022<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/04/">四月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/03/">三月 2017<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/02/">二月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/01/">一月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/12/">十二月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/11/">十一月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/10/">十月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/08/">八月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-1");if(a){document.getElementsByClassName("mdui-collapse-item")[1].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">class</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">108</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E8%B5%84%E8%AE%AF/">资讯<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E9%80%9A%E7%9F%A5/">通知<span class="mdui-ripple sidebar_archives-count">4</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-2");if(a){document.getElementsByClassName("mdui-collapse-item")[2].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/ANR/" rel="tag">ANR<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/APP/" rel="tag">APP<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android/" rel="tag">Android<span class="mdui-ripple sidebar_archives-count">98</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android12/" rel="tag">Android12<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android13/" rel="tag">Android13<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android14/" rel="tag">Android14<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android16/" rel="tag">Android16<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AndroidStudio/" rel="tag">AndroidStudio<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AutoDraw/" rel="tag">AutoDraw<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Build/" rel="tag">Build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Crash/" rel="tag">Crash<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Foxmail/" rel="tag">Foxmail<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Framework/" rel="tag">Framework<span class="mdui-ripple sidebar_archives-count">20</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GPS%E8%BD%A8%E8%BF%B9%E5%9B%BE/" rel="tag">GPS轨迹图<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Git/" rel="tag">Git<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GitHub/" rel="tag">GitHub<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Google/" rel="tag">Google<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Java/" rel="tag">Java<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Kernel/" rel="tag">Kernel<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Launcher/" rel="tag">Launcher<span class="mdui-ripple sidebar_archives-count">17</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Lib/" rel="tag">Lib<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Linux/" rel="tag">Linux<span class="mdui-ripple sidebar_archives-count">18</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Markdown/" rel="tag">Markdown<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Material-Design/" rel="tag">Material Design<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OS-X/" rel="tag">OS X<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OTA/" rel="tag">OTA<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/QuickTime/" rel="tag">QuickTime<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SSH/" rel="tag">SSH<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Settings/" rel="tag">Settings<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SystemUI/" rel="tag">SystemUI<span class="mdui-ripple sidebar_archives-count">19</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/UAC/" rel="tag">UAC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Ubuntu/" rel="tag">Ubuntu<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WPS/" rel="tag">WPS<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Wifi/" rel="tag">Wifi<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WindTerm/" rel="tag">WindTerm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows/" rel="tag">Windows<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows-11/" rel="tag">Windows 11<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/androidmk/" rel="tag">androidmk<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/blog/" rel="tag">blog<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/build/" rel="tag">build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/feel/" rel="tag">feel<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/framework/" rel="tag">framework<span class="mdui-ripple sidebar_archives-count">58</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/inotify/" rel="tag">inotify<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/life/" rel="tag">life<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/ninja/" rel="tag">ninja<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/rsync/" rel="tag">rsync<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/standard/" rel="tag">standard<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/test/" rel="tag">test<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1/" rel="tag">企业微信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E7%94%9F%E6%B4%BB%E6%84%9F%E6%82%9F/" rel="tag">生活感悟<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+      <a href="/timeline" class="mdui-list-item mdui-ripple">时间轴</a>
+    
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-3");if(a){document.getElementsByClassName("mdui-collapse-item")[3].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+          <a href="http://www.niemingzhao.top" target="_blank" class="mdui-list-item mdui-p-l-2 mdui-text-color-theme-accent mdui-ripple" style="justify-content: center;">聂明照的博客</a>
+        
+        
+      </div>
+    </div>
+  </div>
+</aside>
+
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <style>#main article .mdui-card-content .text-center{text-align:center!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-4.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">Android11最全适配实践指南</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2022-09-03 / <i class="iconfont">&#xe601;</i> 龙之叶 &nbsp;&nbsp; <span id="busuanzi_container_page_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_page_pv"></span></span></div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#qrcode', align: 'right'}"><i class="mdui-icon material-icons">devices</i></button>
+          <ul class="mdui-menu" id="qrcode">
+            
+              <li class="mdui-menu-item"><a class="mdui-text-center mdui-ripple">发送到手机</a></li>
+            
+            <li class="mdui-menu-item" disabled>
+              
+                <img src="//qr.liantu.com/api.php?w=246&m=10&text=http://longzhiye.top/2022/09/03/2022-09-03/">
+              
+            </li>
+          </ul>
+        
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="mdui-icon material-icons">share</i></button>
+          <ul class="mdui-menu" id="share_menu">
+            <li class="mdui-menu-item">
+              <a href="https://service.weibo.com/share/share.php?appkey=&title=Android11最全适配实践指南&url=http://longzhiye.top/2022/09/03/2022-09-03/&pic=http://longzhiye.top/images/favicon.png&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://twitter.com/intent/tweet?text=Android11最全适配实践指南&url=http://longzhiye.top/2022/09/03/2022-09-03/&via=龙之叶" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=http://longzhiye.top/2022/09/03/2022-09-03/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://plus.google.com/share?url=http://longzhiye.top/2022/09/03/2022-09-03/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://longzhiye.top/2022/09/03/2022-09-03/&title=Android11最全适配实践指南" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://connect.qq.com/widget/shareqq/index.html?site=龙之叶的博客&title=Android11最全适配实践指南&pics=http://longzhiye.top/images/favicon.png&url=http://longzhiye.top/2022/09/03/2022-09-03/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://telegram.me/share/url?url=http://longzhiye.top/2022/09/03/2022-09-03/&text=Android11最全适配实践指南" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+            </li>
+          </ul>
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <ul>
+<li>以<strong>Android11</strong> 为目标版本的应用（<strong>targetSdkVersion&gt;=30</strong>才有影响）</li>
+<li>所有应用在<strong>Android11</strong>设备上适配改动（无论targetSdkVersion是多少，只要在<strong>Android11</strong>设备上运行的应用都有影响）</li>
+</ul>
+<p>为什么先说<strong>targetSdkVersion&gt;=30</strong>的模块呢？因为一般来说为了Google为了让我们更长时间适应新的内容以及保障线上应用的稳定，都会把改动大的，需要花时间适配的内容放到新的<strong>targetSdkVersion</strong>对应的应用上，如果你暂时没有适配<strong>targetSdkVersion30</strong>的需求，也可以看看第二模块，看看是否有涉及你的应用相关内容。</p>
+<h4 id="适配targetSdkVersion30"><a href="#适配targetSdkVersion30" class="headerlink" title="适配targetSdkVersion30"></a>适配targetSdkVersion30</h4><p>此模块的修改内容只针对<strong>targetSdkVersion 30</strong>或者以上才生效。</p>
+<h4 id="分区存储强制执行"><a href="#分区存储强制执行" class="headerlink" title="分区存储强制执行"></a>分区存储强制执行</h4><blockquote>
+<p>对外部存储目录的访问仅限于应用专属目录，以及应用已创建的特定类型的媒体。</p>
+</blockquote>
+<p>关于分区存储，在<strong>Android10</strong>就已经推行了，简单的说，就是应用对于文件的读写只能在沙盒环境，也就是属于自己应用的目录里面读写。其他媒体文件可以通过<strong>MediaStore</strong>进行访问。</p>
+<p>但是在<strong>android10</strong>的时候，Google还是为开发者考虑，留了一手。在<strong>targetSdkVersion = 29</strong>应用中，设置<strong>android:requestLegacyExternalStorage=”true”<strong>，就可以不启动分区存储，让以前的文件读取正常使用。但是</strong>targetSdkVersion = 30</strong>中不行了，强制开启分区存储。</p>
+<p>当然，作为人性化的android，还是为开发者留了一小手，如果是覆盖安装呢，可以增加<strong>android:preserveLegacyExternalStorage=”true”<strong>，暂时关闭分区存储，好让开发者完成数据迁移的工作。为什么是暂时呢？因为只要</strong>卸载重装</strong>，就会失效了。以下是关于分区存储会遇到的所有情况，给大家罗列出来了，先上代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">fun saveFile() &#123;</span><br><span class="line">    if (checkPermission()) &#123;</span><br><span class="line">        //getExternalStoragePublicDirectory被弃用，分区存储开启后就不允许访问了</span><br><span class="line">        val filePath = Environment.getExternalStoragePublicDirectory(&quot;&quot;).toString() + &quot;/test3.txt&quot;</span><br><span class="line">        val fw = FileWriter(filePath)</span><br><span class="line">        fw.write(&quot;hello world&quot;)</span><br><span class="line">        fw.close()</span><br><span class="line">        showToast(&quot;文件写入成功&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>分情况运行：</p>
+<ol>
+<li><strong>targetSdkVersion = 28</strong>，运行后正常读写。</li>
+<li><strong>targetSdkVersion = 29</strong>，不删除应用，targetSdkVersion 由28修改到29，覆盖安装，运行后正常读写。</li>
+<li><strong>targetSdkVersion = 29</strong>，删除应用，重新运行，读写报错，程序崩溃（open failed: EACCES (Permission denied)）</li>
+<li><strong>targetSdkVersion = 29</strong>，添加android:requestLegacyExternalStorage=”true”（不启用分区存储），读写正常不报错</li>
+<li><strong>targetSdkVersion = 30</strong>，不删除应用，targetSdkVersion 由29修改到30，读写报错，程序崩溃（open failed: EACCES (Permission denied)）</li>
+<li><strong>targetSdkVersion = 30</strong>，不删除应用，targetSdkVersion 由29修改到30，增加android:preserveLegacyExternalStorage=”true”，读写正常不报错</li>
+<li><strong>targetSdkVersion = 30</strong>，删除应用，重新运行，读写报错，程序崩溃（open failed: EACCES (Permission denied)）</li>
+</ol>
+<p>那到底应该怎么改呢？三种方法访问文件：</p>
+<ol>
+<li>应用专属目录</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//分区存储空间</span><br><span class="line">val file = File(context.filesDir, filename)</span><br><span class="line"></span><br><span class="line">//应用专属外部存储空间</span><br><span class="line">val appSpecificExternalDir = File(context.getExternalFilesDir(), filename)</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>访问公共媒体目录文件</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">val cursor = contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, &quot;$&#123;MediaStore.MediaColumns.DATE_ADDED&#125; desc&quot;)</span><br><span class="line">if (cursor != null) &#123;</span><br><span class="line">    while (cursor.moveToNext()) &#123;</span><br><span class="line">        val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID))</span><br><span class="line">        val uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)</span><br><span class="line">        println(&quot;image uri is $uri&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">    cursor.close()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>SAF(存储访问框架–Storage Access Framework)</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)</span><br><span class="line">intent.addCategory(Intent.CATEGORY_OPENABLE)</span><br><span class="line">intent.type = &quot;image/*&quot;</span><br><span class="line">startActivityForResult(intent, 100)</span><br><span class="line"></span><br><span class="line">@RequiresApi(Build.VERSION_CODES.KITKAT)</span><br><span class="line">override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) &#123;</span><br><span class="line">    super.onActivityResult(requestCode, resultCode, data)</span><br><span class="line">    if (data == null || resultCode != Activity.RESULT_OK) return</span><br><span class="line">    if (requestCode == 100) &#123;</span><br><span class="line">        val uri = data.data</span><br><span class="line">        println(&quot;image uri is $uri&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>说到这里可能又有人问了，那我的应用就是个手机管理器，总不能不让我清其他应用的缓存了吧，有办法！Android提供了两个intent入口：</p>
+<ul>
+<li>调用ACTION_MANAGE_STORAGE intent 操作检查可用空间。</li>
+<li>调用ACTION_CLEAR_APP_CACHE intent 操作清除所有缓存。</li>
+</ul>
+<p>说来说去，反正应用数据私有化是大势所趋，还是早点适配分区存储，别等以后手机只有沙盒机制的时候，就来不及了。</p>
+<h3 id="媒体文件访问权限"><a href="#媒体文件访问权限" class="headerlink" title="媒体文件访问权限"></a>媒体文件访问权限</h3><blockquote>
+<p>为了在保证用户隐私的同时可以更轻松地访问媒体，Android 11 增加了以下功能。执行批量操作和使用直接文件路径和原生库访问文件。</p>
+</blockquote>
+<ol>
+<li>执行批量操作<br>这里的批量操作指的是Android 11 向 <strong>MediaStore API</strong> 中添加了多种方法，用于简化特定媒体文件更改流程（例如在原位置编辑照片），分别是：</li>
+</ol>
+<ul>
+<li><strong>createWriteRequest()</strong> 用户向应用授予对指定媒体文件组的写入访问权限的请求。</li>
+<li>**createFavoriteRequest()**用户将设备上指定的媒体文件标记为“收藏”的请求。对该文件具有读取访问权限的任何应用都可以看到用户已将该文件标记为“收藏”。</li>
+<li><strong>createTrashRequest()</strong> 用户将指定的媒体文件放入设备垃圾箱的请求。垃圾箱中的内容会在系统定义的时间段后被永久删除。</li>
+<li><strong>createDeleteRequest()</strong> 用户立即永久删除指定的媒体文件（而不是先将其放入垃圾箱）的请求。</li>
+</ul>
+<p>直接看个例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">val urisToModify = listOf(uri,uri,...)</span><br><span class="line">val editPendingIntent = MediaStore.createWriteRequest(contentResolver,</span><br><span class="line">        urisToModify)</span><br><span class="line"></span><br><span class="line">// Launch a system prompt requesting user permission for the operation.</span><br><span class="line">startIntentSenderForResult(editPendingIntent.intentSender, EDIT_REQUEST_CODE,</span><br><span class="line">    null, 0, 0, 0)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">override fun onActivityResult(requestCode: Int, resultCode: Int,</span><br><span class="line">                 data: Intent?) &#123;</span><br><span class="line">    when (requestCode) &#123;</span><br><span class="line">        EDIT_REQUEST_CODE -&gt;</span><br><span class="line">            if (resultCode == Activity.RESULT_OK) &#123;</span><br><span class="line">                /* Edit request granted; proceed. */</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                /* Edit request not granted; explain to the user. */</span><br><span class="line">            &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>传入uri的集合，获取用户的同意后，就可以进行操作了。</p>
+<ol start="2">
+<li>直接文件路径和原生库访问文件</li>
+</ol>
+<p>没错！Android11又恢复了使用<strong>直接文件路径</strong>访问访问媒体文件！哈哈，这样就方便多了。也就是除了 <strong>MediaStore API</strong>之外还有两种方式可以访问媒体文件：</p>
+<ul>
+<li>File API。</li>
+<li>原生库，例如 fopen()。</li>
+</ul>
+<p>那<strong>Android10</strong>咋办呢？？要不就用<strong>MediaStore</strong>，要不就直接把分区存储关了吧（requestLegacyExternalStorage=true）</p>
+<h3 id="所有文件访问权限"><a href="#所有文件访问权限" class="headerlink" title="所有文件访问权限"></a>所有文件访问权限</h3><p>虽然说了这么多，但是还有些应用就要访问所有文件，比如杀毒软件，文件管理器。放心，有办法！<strong>MANAGE_EXTERNAL_STORAGE</strong> 这不来了吗。<br>这个权限就是用来获取<strong>所有文件</strong>的管理权限。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;uses-permission android:name=&quot;android.permission.MANAGE_EXTERNAL_STORAGE&quot; /&gt;</span><br><span class="line"></span><br><span class="line">val intent = Intent()</span><br><span class="line">intent.action= Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION</span><br><span class="line">startActivity(intent)</span><br><span class="line"></span><br><span class="line">//判断是否获取MANAGE_EXTERNAL_STORAGE权限：</span><br><span class="line">val isHasStoragePermission= Environment.isExternalStorageManager()</span><br></pre></td></tr></table></figure>
+
+<p>来张截图过过瘾：</p>
+<p><img src="/images/20220903/20220903001.jpg"></p>
+<h3 id="电话号码相关权限"><a href="#电话号码相关权限" class="headerlink" title="电话号码相关权限"></a>电话号码相关权限</h3><blockquote>
+<p>Android 11 更改了您的应用在读取电话号码时使用的与电话相关的权限。</p>
+</blockquote>
+<p>具体改了什么呢？其实就是两个API：</p>
+<ul>
+<li>TelecomManager 类中的 <strong>getLine1Number()</strong> 方法</li>
+<li>TelecomManager 类中的 <strong>getMsisdn()</strong> 方法</li>
+</ul>
+<p>也就是当用到这两个API的时候，原来的<strong>READ_PHONE_STATE</strong>权限不管用了，需要<strong>READ_PHONE_NUMBERS</strong>权限才行。</p>
+<p>下面具体说说，<strong>targetSdkVersion</strong>修改到30，然后运行一个获取电话号码的程序：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_PHONE_STATE), 100)</span><br><span class="line"></span><br><span class="line">btn2.setOnClickListener &#123;</span><br><span class="line">    val tm = this.applicationContext.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager</span><br><span class="line">    val phoneNumber = tm.line1Number</span><br><span class="line">    showToast(phoneNumber)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>崩溃了：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.lang.SecurityException: getLine1NumberForDisplay: Neither user 10151 nor current process has android.permission.READ_PHONE_STATE, android.permission.READ_SMS, or android.permission.READ_PHONE_NUMBERS</span><br></pre></td></tr></table></figure>
+
+<p>预想之中哈，<strong>Andmanifest.xml</strong>中注册好权限，并且添加动态权限申请：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;uses-permission android:name=&quot;android.permission.READ_PHONE_STATE&quot; /&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.READ_PHONE_NUMBERS&quot; /&gt;</span><br><span class="line"></span><br><span class="line">ActivityCompat.requestPermissions(this,arrayOf(Manifest.permission.READ_PHONE_STATE,Manifest.permission.READ_PHONE_NUMBERS), 100)</span><br></pre></td></tr></table></figure>
+<p>搞定，如果你只需要获取手机号码这一个功能，也可以只申请<strong>READ_PHONE_NUMBERS</strong>这一个权限：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;uses-permission android:name=&quot;android.permission.READ_PHONE_STATE&quot;  android:maxSdkVersion=&quot;29&quot; /&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.READ_PHONE_NUMBERS&quot; /&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="自定义消息框视图被屏蔽"><a href="#自定义消息框视图被屏蔽" class="headerlink" title="自定义消息框视图被屏蔽"></a>自定义消息框视图被屏蔽</h3><blockquote>
+<p>从 Android 11 开始，已弃用自定义消息框视图。如果您的应用以 Android 11 为目标平台，包含自定义视图的消息框在从后台发布时会被屏蔽</p>
+</blockquote>
+<p>可能有人会奇怪了，什么<strong>是自定义消息框视</strong>图啊？我说英文你就知道了，英文是<strong>custom toast views</strong>，也就是自定义toast。简单写个代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Toast toast = new Toast(context);</span><br><span class="line">toast.setDuration(show_length);</span><br><span class="line">toast.setView(view);</span><br><span class="line">toast.show();</span><br></pre></td></tr></table></figure>
+<p>糟了糟了，自定义toast被弃用了？我们项目就是用的这个啊！不用担心，只是不允许自定义toast从后台显示了。<br>比如我写一个3秒后再显示toast，然后应用一打开就进入后台，看看会发生什么：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Handler().postDelayed(&#123;</span><br><span class="line">      IToast.show(&quot;你好，我是自定义toast&quot;)</span><br><span class="line"> &#125;, 3000)</span><br><span class="line"></span><br><span class="line">W/NotificationService: Blocking custom toast from package com.example.studynote due to package not in the foreground</span><br></pre></td></tr></table></figure>
+<p>啥也没显示，只是发出来一个警告。<br>所以不用太过担心，如果实在需要后台显示，就用普通的toast吧！</p>
+<h3 id="现在需要-APK-签名方案-v2"><a href="#现在需要-APK-签名方案-v2" class="headerlink" title="现在需要 APK 签名方案 v2"></a>现在需要 APK 签名方案 v2</h3><blockquote>
+<p>对于以 Android 11（API 级别 30）为目标平台，且目前仅使用 APK 签名方案 v1 签名的应用，现在还必须使用 APK 签名方案 v2 或更高版本进行签名。用户无法在搭载 Android 11 的设备上安装或更新仅通过 APK 签名方案 v1 签名的应用。</p>
+</blockquote>
+<p>这个介绍已经很明显了吧，如果你<strong>的targetSdkVersion</strong>修改到30，那么你就必须要加上v2签名才行。否则无法安装和更新。</p>
+<h3 id="媒体intent操作需要系统默认相机"><a href="#媒体intent操作需要系统默认相机" class="headerlink" title="媒体intent操作需要系统默认相机"></a>媒体intent操作需要系统默认相机</h3><p>从 Android 11 开始，只有预装的系统相机应用可以响应以下 intent 操作：</p>
+<ul>
+<li>android.media.action.VIDEO_CAPTURE</li>
+<li>android.media.action.IMAGE_CAPTURE</li>
+<li>android.media.action.IMAGE_CAPTURE_SECURE<br>也就是说，如果我调用<strong>intent</strong>唤起照相机，使用<strong>VIDEO_CAPTURE</strong>的action，只有系统的相机能够响应，而第三方的相机应用不会响应了。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">val intent=Intent()</span><br><span class="line">intent.action=android.provider.MediaStore.ACTION_IMAGE_CAPTURE</span><br><span class="line">startActivity(intent)</span><br><span class="line"></span><br><span class="line">//无法唤起第三方相机了，只能唤起系统相机</span><br></pre></td></tr></table></figure>
+这点对普通的相机应用还是有点打击的，官方给的建议是如果要使用特定的第三方相机应用来代表其捕获图片或视频，可以通过为intent设置软件包名称或组件来使这些intent变得明确。<h3 id="5G"><a href="#5G" class="headerlink" title="5G"></a>5G</h3></li>
+</ul>
+<blockquote>
+<p>Android 11 添加了在您的应用中支持 5G 的功能</p>
+</blockquote>
+<p>新的Android11也是支持了5G相关的一些功能，包括：</p>
+<ul>
+<li>检测是否连接到了5G网络</li>
+<li>检查按流量计费性</li>
+</ul>
+<p>首先是检测5G网络，通过TelephonyManager的监听方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">private fun getNetworkType()&#123;</span><br><span class="line">    val tManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager</span><br><span class="line">    tManager.listen(object : PhoneStateListener() &#123;</span><br><span class="line"></span><br><span class="line">        @RequiresApi(Build.VERSION_CODES.R)</span><br><span class="line">        override fun onDisplayInfoChanged(telephonyDisplayInfo: TelephonyDisplayInfo) &#123;</span><br><span class="line">            if (ActivityCompat.checkSelfPermission(this@Android11Test2Activity, android.Manifest.permission.READ_PHONE_STATE) != android.content.pm.PackageManager.PERMISSION_GRANTED) &#123;</span><br><span class="line">                return</span><br><span class="line">            &#125;</span><br><span class="line">            super.onDisplayInfoChanged(telephonyDisplayInfo)</span><br><span class="line"></span><br><span class="line">            when(telephonyDisplayInfo.networkType) &#123;</span><br><span class="line">                TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_LTE_ADVANCED_PRO -&gt; showToast(&quot;高级专业版 LTE (5Ge)&quot;)</span><br><span class="line">                TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_NSA -&gt; showToast(&quot;NR (5G) - 5G Sub-6 网络&quot;)</span><br><span class="line">                TelephonyDisplayInfo.OVERRIDE_NETWORK_TYPE_NR_NSA_MMWAVE -&gt; showToast(&quot;5G+/5G UW - 5G mmWave 网络&quot;)</span><br><span class="line">                else -&gt; showToast(&quot;other&quot;)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;, PhoneStateListener.LISTEN_DISPLAY_INFO_CHANGED)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果是5g网络，就免不了要去判断是不是按流量计费的，否则5G的流量可不是开玩笑的。</p>
+<p>检测流量计费方法也很简单，监听网络，在回调中判断：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">val manager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager</span><br><span class="line"> manager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() &#123;</span><br><span class="line">    override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) &#123;</span><br><span class="line">      super.onCapabilitiesChanged(network, networkCapabilities)</span><br><span class="line"></span><br><span class="line">        //true 代表连接不按流量计费</span><br><span class="line">        val isNotFlowPay=networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED) ||</span><br><span class="line">                        networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_TEMPORARILY_NOT_METERED)</span><br><span class="line">      &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>判断该值，如果为 true，则将连接视为不按流量计费。</p>
+<h3 id="后台位置信息访问权限"><a href="#后台位置信息访问权限" class="headerlink" title="后台位置信息访问权限"></a>后台位置信息访问权限</h3><blockquote>
+<p>在搭载 Android 11 的设备上，当应用中的某项功能请求在后台访问位置信息时，用户看到的系统对话框不再包含用于启用后台位置信息访问权限的按钮。如需启用后台位置信息访问权限，用户必须在设置页面上针对应用的位置权限设置一律允许选项。</p>
+</blockquote>
+<p>什么意思呢？主要涉及到两点：</p>
+<ul>
+<li>从Android10系统的设备开始，就需要请求后台位置权限<strong>（ACCESS_BACKGROUND_LOCATION）</strong>，并选择<strong>Allow all the time （始终允许）</strong>才能获得后台位置权限。Android11设备上再次加强对后台权限的管理，主要表现在系统对话框上，对话框不再提示始终允许字样，而是提供了位置权限的设置入口，需要在设置页面选择始终允许才能获得后台位置权限。</li>
+<li>在搭载Android11系统的设备上，targetVersion小于30的时候，可以前台后台位置权限一起申请，并且对话框提供了文字说明，表示需要随时获取用户位置信息，进入设置选择<strong>始终允</strong>许即可。但是targetVersion为30的时候，你必须<strong>单独申请</strong>后台位置权限，而且要在获取前台权限之后，顺序不能乱。并且无任何提示，需要开发者自己设计提示样式。</li>
+</ul>
+<p>可能有点绕，操作几个例子说明：</p>
+<ol>
+<li><strong>Android10设备</strong>，申请前台和后台位置权限（任意targetSdkVersion）：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_BACKGROUND_LOCATION), 100)</span><br></pre></td></tr></table></figure>
+执行效果：</li>
+</ol>
+<p><img src="/images/20220903/20220903002.jpg"></p>
+<ol start="2">
+<li><strong>Android11设备</strong>，targetSdkVersion&lt;=29(Android 10),申请前台和后台位置权限：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_BACKGROUND_LOCATION), 100)</span><br></pre></td></tr></table></figure>
+执行效果：</li>
+</ol>
+<p><img src="/images/20220903/20220903003.jpg"></p>
+<ol start="3">
+<li><strong>Android11设备</strong>，targetSdkVersion=30(Android 11),申请前台和后台位置权限：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_BACKGROUND_LOCATION), 100)</span><br></pre></td></tr></table></figure>
+执行无反应</li>
+<li><strong>Android11设备</strong>，targetSdkVersion=30(Android 11),先申请前台位置权限，后申请后台位置权限：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 100)</span><br></pre></td></tr></table></figure>
+执行效果：</li>
+</ol>
+<p><img src="/images/20220903/20220903004.jpg"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">requestPermissions(arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION), 100)</span><br></pre></td></tr></table></figure>
+<p>执行效果(直接跳转到设置页面，无任何说明)：</p>
+<p><img src="/images/20220903/20220903005.jpg"></p>
+<p>所以，该怎么适配呢？</p>
+<ul>
+<li><strong>targetSdkVersion&lt;30</strong>情况下，如果你之前就有判断过前台和后台位置权限，那就无需担心，没有什么需要适配。</li>
+<li><strong>targetSdkVersion&gt;30</strong>情况下,需要分开申请前后台位置权限，并且对后台位置权限申请做好说明和引导，当然也是为了更好的服务用户。</li>
+</ul>
+<p>权限申请的demo代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">val permissionAccessCoarseLocationApproved = ActivityCompat</span><br><span class="line">    .checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION) ==</span><br><span class="line">    PackageManager.PERMISSION_GRANTED</span><br><span class="line"></span><br><span class="line">if (permissionAccessCoarseLocationApproved) &#123;</span><br><span class="line">   val backgroundLocationPermissionApproved = ActivityCompat</span><br><span class="line">       .checkSelfPermission(this, permission.ACCESS_BACKGROUND_LOCATION) ==</span><br><span class="line">       PackageManager.PERMISSION_GRANTED</span><br><span class="line"></span><br><span class="line">   if (backgroundLocationPermissionApproved) &#123;</span><br><span class="line">        //前后台位置权限都有</span><br><span class="line">   &#125; else &#123;</span><br><span class="line">        //申请后台权限</span><br><span class="line">        if (applicationInfo.targetSdkVersion &lt; Build.VERSION_CODES.R)&#123;</span><br><span class="line">            ActivityCompat.requestPermissions(this,</span><br><span class="line">                    arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),</span><br><span class="line">                    200)</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">            AlertDialog.Builder(this).setMessage(&quot;需要提供后台位置权限，请在设置页面选择始终允许&quot;)</span><br><span class="line">                    .setPositiveButton(&quot;确定&quot;, DialogInterface.OnClickListener &#123; dialog, which -&gt;</span><br><span class="line">                        ActivityCompat.requestPermissions(this,</span><br><span class="line">                                arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),</span><br><span class="line">                                200)</span><br><span class="line">                    &#125;).create().show()</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">   &#125;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    if (applicationInfo.targetSdkVersion &lt; Build.VERSION_CODES.R)&#123;</span><br><span class="line">        //申请前台和后台位置权限</span><br><span class="line">        ActivityCompat.requestPermissions(this,</span><br><span class="line">                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_BACKGROUND_LOCATION),</span><br><span class="line">                100)</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        //申请前台位置权限</span><br><span class="line">        ActivityCompat.requestPermissions(this,</span><br><span class="line">                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),</span><br><span class="line">                100)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="软件包可见性"><a href="#软件包可见性" class="headerlink" title="软件包可见性"></a>软件包可见性</h3><blockquote>
+<p>Android 11 更改了应用查询用户已在设备上安装的其他应用以及与之交互的方式。使用新的  元素，应用可以定义一组自身可访问的其他应用。通过告知系统应向您的应用显示哪些其他应用，此元素有助于鼓励最小权限原则。此外，此元素还可帮助 Google Play 等应用商店评估应用为用户提供的隐私权和安全性。</p>
+</blockquote>
+<p>也就是说，<strong>Android11中</strong>，如果你想去获取其他应用的信息，比如包名，名称等等，不能直接获取了，必须在清单文件中添加**<queries>**元素，告知系统你要获取哪些应用信息或者哪一类应用。<br>比如我这段查询应用信息的代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">val pm = this.packageManager</span><br><span class="line">val listAppcations: List&lt;ApplicationInfo&gt; = pm</span><br><span class="line">        .getInstalledApplications(PackageManager.GET_META_DATA)</span><br><span class="line">for (app in listAppcations) &#123;</span><br><span class="line">    Log.e(&quot;lz&quot;,app.packageName)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在<strong>Android11</strong>版本，只能查询到自己应用和系统应用的信息，查不到其他应用的信息了。怎么呢？添加**<queries>**元素，两种方式：</p>
+<ol>
+<li>元素中加入具体包名<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;manifest package=&quot;com.example.game&quot;&gt;</span><br><span class="line">    &lt;queries&gt;</span><br><span class="line">        &lt;package android:name=&quot;com.example.store&quot; /&gt;</span><br><span class="line">        &lt;package android:name=&quot;com.example.services&quot; /&gt;</span><br><span class="line">    &lt;/queries&gt;</span><br><span class="line">    ...</span><br><span class="line">&lt;/manifest&gt;</span><br></pre></td></tr></table></figure></li>
+<li>元素中加入固定过滤的<strong>intent</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;manifest package=&quot;com.example.game&quot;&gt;</span><br><span class="line">    &lt;queries&gt;</span><br><span class="line">        &lt;intent&gt;</span><br><span class="line">            &lt;action android:name=&quot;android.intent.action.SEND&quot; /&gt;</span><br><span class="line">            &lt;data android:mimeType=&quot;image/jpeg&quot; /&gt;</span><br><span class="line">        &lt;/intent&gt;</span><br><span class="line">    &lt;/queries&gt;</span><br><span class="line">&lt;/manifest&gt;</span><br></pre></td></tr></table></figure>
+可能还是有人会疑惑，那我的应用是<strong>浏览器或者设备管理器</strong>咋办呢？我就要获取所有包名啊？<br>放心，Android11还引入了 <strong>QUERY_ALL_PACKAGES</strong> 权限，清单文件中加入即可。但是<strong>Google Play</strong>可不一定能滥用哦，它为需要QUERY_ALL_PACKAGES 权限的应用会提供相关指南，但是还没出来，具体要看后面的消息了。<br>至于国内市场。。。（希望能有个应用市场一统天下好好管理这混乱的市场吧！）<h3 id="文档访问限制"><a href="#文档访问限制" class="headerlink" title="文档访问限制"></a>文档访问限制</h3></li>
+</ol>
+<blockquote>
+<p>为让开发者有时间进行测试，以下与存储访问框架 (SAF) 相关的变更只有在应用以 Android 11 为目标平台时才会生效。</p>
+</blockquote>
+<p>上文存储的时候说过可以通过**SAF(存储访问框架–Storage Access Framework)**来访问公共目录，但是Android11再次升级，部分目录和文件不能访问了，具体如下：<br>无法再使用 <strong>ACTION_OPEN_DOCUMENT_TREE intent</strong> 操作请求访问以下目录：</p>
+<ul>
+<li>内部存储卷的根目录。</li>
+<li>设备制造商认为可靠的各个 SD 卡卷的根目录，无论该卡是模拟卡还是可移除的卡。可靠的卷是指应用在大多数情况下可以成功访问的卷。</li>
+<li>Download 目录。</li>
+</ul>
+<p>无法再使用 <strong>ACTION_OPEN_DOCUMENT_TREE</strong> 或 <strong>ACTION_OPEN_DOCUMENT intent</strong> 操作请求用户从以下目录中选择单独的文件：</p>
+<ul>
+<li>Android/data/ 目录及其所有子目录。</li>
+<li>Android/obb/ 目录及其所有子目录。</li>
+</ul>
+<h3 id="限制对-APN-数据库的读取访问"><a href="#限制对-APN-数据库的读取访问" class="headerlink" title="限制对 APN 数据库的读取访问"></a>限制对 APN 数据库的读取访问</h3><blockquote>
+<p>以 Android 11 为目标平台的应用现在必须具备 Manifest.permission.WRITE_APN_SETTINGS 特权，才能读取或访问电话提供程序 APN 数据库。如果在不具备此权限的情况下尝试访问 APN 数据库，会生成安全异常。</p>
+</blockquote>
+<p>问题来了，APN是啥？</p>
+<ul>
+<li>指一种网络接入技术，是通过手机上网时必须配置的一个参数，APN配置参数包括名字，运营商编号，APN接入点等等。</li>
+</ul>
+<p>就是说如果没有<strong>Manifest.permission.WRITE_APN_SETTINGS</strong>权限就不能读取APN数据库了，但是！这个权限很早之前就被限定只有系统程序才能申请这个权限了，现在这个特权没理解到是什么意思，难道系统程序都不能随便申请了？</p>
+<h3 id="在元数据文件中声明“无障碍”按钮使用情况"><a href="#在元数据文件中声明“无障碍”按钮使用情况" class="headerlink" title="在元数据文件中声明“无障碍”按钮使用情况"></a>在元数据文件中声明“无障碍”按钮使用情况</h3><blockquote>
+<p>从 Android 11 开始，您的无障碍服务无法在运行时声明与系统的“无障碍”按钮的关联。如果您将 AccessibilityServiceInfo.FLAG_REQUEST_ACCESSIBILITY_BUTTON 附加到 AccessibilityServiceInfo 对象的 flags 属性，框架就不会将“无障碍”按钮回调事件传递给您的服务。</p>
+</blockquote>
+<p>做过无障碍辅助功能的应该都知道<strong>AccessibilityServiceInfo</strong>要设置flag为<strong>FLAG_REQUEST_ACCESSIBILITY_BUTTON，getAccessibilityButtonController</strong>方法获取辅助功能按钮控制器，并且可用于查询辅助功能按钮的状态并注册监听器以进行交互和辅助功能按钮的状态更改。</p>
+<p>但是，Android 11开始，这样写不能获取辅助按钮回调事件了，得换成另外一种写法。在元数据文件（通常为 res/raw/accessibilityservice.xml）中使用 <strong>flagRequestAccessibilityButton</strong> 标记声明您的无障碍服务与“无障碍”按钮的关联。</p>
+<h3 id="Firebase-JobDispatcher-和-GCMNetworkManager"><a href="#Firebase-JobDispatcher-和-GCMNetworkManager" class="headerlink" title="Firebase JobDispatcher 和 GCMNetworkManager"></a>Firebase JobDispatcher 和 GCMNetworkManager</h3><blockquote>
+<p>如果您的应用以 API 级别 30 或更高级别为目标平台，在搭载 Android 6.0（API 级别 23）或更高版本的设备上会停用 Firebase JobDispatcher 和 GcmNetworkManager API 调用。</p>
+</blockquote>
+<p>这两个api国内都用不了，主要用于后台任务。官方给出的替代意见是<strong>WorkManager</strong>，这个国内是可以用的，属于jetpack组件，主要用于调度和执行可延期的后台工作。</p>
+<h3 id="设备到设备文件传输"><a href="#设备到设备文件传输" class="headerlink" title="设备到设备文件传输"></a>设备到设备文件传输</h3><blockquote>
+<p>如果您的应用以 Android 11 为目标平台，您将无法再使用 allowBackup 属性停用应用文件的设备到设备迁移。系统会自动启用此功能。不过，即使您的应用以 Android 11 为目标平台，您也可以通过将 allowBackup 属性设置为 false 来停用应用文件的云端备份和恢复。</p>
+</blockquote>
+<p><strong>android:allowBackup属性</strong></p>
+<ul>
+<li>代表是否允许应用参与备份和恢复基础架构。如果将此属性设为 false，则永远不会为该应用执行<strong>备份或恢复</strong>，即使是采用全系统备份方法也不例外（这种备份方法通常会通过 adb 保存所有应用数据）。此属性的默认值为 true。</li>
+</ul>
+<p>所以这里是不能停用文件的<strong>设备到设备</strong>迁移，但是可以停用<strong>云端备份和恢复</strong></p>
+<h3 id="自动重置权限"><a href="#自动重置权限" class="headerlink" title="自动重置权限"></a>自动重置权限</h3><blockquote>
+<p>如果应用以 Android 11 为目标平台并且数月未使用，系统会通过自动重置用户已授予应用的运行时敏感权限来保护用户数据。此操作与用户在系统设置中查看权限并将应用的访问权限级别更改为拒绝的做法效果一样。如果应用已遵循有关在运行时请求权限的最佳做法，那么您不必对应用进行任何更改。这是因为，当用户与应用中的功能互动时，您应该会验证相关功能是否具有所需权限。</p>
+</blockquote>
+<p>官方说明说的很清楚了，而且只要应用遵循有关在运行时请求权限的最佳做法，也就是<strong>每次需要调用权限</strong>的时候都会去判断，那么就不会有什么问题。</p>
+<p>如果需要关闭这个功能怎么办呢？只有引导用户去设置页面关闭了，可以调用包含<strong>Settings.ACTION_APPLICATION_DETAILS_SETTINGS action</strong>的 Intent将用户定向到系统设置中应用的页面。</p>
+<p>怎么检查应用是否停用自动重置功能呢？调用 PackageManager的**isAutoRevokeWhitelisted()**方法。如果此方法返回 true，代表系统不会自动重置应用的权限。</p>
+<h3 id="前台服务类型"><a href="#前台服务类型" class="headerlink" title="前台服务类型"></a>前台服务类型</h3><blockquote>
+<p>从 Android 9 开始，应用仅限于在前台访问摄像头和麦克风。为了进一步保护用户，Android 11 更改了前台服务访问摄像头和麦克风相关数据的方式。如果您的应用以 Android 11 为目标平台并且在某项前台服务中访问这些类型的数据，您需要在该前台服务的声明的 foregroundServiceType 属性中添加新的 camera 和 microphone 类型。</p>
+</blockquote>
+<p>在Android10的时候，对于前台定位服务就必须加上**android:foregroundServiceType=”location”**，现在Android11上又增加了两个权限限制，一个是摄像头一个是麦克风。</p>
+<p>所以总结下来就是，应用某项前台服务需要访问<strong>位置信息、摄像头和麦克风</strong>，那么就要在清单文件中这样添加：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;manifest&gt;</span><br><span class="line">    &lt;service ...</span><br><span class="line">        android:foregroundServiceType=&quot;location|camera|microphone&quot; /&gt;</span><br><span class="line">&lt;/manifest&gt;</span><br></pre></td></tr></table></figure>
+<p>有的朋友可能测试发现，不加<strong>foregroundServiceType</strong>的前提下，让<strong>Activity</strong>启动了一个前台服务，并在服务里去获取定位，竟然可以获取到定位信息，难道官方说错了？</p>
+<p>其实这是因为你并没有让前台服务单独运行，你可以试着在Activity启动Service后，进入Home界面，然后过几秒再请求位置，就请求不到了。但是不会崩溃，因为这个被系统设置的权限类别为<strong>MODE_IGNORED</strong>，也就是静默失败模式。</p>
+<p>所以为了保险起见，只要前台服务涉及到了这三个功能，就在清单文件加上<strong>android:foregroundServiceType</strong></p>
+<h3 id="适配Android11手机"><a href="#适配Android11手机" class="headerlink" title="适配Android11手机"></a>适配Android11手机</h3><p>此模块的修改内容针对所有项目<strong>在Android11</strong>手机上存在的改动，与<strong>targetSdkVersion</strong>无关。</p>
+<h3 id="数据访问审核"><a href="#数据访问审核" class="headerlink" title="数据访问审核"></a>数据访问审核</h3><blockquote>
+<p>为了让应用及其依赖项访问用户私密数据的过程更加透明，Android 11 引入了数据访问审核功能。借助此流程得出的见解，您可以更好地识别和纠正可能出现的意外数据访问。</p>
+</blockquote>
+<p>哪些范畴属于用户私密数据呢？其实就是危险权限的调用，所以这个功能就是提供了可以监听危险权限调用的监听。主要涉及到的方法是<strong>AppOpsManager.OnOpNotedCallback</strong>。无论是应用本身，还是依赖库或者SDK中的代码，只要访问到私密数据（危险权限），都会回调给我们。<br>对于工程庞大或者使用较多SDK的工程比较适合用上这个功能，让自己应用的私有数据管理更加透明规范，否则对于私有数据的使用和管理并不全面和方便。而且还可以对权限使用添加归因，也就是一个tag，标志权限用到了什么地方。方便回调的时候知晓哪里使用了私有数据。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">override fun onCreate(savedInstanceState: Bundle?) &#123;</span><br><span class="line">    super.onCreate(savedInstanceState)</span><br><span class="line">    setContentView(R.layout.activity_test1)</span><br><span class="line"></span><br><span class="line">    //创建归因（attribute）  </span><br><span class="line">    attributionContext = createAttributionContext(&quot;shareLocation&quot;)</span><br><span class="line"></span><br><span class="line">    //监听事件</span><br><span class="line">    val appOpsCallback = object : AppOpsManager.OnOpNotedCallback() &#123;</span><br><span class="line">        private fun logPrivateDataAccess(</span><br><span class="line">                opCode: String, attributionTag: String, trace: String) &#123;</span><br><span class="line">            Log.i(TAG, &quot;Private data accessed. &quot; +</span><br><span class="line">                    &quot;Operation: $opCode\n &quot; +</span><br><span class="line">                    &quot;Attribution Tag:$attributionTag\nStack Trace:\n$trace&quot;)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        override fun onNoted(syncNotedAppOp: SyncNotedAppOp) &#123;</span><br><span class="line">            syncNotedAppOp.attributionTag?.let &#123;</span><br><span class="line">                logPrivateDataAccess(syncNotedAppOp.op,</span><br><span class="line">                        it,</span><br><span class="line">                        Throwable().stackTrace.toString())</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        override fun onSelfNoted(syncNotedAppOp: SyncNotedAppOp) &#123;</span><br><span class="line">            syncNotedAppOp.attributionTag?.let &#123;</span><br><span class="line">                logPrivateDataAccess(syncNotedAppOp.op,</span><br><span class="line">                        it,</span><br><span class="line">                        Throwable().stackTrace.toString())</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        override fun onAsyncNoted(asyncNotedAppOp: AsyncNotedAppOp) &#123;</span><br><span class="line">            asyncNotedAppOp.attributionTag?.let &#123;</span><br><span class="line">                logPrivateDataAccess(asyncNotedAppOp.op,</span><br><span class="line">                        it,</span><br><span class="line">                        asyncNotedAppOp.message)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //开启私密数据监听</span><br><span class="line">    val appOpsManager =</span><br><span class="line">            getSystemService(AppOpsManager::class.java) as AppOpsManager</span><br><span class="line">    appOpsManager.setOnOpNotedCallback(mainExecutor, appOpsCallback)</span><br><span class="line"></span><br><span class="line">    btn1.setOnClickListener &#123;</span><br><span class="line">        getLocation()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fun getLocation() &#123;</span><br><span class="line">    val locationManager = attributionContext.getSystemService(</span><br><span class="line">            LocationManager::class.java) as LocationManager</span><br><span class="line">    if (!checkPermission()) &#123;</span><br><span class="line">        return</span><br><span class="line">    &#125;</span><br><span class="line">    val location: Location? = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)</span><br><span class="line">    if (location != null) &#123;</span><br><span class="line">        showToast(&quot;$&#123;location.latitude&#125;&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该例子主要展示了一个<strong>获取位置信息</strong>的功能，如果调用到<strong>getLocation</strong>方法，就会触发<strong>onNoted</strong>回调，回调信息包括危险权限code以及归因。<br>其中<strong>OnOpNotedCallback</strong> 一共三个回调方法：</p>
+<ul>
+<li><strong>onNoted</strong> 正常情况下都会回调到该方法</li>
+<li><strong>onAsyncNoted</strong> 如果数据访问并非发生在应用调用API期间，就会调用onAsyncNoted()，比如一些监听器的回调。</li>
+<li><strong>onSelfNoted</strong> 在极少数情况下，如果应用将自身的UID传递到 noteOp()，需要调用 onSelfNoted()。</li>
+</ul>
+<p>最后点击按钮，看下回调的结果日志：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Private data accessed. Operation: android:coarse_location</span><br><span class="line">     Attribution Tag:shareLocation</span><br><span class="line">    Stack Trace:</span><br><span class="line">    [Ljava.lang.StackTraceElement;@14f5a16</span><br></pre></td></tr></table></figure>
+<p>可以看到权限代码：<strong>android:coarse_location</strong> 以及归因 <strong>shareLocation</strong></p>
+<h3 id="单次授权"><a href="#单次授权" class="headerlink" title="单次授权"></a>单次授权</h3><blockquote>
+<p>在 Android 11 中，每当应用请求与位置信息、麦克风或摄像头相关的权限时，面向用户的权限对话框会包含仅限这一次选项。如果用户在对话框中选择此选项，系统会向应用授予临时的单次授权。</p>
+</blockquote>
+<p>简单的说，就是在申请与<strong>位置信息、麦克风或摄像头</strong>相关的权限时，系统会自动提供一个<strong>单次授权</strong>的选项，只供这一次权限获取。然后用户下次打开app的时候，系统会再次提示用户授予权限。这个影响应该不大，只要我们每次使用的时候都去判断权限，没有就去申请即可。放一张新版本权限获取样式：</p>
+<p><img src="/images/20220903/20220903006.jpg"></p>
+<h3 id="权限对话框的可见性"><a href="#权限对话框的可见性" class="headerlink" title="权限对话框的可见性"></a>权限对话框的可见性</h3><blockquote>
+<p>Android 11 建议不要请求用户已选择拒绝的权限。在应用安装到设备上后，如果用户在使用过程中屡次针对某项特定的权限点按拒绝，此操作表示其希望“不再询问”。</p>
+</blockquote>
+<p>这个都算不上改动，只是官方的一个良好建议。建议在用户多次拒绝之后，不要再展示权限申请。</p>
+<h3 id="Scudo-Hardened-Allocator"><a href="#Scudo-Hardened-Allocator" class="headerlink" title="Scudo Hardened Allocator"></a>Scudo Hardened Allocator</h3><blockquote>
+<p>Android 11 在内部使用 Scudo Hardened Allocator 为堆分配提供服务。Scudo 能够检测并减轻某些类型的内存安全违规行为。如果您在原生代码崩溃报告中发现与 Scudo 相关的崩溃（例如 Scudo ERROR:），请参阅 Scudo 问题排查文档。</p>
+</blockquote>
+<p><strong>Scudo</strong>是一种动态的用户模式内存分配器，旨在抵御与堆相关的漏洞，同时保持良好的性能。它是一个开源的项目。<br>Android 11中，将采用这个新的<strong>heap分配器</strong>，性能更好，更安全。</p>
+<h3 id="文件描述符排错程序"><a href="#文件描述符排错程序" class="headerlink" title="文件描述符排错程序"></a>文件描述符排错程序</h3><blockquote>
+<p>Android 10 引入了 fdsan（文件描述符排错程序）。fdsan 检测错误处理文件描述符所有权的错误，例如 use-after-close 和 double-close。在 Android 11 中，fdsan 的默认模式发生了变化。现在，fdsan 会在检测到错误时中止，而以前的行为则是记录警告并继续。</p>
+</blockquote>
+<p>问题来了，<strong>fdsan</strong>是啥？先要了解fd是啥</p>
+<p>文件描述符(FileDescriptor) 是<strong>Unix／Linux</strong>系统文件操作的相关概念，它在形式上是一个非负整数。当程序打开一个现有文件或者创建一个新文件时，内核向进程返回一个文件描述符。系统的进程也就是使用了这个fd来标示打开的文件，有了它就能对文件做各种操作，获得文件的各种相关信息了。</p>
+<p>所以<strong>fdsan</strong>也就是检测文件处理中发生的一些错误。</p>
+<h3 id="应用使用情况统计信息"><a href="#应用使用情况统计信息" class="headerlink" title="应用使用情况统计信息"></a>应用使用情况统计信息</h3><blockquote>
+<p>为了更好地保护用户，Android 11 将每个用户的应用使用情况统计信息存储在凭据加密存储空间中。</p>
+</blockquote>
+<p>这就涉及到了<strong>UsageStatsManager</strong>，UsageStatsManager是Android提供统计应用使用情况的服务。通过这个服务可以获取指定时间区间内应用使用统计数据、组件状态变化事件统计数据以及硬件配置信息统计数据。</p>
+<p>比如<strong>queryAndAggregateUsageStats</strong>方法，可以获取指定时间区间内使用统计数据，以应用包名为键值进行数据合并。</p>
+<p>但是在Android 11 设备中，不好意思，不能随意使用这些信息了。只有当**isUserUnlocked()**方法返回true的时候，才能正常访问这些数据。也就是以下两种情况：</p>
+<ul>
+<li>用户在系统启动后首次解锁其设备</li>
+<li>用户在设备上切换到自己的帐号</li>
+</ul>
+<h3 id="JobScheduler-API-调用限制调试"><a href="#JobScheduler-API-调用限制调试" class="headerlink" title="JobScheduler API 调用限制调试"></a>JobScheduler API 调用限制调试</h3><p><strong>JobScheduler</strong>任务调度器，可以在设备空闲时做一些任务处理。Android11中如果你设置为<strong>debug模式</strong>（debuggable 清单属性设置为 true），超出速率限制的<strong>JobScheduler API</strong>调用将返回 <strong>RESULT_FAILURE</strong>。这个有什么用呢？应该可以帮助我们发现一些性能问题，感兴趣的可以自己试试。</p>
+<p>顺便提下，Jetpack组件<strong>WorkManager</strong>也是用到了JobScheduler，不熟悉的同学可以去了解下，JobScheduler是由SystemServer进程启动的一个系统服务，所以才可以有这么大的权限。</p>
+<h3 id="无障碍操作"><a href="#无障碍操作" class="headerlink" title="无障碍操作"></a>无障碍操作</h3><blockquote>
+<p>在以前的 Android 版本中，框架会向未正确处理基于点击的无障碍操作的微件分派触摸事件。通常，这些视图会直接处理触摸事件，而不是注册点击监听器。为了在正确定义无障碍操作的应用中创建更一致的行为，Android 11 绝不会分派触摸事件。相反，系统会完全依赖于基于点击的无障碍操作：ACTION_CLICK 和 ACTION_LONG_CLICK。此更改会影响屏幕阅读器的行为。</p>
+</blockquote>
+<p>在Android手机上有个预安装的屏幕阅读服务，叫做<strong>TalkBack</strong>，为视力障碍人士或者视力状态不佳的老年人提供。那我们应用为了让这个阅读器能够读懂你的自定义view操作，必须给与自定义控件定义处理程序，包括<strong>点击</strong>，<strong>长按</strong>等操作。原来版本可能对于<strong>OnTouchListener</strong>也支持无障碍触摸事件，而在Android11中，必须专门制定点击或者长按事件才行了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">class TriSwitch(context: Context) : Switch(context) &#123;</span><br><span class="line">    // 0, 1, or 2.</span><br><span class="line">    var currentState: Int = 0</span><br><span class="line">        private set</span><br><span class="line"></span><br><span class="line">    init &#123;</span><br><span class="line">        updateAccessibilityActions()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private fun updateAccessibilityActions() &#123;</span><br><span class="line">        ViewCompat.replaceAccessibilityAction(this, ACTION_CLICK,</span><br><span class="line">            action-label) &#123;</span><br><span class="line">            view, args -&gt; moveToNextState()</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private fun moveToNextState() &#123;</span><br><span class="line">        currentState = (currentState + 1) % 3</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一个自定义控件<strong>TriSwitch</strong>，继承自Switch，由于和Switch的点击效果不一样，所以必须通过替换 <strong>ViewCompat.replaceAccessibilityAction()</strong> 来重新定义相应的无障碍操作。</p>
+<h3 id="非SDK接口限制"><a href="#非SDK接口限制" class="headerlink" title="非SDK接口限制"></a>非SDK接口限制</h3><blockquote>
+<p>Android 11 包含更新后的受限制非 SDK 接口列表（基于与 Android 开发者之间的协作以及最新的内部测试）。在限制使用非 SDK 接口之前，我们会尽可能确保提供公开替代方案。</p>
+</blockquote>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>一路分析下来也可以看到，如果是重要的改动，特别是涉及到崩溃的改动还是放到了<strong>targetSdkVersion=30</strong>的内容中，这也是每次Android发版的一个潜规则吧，为了最大程度不影响已上线的app所作出的举动。</p>
+<h3 id="附件"><a href="#附件" class="headerlink" title="附件"></a>附件</h3><p><a target="_blank" rel="noopener" href="https://developer.android.google.cn/preview/behavior-changes-all">官网改动介绍</a></p>
+
+      
+      <blockquote>
+        
+        <strong>本文链接：</strong><br><a href="http://longzhiye.top/2022/09/03/2022-09-03/">http://longzhiye.top/2022/09/03/2022-09-03/</a>
+      </blockquote>
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Android/" rel="tag">Android</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2022/09/04/2022-09-04/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android各版本迭代信息集合'}">上一篇</span>
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2022/09/01/2022-09-01/">
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Git常用命令实例'}">下一篇</span>
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+
+
+
+</main>
+  <footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="http://github.com/longzhiye" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe7ab;</i></a>
+    
+    
+    
+      <a href="https://www.zhihu.com/people/long-zhi-xie-61" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe6c0;</i></a>
+    
+    
+    
+      <a href="tencent://tencent:////message/?uin=951898105&Menu=yes" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2022 - 2025 龙之叶<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>
+    <br>
+      <span id="busuanzi_container_site_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_site_pv"></span></span> &nbsp;&nbsp;
+      <span id="busuanzi_container_site_uv" style="display: none;"><i class="iconfont">&#xe601;</i> <span id="busuanzi_value_site_uv"></span></span>
+    
+  </div>
+</footer>
+
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+  
+<script src="/custom.js"></script>
+
+</body>
+</html>

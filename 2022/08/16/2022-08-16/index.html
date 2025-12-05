@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>Android 13现已正式发布至 AOSP！ | 龙之叶的博客</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="alternate" href="/atom.xml" title="龙之叶的博客" type="application/atom+xml">
+  <meta name="description" content="Android 13 现已正式发布至 AOSP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 13现已正式发布至 AOSP！">
+<meta property="og:url" content="http://longzhiye.top/2022/08/16/2022-08-16/index.html">
+<meta property="og:site_name" content="龙之叶的博客">
+<meta property="og:description" content="Android 13 现已正式发布至 AOSP">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://longzhiye.top/images/20220816/202208181330000.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20220816/202208181400000.png">
+<meta property="og:image" content="http://longzhiye.top/images/20220816/202208181410000.png">
+<meta property="og:image" content="http://longzhiye.top/images/20220816/202208181413.png">
+<meta property="og:image" content="http://longzhiye.top/images/20220816/202208181415000.png">
+<meta property="og:image" content="http://longzhiye.top/images/20220816/202208181419000.png">
+<meta property="og:image" content="http://longzhiye.top/images/20220816/202208181423000.gif">
+<meta property="og:image" content="http://longzhiye.top/images/20220816/202208181424000.gif">
+<meta property="og:image" content="http://longzhiye.top/images/20220816/202208181425000.png">
+<meta property="og:image" content="http://longzhiye.top/images/20220816/202208181427000.png">
+<meta property="article:published_time" content="2022-08-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-04T08:39:58.943Z">
+<meta property="article:author" content="龙之叶">
+<meta property="article:tag" content="Android13">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://longzhiye.top/images/20220816/202208181330000.jpg">
+
+  <meta name="keywords" content=",Android13">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="龙之叶的博客">
+  <meta name="msapplication-starturl" content="http://longzhiye.top/2022/08/16/2022-08-16/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="龙之叶的博客">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <link rel="canonical" href="http://longzhiye.top/2022/08/16/2022-08-16/">
+  
+
+  
+  
+
+  
+  
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/custom.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(!a){document.getElementsByTagName("body")[0].className+=" mdui-drawer-body-left"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">龙之叶的博客</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+	<!--
+    <a href="/atom.xml" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'RSS'}"><i class="mdui-icon material-icons">rss_feed</i></a>
+	-->
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(a){document.getElementById("sidebar").className+=" mdui-drawer-close"};</script>
+  <div class="mdui-grid-tile">
+    <img src="/images/banner.png" style="height: 160px;">
+    <img src="/images/avatar.png" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;background-color:#fff;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">龙之叶</div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>生命不息，折腾不止</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:longzhiye163@163.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'longzhiye163@163.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-0");if(a){document.getElementsByClassName("mdui-collapse-item")[0].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">archive</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2025/10/">十月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/09/">九月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/08/">八月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/07/">七月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/06/">六月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/03/">三月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/02/">二月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/01/">一月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/10/">十月 2024<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/09/">九月 2024<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/08/">八月 2024<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/03/">三月 2024<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/02/">二月 2024<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/01/">一月 2024<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/12/">十二月 2023<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/11/">十一月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/10/">十月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/09/">九月 2023<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/08/">八月 2023<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/06/">六月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/05/">五月 2023<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/04/">四月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/03/">三月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/02/">二月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/09/">九月 2022<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/04/">四月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/03/">三月 2017<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/02/">二月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/01/">一月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/12/">十二月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/11/">十一月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/10/">十月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/08/">八月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-1");if(a){document.getElementsByClassName("mdui-collapse-item")[1].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">class</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">108</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E8%B5%84%E8%AE%AF/">资讯<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E9%80%9A%E7%9F%A5/">通知<span class="mdui-ripple sidebar_archives-count">4</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-2");if(a){document.getElementsByClassName("mdui-collapse-item")[2].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/ANR/" rel="tag">ANR<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/APP/" rel="tag">APP<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android/" rel="tag">Android<span class="mdui-ripple sidebar_archives-count">98</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android12/" rel="tag">Android12<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android13/" rel="tag">Android13<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android14/" rel="tag">Android14<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android16/" rel="tag">Android16<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AndroidStudio/" rel="tag">AndroidStudio<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AutoDraw/" rel="tag">AutoDraw<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Build/" rel="tag">Build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Crash/" rel="tag">Crash<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Foxmail/" rel="tag">Foxmail<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Framework/" rel="tag">Framework<span class="mdui-ripple sidebar_archives-count">20</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GPS%E8%BD%A8%E8%BF%B9%E5%9B%BE/" rel="tag">GPS轨迹图<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Git/" rel="tag">Git<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GitHub/" rel="tag">GitHub<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Google/" rel="tag">Google<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Java/" rel="tag">Java<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Kernel/" rel="tag">Kernel<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Launcher/" rel="tag">Launcher<span class="mdui-ripple sidebar_archives-count">17</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Lib/" rel="tag">Lib<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Linux/" rel="tag">Linux<span class="mdui-ripple sidebar_archives-count">18</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Markdown/" rel="tag">Markdown<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Material-Design/" rel="tag">Material Design<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OS-X/" rel="tag">OS X<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OTA/" rel="tag">OTA<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/QuickTime/" rel="tag">QuickTime<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SSH/" rel="tag">SSH<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Settings/" rel="tag">Settings<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SystemUI/" rel="tag">SystemUI<span class="mdui-ripple sidebar_archives-count">19</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/UAC/" rel="tag">UAC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Ubuntu/" rel="tag">Ubuntu<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WPS/" rel="tag">WPS<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Wifi/" rel="tag">Wifi<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WindTerm/" rel="tag">WindTerm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows/" rel="tag">Windows<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows-11/" rel="tag">Windows 11<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/androidmk/" rel="tag">androidmk<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/blog/" rel="tag">blog<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/build/" rel="tag">build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/feel/" rel="tag">feel<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/framework/" rel="tag">framework<span class="mdui-ripple sidebar_archives-count">58</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/inotify/" rel="tag">inotify<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/life/" rel="tag">life<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/ninja/" rel="tag">ninja<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/rsync/" rel="tag">rsync<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/standard/" rel="tag">standard<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/test/" rel="tag">test<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1/" rel="tag">企业微信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E7%94%9F%E6%B4%BB%E6%84%9F%E6%82%9F/" rel="tag">生活感悟<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+      <a href="/timeline" class="mdui-list-item mdui-ripple">时间轴</a>
+    
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-3");if(a){document.getElementsByClassName("mdui-collapse-item")[3].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+          <a href="http://www.niemingzhao.top" target="_blank" class="mdui-list-item mdui-p-l-2 mdui-text-color-theme-accent mdui-ripple" style="justify-content: center;">聂明照的博客</a>
+        
+        
+      </div>
+    </div>
+  </div>
+</aside>
+
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <style>#main article .mdui-card-content .text-center{text-align:center!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-9.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">Android 13现已正式发布至 AOSP！</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2022-08-16 / <i class="iconfont">&#xe601;</i> 龙之叶 &nbsp;&nbsp; <span id="busuanzi_container_page_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_page_pv"></span></span></div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#qrcode', align: 'right'}"><i class="mdui-icon material-icons">devices</i></button>
+          <ul class="mdui-menu" id="qrcode">
+            
+              <li class="mdui-menu-item"><a class="mdui-text-center mdui-ripple">发送到手机</a></li>
+            
+            <li class="mdui-menu-item" disabled>
+              
+                <img src="//qr.liantu.com/api.php?w=246&m=10&text=http://longzhiye.top/2022/08/16/2022-08-16/">
+              
+            </li>
+          </ul>
+        
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="mdui-icon material-icons">share</i></button>
+          <ul class="mdui-menu" id="share_menu">
+            <li class="mdui-menu-item">
+              <a href="https://service.weibo.com/share/share.php?appkey=&title=Android 13现已正式发布至 AOSP！&url=http://longzhiye.top/2022/08/16/2022-08-16/&pic=http://longzhiye.top/images/favicon.png&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://twitter.com/intent/tweet?text=Android 13现已正式发布至 AOSP！&url=http://longzhiye.top/2022/08/16/2022-08-16/&via=龙之叶" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=http://longzhiye.top/2022/08/16/2022-08-16/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://plus.google.com/share?url=http://longzhiye.top/2022/08/16/2022-08-16/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://longzhiye.top/2022/08/16/2022-08-16/&title=Android 13现已正式发布至 AOSP！" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://connect.qq.com/widget/shareqq/index.html?site=龙之叶的博客&title=Android 13现已正式发布至 AOSP！&pics=http://longzhiye.top/images/favicon.png&url=http://longzhiye.top/2022/08/16/2022-08-16/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://telegram.me/share/url?url=http://longzhiye.top/2022/08/16/2022-08-16/&text=Android 13现已正式发布至 AOSP！" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+            </li>
+          </ul>
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <p><img src="/images/20220816/202208181330000.jpg"></p>
+<p>Android 13 的源代码推送至 Android 开源项目 (AOSP)，并正式发布最新版本的 Android。对于开发者来说，Android 13 聚焦于我们的核心主题，即隐私和安全，以及开发者生产力，帮助您更轻松地为用户构建优良的体验。</p>
+<blockquote>
+<p>Android 开源项目<br><a target="_blank" rel="noopener" href="https://source.android.google.cn/">https://source.android.google.cn</a></p>
+</blockquote>
+<blockquote>
+<p>适用于大屏设备开发的响应式布局<br><a target="_blank" rel="noopener" href="https://developer.android.google.cn/large-screens">https://developer.android.google.cn/large-screens</a></p>
+</blockquote>
+<p>Android 13 自即日起会推送至 Pixel 设备。今年晚些时候，Android 13 也会推送至其他的设备，包括三星 Galaxy、华硕、HMD (诺基亚手机)、iQOO、摩托罗拉、一加、OPPO、真我、夏普、索尼、TECNO、vivo、小米等。</p>
+<h2 id="Android-13-为开发者带来了什么？"><a href="#Android-13-为开发者带来了什么？" class="headerlink" title="Android 13 为开发者带来了什么？"></a>Android 13 为开发者带来了什么？</h2><p>Android 13 带来的更新内容众多，下文只是精选的一部分。请您务必前往 Android 13 开发者网站了解所有新功能的详细信息:<br><a target="_blank" rel="noopener" href="https://developer.android.google.cn/13">https://developer.android.google.cn/13</a></p>
+<h3 id="开发者生产力和工具"><a href="#开发者生产力和工具" class="headerlink" title="开发者生产力和工具"></a>开发者生产力和工具</h3><p><strong>主题应用图标</strong> - Android 13 将 Material You 的动态颜色扩展到了所有应用图标，让用户可以基于其壁纸和其他主题偏好来选择图标色调。您的应用仅需提供一个单色的应用图标，并对自适应图标 XML 进行一些调整即可。请访问官方文档了解详细信息:<br><a target="_blank" rel="noopener" href="https://developer.android.google.cn/about/versions/13/features#themed-app-icons">https://developer.android.google.cn/about/versions/13/features#themed-app-icons</a></p>
+<p><img src="/images/20220816/202208181400000.png" alt="基于壁纸颜色和深色主题 (左) 改变色调的主题应用图标"></p>
+<center>基于壁纸颜色和深色主题 (左) 改变色调的主题应用图标</center>
+
+<blockquote>
+<p>图标规格<br>    <a target="_blank" rel="noopener" href="https://developer.android.google.cn/guide/practices/ui_guidelines/icon_design_adaptive#design-adaptive-icons">https://developer.android.google.cn/guide/practices/ui_guidelines/icon_design_adaptive#design-adaptive-icons</a></p>
+</blockquote>
+<p><strong>按应用设定语言偏好</strong> - Android 13 可以让应用使用不同于系统语言的其他语言，以更好地满足多语言用户的需求。Android 现在为应用提供了一个标准的 “应用语言” 设置面板 (如果应用选择支持此功能)，您还可以调用一个新的平台 API，在运行时获取或设置用户的首选语言区域，从而减少模板代码并提高兼容性。请访问官方文档了解详细信息:<br><a target="_blank" rel="noopener" href="https://developer.android.google.cn/guide/topics/resources/app-languages">https://developer.android.google.cn/guide/topics/resources/app-languages</a></p>
+<p><img src="/images/20220816/202208181410000.png" alt="设置中的单个应用语言选项"></p>
+<center>设置中的单个应用语言选项</center>
+
+<blockquote>
+<p>使用 android:localeConfig 将受支持的语言添加到手机设置中<br><a target="_blank" rel="noopener" href="https://developer.android.google.cn/guide/topics/resources/app-languages#use-localeconfig">https://developer.android.google.cn/guide/topics/resources/app-languages#use-localeconfig</a></p>
+</blockquote>
+<blockquote>
+<p>LocaleManager<br><a target="_blank" rel="noopener" href="https://developer.android.google.cn/reference/android/app/LocaleManager">https://developer.android.google.cn/reference/android/app/LocaleManager</a></p>
+</blockquote>
+<p><strong>改进的文本支持</strong> - Android 13 针对文本和语言提供了多项改进，帮助您打造更加完美的体验。更快的断字将断字性能优化了多达 200%，因此现在可以在 TextView 中启用此功能，这几乎不影响渲染性能。通过使用文本转换 API，能让中文、日文等需要使用拼音输入的语言在执行搜索和自动完成等功能时的速度更快。Android 13 还改善了非拉丁文字 (如泰米尔语、缅甸语、泰卢固语和藏语等) 的行高，让字符免于被裁切且更加易于阅读。请访问官方文档了解详细信息:<br><a target="_blank" rel="noopener" href="https://developer.android.google.cn/about/versions/13/features#language-support">https://developer.android.google.cn/about/versions/13/features#language-support</a></p>
+<p><img src="/images/20220816/202208181413.png" alt="以 Android 13 为目标平台的应用中的非拉丁文字行高改进效果 (下)"></p>
+<center>以 Android 13 为目标平台的应用中的非拉丁文字行高改进效果 (下)</center>
+
+<blockquote>
+<p>更快的断字<br><a target="_blank" rel="noopener" href="https://developer.android.google.cn/about/versions/13/features#faster-hyphenation">https://developer.android.google.cn/about/versions/13/features#faster-hyphenation</a></p>
+</blockquote>
+<blockquote>
+<p>文本转换 API<br><a target="_blank" rel="noopener" href="https://developer.android.google.cn/about/versions/13/features#text-conversion">https://developer.android.google.cn/about/versions/13/features#text-conversion</a></p>
+</blockquote>
+<blockquote>
+<p>改进了非拉丁字母的行高<br><a target="_blank" rel="noopener" href="https://developer.android.google.cn/about/versions/13/features#line-height">https://developer.android.google.cn/about/versions/13/features#line-height</a></p>
+</blockquote>
+<p><strong>彩色矢量字体</strong> - Android 13 增加了对 COLR 版本 1 (请参考详细规格和介绍视频) 字体的渲染支持，并将系统表情符号更新为 COLRv1 格式。COLRv1 是一种新的、高度紧凑的字体格式，在任何尺寸下都能快速清晰地渲染。对于大多数应用，这项修改完全无法被感知到，系统会自动处理好一切。您可以在 Chrome 发布公告中了解更多关于 COLRv1 的信息:<br><a target="_blank" rel="noopener" href="https://developer.chrome.com/blog/colrv1-fonts/">https://developer.chrome.com/blog/colrv1-fonts/</a></p>
+<p><img src="/images/20220816/202208181415000.png" alt="COLRv1 矢量表情符号 (左) 和位图表情符号"></p>
+<center>COLRv1 矢量表情符号 (左) 和位图表情符号</center>
+
+<blockquote>
+<p>COLR 规格<br>    <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/typography/opentype/spec/colr">https://docs.microsoft.com/en-us/typography/opentype/spec/colr</a><br>COLR 介绍视频<br>    <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=BmqYm5Wwz8M">https://www.youtube.com/watch?v=BmqYm5Wwz8M</a></p>
+</blockquote>
+<p><strong>快捷设置放置 API</strong> - 对于提供自定义快捷设置 (Quick Settings) 图块的应用，Android 13 能让用户更容易发现和添加您的图块。借助新的图块放置 API，您的应用现在可以让用户通过对话框直接添加您的自定义快捷设置图块，而且只需一步即可完成操作，不需要离开您的应用。请访问官方文档了解详细信息:<br><a target="_blank" rel="noopener" href="https://developer.android.google.cn/about/versions/13/features#quick-settings">https://developer.android.google.cn/about/versions/13/features#quick-settings</a></p>
+<blockquote>
+<p>TileService<br>    <a target="_blank" rel="noopener" href="https://developer.android.google.cn/reference/android/service/quicksettings/TileService">https://developer.android.google.cn/reference/android/service/quicksettings/TileService</a><br>图块放置 API<br>    <a target="_blank" rel="noopener" href="https://developer.android.google.cn/reference/android/app/StatusBarManager#requestAddTileService(android.content.ComponentName,%20java.lang.CharSequence,%20android.graphics.drawable.Icon,%20java.util.concurrent.Executor,%20java.util.function.Consumer%3Cjava.lang.Integer%3E)">https://developer.android.google.cn/reference/android/app/StatusBarManager#requestAddTileService(android.content.ComponentName,%20java.lang.CharSequence,%20android.graphics.drawable.Icon,%20java.util.concurrent.Executor,%20java.util.function.Consumer%3Cjava.lang.Integer%3E)</a></p>
+</blockquote>
+<p><strong>可编程着色器 (shader)</strong> - Android 13 引入了可编程 RuntimeShader 对象，其行为使用 Android 图形着色语言 (Android Graphics Shading Language, AGSL) 定义。您可以使用这些着色器在自己的应用中实现波纹、模糊和过度滚动拉伸，以及类似的高级效果。请访问官方文档了解详细信息:<br><a target="_blank" rel="noopener" href="https://developer.android.google.cn/guide/topics/graphics/agsl">https://developer.android.google.cn/guide/topics/graphics/agsl</a></p>
+<blockquote>
+<p>RuntimeShader<br>    <a target="_blank" rel="noopener" href="https://developer.android.google.cn/reference/android/graphics/RuntimeShader">https://developer.android.google.cn/reference/android/graphics/RuntimeShader</a></p>
+</blockquote>
+<blockquote>
+<p>Android 图形着色语言<br>    <a target="_blank" rel="noopener" href="https://developer.android.google.cn/guide/topics/graphics/agsl">https://developer.android.google.cn/guide/topics/graphics/agsl</a></p>
+</blockquote>
+<blockquote>
+<p>波纹 (Ripple)<br>    <a target="_blank" rel="noopener" href="https://cs.android.com/android/platform/superproject/+/master:frameworks/base/graphics/java/android/graphics/drawable/RippleShader.java;l=24?q=RippleShader&amp;sq=">https://cs.android.com/android/platform/superproject/+/master:frameworks/base/graphics/java/android/graphics/drawable/RippleShader.java;l=24?q=RippleShader&amp;sq=</a></p>
+</blockquote>
+<blockquote>
+<p>模糊 (Blur)<br>    <a target="_blank" rel="noopener" href="https://cs.android.com/android/platform/superproject/+/master:frameworks/native/libs/renderengine/skia/filters/BlurFilter.cpp?q=RuntimeShader&amp;ss=android/platform/superproject&amp;start=21">https://cs.android.com/android/platform/superproject/+/master:frameworks/native/libs/renderengine/skia/filters/BlurFilter.cpp?q=RuntimeShader&amp;ss=android%2Fplatform%2Fsuperproject&amp;start=21</a></p>
+</blockquote>
+<blockquote>
+<p>过度滚动拉伸 (Stretch)<br>    <a target="_blank" rel="noopener" href="https://cs.android.com/android/platform/superproject/+/master:frameworks/base/tests/HwAccelerationTest/src/com/android/test/hwui/StretchShaderActivity.java?q=RuntimeShader&amp;ss=android/platform/superproject&amp;start=11">https://cs.android.com/android/platform/superproject/+/master:frameworks/base/tests/HwAccelerationTest/src/com/android/test/hwui/StretchShaderActivity.java?q=RuntimeShader&amp;ss=android%2Fplatform%2Fsuperproject&amp;start=11</a></p>
+</blockquote>
+<p><strong>基于 PlaybackState 的媒体控件</strong> - 对于以 Android 13 为目标平台的应用，系统基于 PlaybackState 操作清单实现了更丰富的媒体控件，从而在手机和平板电脑等设备类型上获得更佳的一致性，并和 Android Auto 和 Android TV 等其他 Android 平台保持一致。请访问官方文档了解详细信息:<br><a target="_blank" rel="noopener" href="https://developer.android.google.cn/about/versions/13/behavior-changes-13#playback-controls">https://developer.android.google.cn/about/versions/13/behavior-changes-13#playback-controls</a></p>
+<p><img src="/images/20220816/202208181419000.png" alt="Android 13 媒体控件在手机和平板电脑上保持一致"></p>
+<center>Android 13 媒体控件在手机和平板电脑上保持一致</center>
+
+<blockquote>
+<p>PlaybackState<br>    <a target="_blank" rel="noopener" href="https://developer.android.google.cn/reference/android/media/session/PlaybackState">https://developer.android.google.cn/reference/android/media/session/PlaybackState</a></p>
+</blockquote>
+<p><strong>蓝牙低功耗 (LE) 音频</strong> - 低功耗 (Low Energy, LE) 音频是用于实现新的用例的下一代无线音频。用户可以通过它与朋友和家人分享和广播自己的音频，或订阅公共广播以获得信息、娱乐或无障碍辅助信息。它旨在确保用户能够在不牺牲电池寿命的情况下接收高保真音频，并在不同用例之间无缝切换。Android 13 增加了对低功耗音频的内置支持，开发者们可在兼容的设备上使用这项新功能。请访问官方文档了解详细信息:<br><a target="_blank" rel="noopener" href="https://developer.android.google.cn/reference/android/bluetooth/BluetoothLeAudio">https://developer.android.google.cn/reference/android/bluetooth/BluetoothLeAudio</a></p>
+<blockquote>
+<p>低功耗 (LE) 音频<br>    <a target="_blank" rel="noopener" href="https://www.bluetooth.com/learn-about-bluetooth/recent-enhancements/le-audio/resources/">https://www.bluetooth.com/learn-about-bluetooth/recent-enhancements/le-audio/resources/</a></p>
+</blockquote>
+<p><strong>MIDI 2.0</strong> - Android 13 增加了对新的 MIDI 2.0 标准的支持，包括通过 USB 连接 MIDI 2.0 硬件的能力。这个更新的标准提供了一些新功能，如更高的控制器分辨率，更好地支持非西方音调，以及通过单一音符控制器提供更佳的表现力。请访问官方文档了解详细信息:<br><a target="_blank" rel="noopener" href="https://developer.android.google.cn/reference/android/media/midi/MidiDeviceInfo#PROTOCOL_UMP_MIDI_2_0">https://developer.android.google.cn/reference/android/media/midi/MidiDeviceInfo#PROTOCOL_UMP_MIDI_2_0</a></p>
+<blockquote>
+<p>新的 MIDI 2.0 标准<br>    <a target="_blank" rel="noopener" href="https://www.midi.org/midi-articles/details-about-midi-2-0-midi-ci-profiles-and-property-exchange">https://www.midi.org/midi-articles/details-about-midi-2-0-midi-ci-profiles-and-property-exchange</a></p>
+</blockquote>
+<p><strong>OpenJDK 11 更新</strong> - Android 13 核心库已经与 OpenJDK 11 LTS 版本保持一致，为应用和平台开发者提供库更新和 Java 11 编程语言支持。作为对 Android 12 及以上设备的 ART 模块更新的一部分，我们计划通过 Google Play 系统更新将这些核心库的变更发布至更多设备。请访问官方文档了解详细信息:<br><a target="_blank" rel="noopener" href="https://developer.android.google.cn/about/versions/13/features#core-libraries">https://developer.android.google.cn/about/versions/13/features#core-libraries</a></p>
+<p><strong>预测性返回手势</strong> - Android 13 引入了新的 API，可让您的应用告诉系统它将提前处理返回事件，我们称之为 “提前” 模型。这个新方案会需要若干年来完善，以帮助您的应用程序支持预测性返回手势，该功能现在可通过开发者选项在当前版本中进行测试。请访问官方文档了解详细信息:</p>
+<p><a target="_blank" rel="noopener" href="https://developer.android.google.cn/guide/navigation/predictive-back-gesture">https://developer.android.google.cn/guide/navigation/predictive-back-gesture</a></p>
+<blockquote>
+<p>让系统返回操作回归本源<br>    <a target="_blank" rel="noopener" href="https://io.google/2022/program/5c6a8dbb-7ac2-4c31-a707-0a16e8424970/">https://io.google/2022/program/5c6a8dbb-7ac2-4c31-a707-0a16e8424970/</a></p>
+</blockquote>
+<h3 id="为平板电脑而生"><a href="#为平板电脑而生" class="headerlink" title="为平板电脑而生"></a>为平板电脑而生</h3><p>Android 13 进一步拓展了我们今年早些时候发布的 Android 12L 功能更新，在平板电脑上提供了更好的体验。强化了一些功能，包括针对多任务操作改进过的任务栏，更多针对大屏幕的布局，以及针对系统界面和应用进行了许多优化，应用兼容模式也得到了改进，等等。</p>
+<p><img src="/images/20220816/202208181423000.gif" alt="在运行 Android 13 的平板电脑上进行多任务操作"></p>
+<center>在运行 Android 13 的平板电脑上进行多任务操作</center>
+
+
+<blockquote>
+<p>大屏幕使用入门<br>    <a target="_blank" rel="noopener" href="https://developer.android.google.cn/guide/topics/large-screens/get-started-with-large-screens">https://developer.android.google.cn/guide/topics/large-screens/get-started-with-large-screens</a></p>
+</blockquote>
+<blockquote>
+<p>适用于大屏幕设备开发的响应式布局<br>    <a target="_blank" rel="noopener" href="https://developer.android.google.cn/large-screens">https://developer.android.google.cn/large-screens</a></p>
+</blockquote>
+<h3 id="隐私和安全"><a href="#隐私和安全" class="headerlink" title="隐私和安全"></a>隐私和安全</h3><p><strong>照片选择器和 API</strong> - 全新的系统照片选择器为用户分享本地和云端照片提供了标准且私密的方式。照片选择器针对 Android 上长期使用的文档选择器进行了扩展，使用户可以很容易地与应用分享特定的照片和视频，而无需授权应用查看设备上的所有媒体文件。照片选择器为照片和视频提供了专门的体验，并提供了供应用访问共享媒体文件的 API。Android 11 及以上系统设备 (Go 设备除外) 的用户会通过 Google Play 系统更新获得照片选择器功能。请访问官方文档了解详细信息:<br><a target="_blank" rel="noopener" href="https://developer.android.google.cn/training/data-storage/shared/photopicker">https://developer.android.google.cn/training/data-storage/shared/photopicker</a></p>
+<p><img src="/images/20220816/202208181424000.gif" alt="用户可以通过照片选择器向应用分享特定的照片和视频"></p>
+<center>用户可以通过照片选择器向应用分享特定的照片和视频</center>
+
+<p><strong>通知权限</strong> - 为了帮助用户专注于对他们最重要的通知，Android 13 引入了一个新的通知运行时权限。现在应用需要在发送通知之前向用户申请通知权限。对于以 Android 12 或更低版本为目标平台的应用，系统将代您处理升级流程。请访问官方文档了解详细信息:<br><a target="_blank" rel="noopener" href="https://developer.android.google.cn/guide/topics/ui/notifiers/notification-permission">https://developer.android.google.cn/guide/topics/ui/notifiers/notification-permission</a></p>
+<p><img src="/images/20220816/202208181425000.png" alt="Android 13 中的通知权限对话框"></p>
+<center>Android 13 中的通知权限对话框</center>
+
+<blockquote>
+<p>POST_NOTIFICATIONS<br>    <a target="_blank" rel="noopener" href="https://developer.android.google.cn/reference/android/Manifest.permission#POST_NOTIFICATIONS">https://developer.android.google.cn/reference/android/Manifest.permission#POST_NOTIFICATIONS</a></p>
+</blockquote>
+<p><strong>针对附近 Wi-Fi 设备的权限</strong> - Android 13 为管理设备与周围 Wi-Fi 热点连接的应用引入了新的 NEARBY_WIFI_DEVICES 运行时权限。许多常用的 Wi-Fi API 都需要这个新权限，从而让应用在不需要获得定位权限的情况下即可通过 Wi-Fi 发现并连接到附近的设备。请访问官方文档了解详细信息:<br><a target="_blank" rel="noopener" href="https://developer.android.google.cn/guide/topics/connectivity/wifi-permissions">https://developer.android.google.cn/guide/topics/connectivity/wifi-permissions</a></p>
+<blockquote>
+<p>NEARBY_WIFI_DEVICES<br>    <a target="_blank" rel="noopener" href="https://developer.android.google.cn/reference/android/Manifest.permission.html#NEARBY_WIFI_DEVICES">https://developer.android.google.cn/reference/android/Manifest.permission.html#NEARBY_WIFI_DEVICES</a></p>
+</blockquote>
+<p><strong>细化的媒体权限</strong> - 在分享照片和视频时，照片选择器现在是我们推荐的解决方案，它更加用户友好，且无需请求权限。但对于尚未使用照片选择器的应用，或者需要访问音频文件的场景，Android 13 也增加了新的更细化的媒体权限。这些媒体权限用以取代 READ_EXTERNAL_STORAGE 权限，让应用得以访问特定的媒体文件类型，包括图片、视频和音频。我们强烈建议您在条件允许时使用照片选择器方案，当应用以 Android 13 为目标平台且不适合使用该方案时，则推荐使用细化的媒体权限。请访问官方文档了解详细信息:<br><a target="_blank" rel="noopener" href="https://developer.android.google.cn/about/versions/13/behavior-changes-13#granular-media-permissions">https://developer.android.google.cn/about/versions/13/behavior-changes-13#granular-media-permissions</a><br>图片</p>
+<p><img src="/images/20220816/202208181427000.png" alt="请求允许访问音频文件"></p>
+<center>请求允许访问音频文件</center>
+
+<blockquote>
+<p>照片选择器<br>    <a target="_blank" rel="noopener" href="https://developer.android.google.cn/training/data-storage/shared/photopicker">https://developer.android.google.cn/training/data-storage/shared/photopicker</a></p>
+</blockquote>
+<blockquote>
+<p>READ_EXTERNAL_STORAGE<br>    <a target="_blank" rel="noopener" href="https://developer.android.google.cn/reference/android/Manifest.permission.html#READ_EXTERNAL_STORAGE">https://developer.android.google.cn/reference/android/Manifest.permission.html#READ_EXTERNAL_STORAGE</a></p>
+</blockquote>
+<p><strong>开发者可降级权限</strong> - 从 Android 13 开始，如果应用不再需要某些之前由用户授予过的权限，可以通过新的 API 来降级权限。通过移除不再使用的权限，您的应用可以向用户表明其只使用了必需的最少权限，从而提高用户信任度。请访问官方文档了解详细信息:<br><a target="_blank" rel="noopener" href="https://developer.android.google.cn/about/versions/13/features#developer-downgradable-permissions">https://developer.android.google.cn/about/versions/13/features#developer-downgradable-permissions</a></p>
+<blockquote>
+<p>revokeOwnPermissionsOnKill<br>    <a target="_blank" rel="noopener" href="https://developer.android.google.cn/reference/android/content/Context.html#revokeOwnPermissionsOnKill(java.util.Collection%3Cjava.lang.String%3E)">https://developer.android.google.cn/reference/android/content/Context.html#revokeOwnPermissionsOnKill(java.util.Collection%3Cjava.lang.String%3E)</a></p>
+</blockquote>
+<p><strong>更安全的导出 Intent 过滤器</strong> - 在向以 Android 13 为目标平台的其他应用的导出 intent 过滤器发送显式 intent 时，Android 13 给出了更严格的规则。如果 intent 指定了动作，则系统只在该 intent 与接收应用中声明的 <intent-filter> 元素匹配时才会向导出组件传递 intent。请访问官方文档了解详细信息:<br><a target="_blank" rel="noopener" href="https://developer.android.google.cn/about/versions/13/behavior-changes-13#intent-filters">https://developer.android.google.cn/about/versions/13/behavior-changes-13#intent-filters</a></p>
+<h3 id="应用性能"><a href="#应用性能" class="headerlink" title="应用性能"></a>应用性能</h3><p>Android 13 通过对 ART 运行时的更新，提高了所有应用的性能和效率。我们正在为 Android 12 及以上设备更新 ART 模块，作为此项更新的一环，我们也会通过 Google Play 系统更新将这些性能改进带给更多的 Android 用户。</p>
+<p><strong>垃圾回收改进</strong> - 一个基于 Linux 内核功能 userfaultfd 的新垃圾回收器会随着即将到来的 Google Play 系统更新加入 Android 13 设备的 ART。新的垃圾回收器消除了读取障碍，降低了每个对象加载的开销，减少了内存压力，使得编译后的代码体积能减少约 10%。它在 GC 时间也更高效，因为分页会随着压缩的进行而被释放。总而言之，新的垃圾回收器有助于节省电量，避免在 GC 过程中出现卡顿，以及让应用免于在低内存时被强行终止。</p>
+<p><strong>遍及整个 ART 的优化</strong> - 在 Android 13 中，ART 让切换到本地代码的速度更快，反之亦然，现在 JNI 调用的速度可达之前的 2.5 倍。我们还重新设计了运行时的引用处理，使其基本处于非阻塞状态，这进一步减少了卡顿。我们公开了一个新的公共 API，Reference.refersTo()，让您可以尽快回收无法抵达的对象，我们还优化了类/方法的查找，从而让解释器的运行更快。最后，ART 现在在安装时会执行更多的字节码验证，避免了在运行时验证的损耗，从而让应用能快速启动。请观看应用性能更新介绍了解详细信息:<br><a target="_blank" rel="noopener" href="https://io.google/2022/program/2cf473b7-113e-4332-a469-8dfd815eb45b/">https://io.google/2022/program/2cf473b7-113e-4332-a469-8dfd815eb45b/</a></p>
+<blockquote>
+<p>Reference.refersTo()<br>    <a target="_blank" rel="noopener" href="https://developer.android.google.cn/reference/java/lang/ref/Reference.html#refersTo(T)">https://developer.android.google.cn/reference/java/lang/ref/Reference.html#refersTo(T)</a></p>
+</blockquote>
+<p>注:以上内容转载自<strong>谷歌开发者公众号</strong></p>
+
+      
+      <blockquote>
+        
+        <strong>本文链接：</strong><br><a href="http://longzhiye.top/2022/08/16/2022-08-16/">http://longzhiye.top/2022/08/16/2022-08-16/</a>
+      </blockquote>
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E8%B5%84%E8%AE%AF/">资讯</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Android13/" rel="tag">Android13</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2022/08/17/2022-08-17/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android 13新特性：自动清除剪贴板历史记录'}">上一篇</span>
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2022/08/09/2022-08-09/">
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'I come back'}">下一篇</span>
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+
+
+
+</main>
+  <footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="http://github.com/longzhiye" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe7ab;</i></a>
+    
+    
+    
+      <a href="https://www.zhihu.com/people/long-zhi-xie-61" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe6c0;</i></a>
+    
+    
+    
+      <a href="tencent://tencent:////message/?uin=951898105&Menu=yes" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2022 - 2025 龙之叶<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>
+    <br>
+      <span id="busuanzi_container_site_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_site_pv"></span></span> &nbsp;&nbsp;
+      <span id="busuanzi_container_site_uv" style="display: none;"><i class="iconfont">&#xe601;</i> <span id="busuanzi_value_site_uv"></span></span>
+    
+  </div>
+</footer>
+
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+  
+<script src="/custom.js"></script>
+
+</body>
+</html>

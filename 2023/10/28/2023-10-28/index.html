@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>android10.0(Q)编译安卓内核（pixel 2） | 龙之叶的博客</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="alternate" href="/atom.xml" title="龙之叶的博客" type="application/atom+xml">
+  <meta name="description" content="android10.0(Q)编译安卓内核（pixel 2）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android10.0(Q)编译安卓内核（pixel 2）">
+<meta property="og:url" content="http://longzhiye.top/2023/10/28/2023-10-28/index.html">
+<meta property="og:site_name" content="龙之叶的博客">
+<meta property="og:description" content="android10.0(Q)编译安卓内核（pixel 2）">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://longzhiye.top/images/20231028/20231028001.JPG">
+<meta property="og:image" content="http://longzhiye.top/images/20231028/20231028003.JPG">
+<meta property="og:image" content="http://longzhiye.top/images/20231028/20231028004.JPG">
+<meta property="og:image" content="http://longzhiye.top/images/20231028/20231028005.JPG">
+<meta property="og:image" content="http://longzhiye.top/images/20231028/20231028002.JPG">
+<meta property="article:published_time" content="2023-10-27T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-04T08:39:58.954Z">
+<meta property="article:author" content="龙之叶">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Framework">
+<meta property="article:tag" content="Kernel">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://longzhiye.top/images/20231028/20231028001.JPG">
+
+  <meta name="keywords" content=",Android,Framework,Kernel">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="龙之叶的博客">
+  <meta name="msapplication-starturl" content="http://longzhiye.top/2023/10/28/2023-10-28/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="龙之叶的博客">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <link rel="canonical" href="http://longzhiye.top/2023/10/28/2023-10-28/">
+  
+
+  
+  
+
+  
+  
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/custom.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(!a){document.getElementsByTagName("body")[0].className+=" mdui-drawer-body-left"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">龙之叶的博客</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+	<!--
+    <a href="/atom.xml" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'RSS'}"><i class="mdui-icon material-icons">rss_feed</i></a>
+	-->
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(a){document.getElementById("sidebar").className+=" mdui-drawer-close"};</script>
+  <div class="mdui-grid-tile">
+    <img src="/images/banner.png" style="height: 160px;">
+    <img src="/images/avatar.png" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;background-color:#fff;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">龙之叶</div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>生命不息，折腾不止</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:longzhiye163@163.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'longzhiye163@163.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-0");if(a){document.getElementsByClassName("mdui-collapse-item")[0].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">archive</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2025/10/">十月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/09/">九月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/08/">八月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/07/">七月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/06/">六月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/03/">三月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/02/">二月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/01/">一月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/10/">十月 2024<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/09/">九月 2024<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/08/">八月 2024<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/03/">三月 2024<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/02/">二月 2024<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/01/">一月 2024<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/12/">十二月 2023<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/11/">十一月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/10/">十月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/09/">九月 2023<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/08/">八月 2023<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/06/">六月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/05/">五月 2023<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/04/">四月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/03/">三月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/02/">二月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/09/">九月 2022<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/04/">四月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/03/">三月 2017<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/02/">二月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/01/">一月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/12/">十二月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/11/">十一月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/10/">十月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/08/">八月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-1");if(a){document.getElementsByClassName("mdui-collapse-item")[1].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">class</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">108</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E8%B5%84%E8%AE%AF/">资讯<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E9%80%9A%E7%9F%A5/">通知<span class="mdui-ripple sidebar_archives-count">4</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-2");if(a){document.getElementsByClassName("mdui-collapse-item")[2].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/ANR/" rel="tag">ANR<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/APP/" rel="tag">APP<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android/" rel="tag">Android<span class="mdui-ripple sidebar_archives-count">98</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android12/" rel="tag">Android12<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android13/" rel="tag">Android13<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android14/" rel="tag">Android14<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android16/" rel="tag">Android16<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AndroidStudio/" rel="tag">AndroidStudio<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AutoDraw/" rel="tag">AutoDraw<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Build/" rel="tag">Build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Crash/" rel="tag">Crash<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Foxmail/" rel="tag">Foxmail<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Framework/" rel="tag">Framework<span class="mdui-ripple sidebar_archives-count">20</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GPS%E8%BD%A8%E8%BF%B9%E5%9B%BE/" rel="tag">GPS轨迹图<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Git/" rel="tag">Git<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GitHub/" rel="tag">GitHub<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Google/" rel="tag">Google<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Java/" rel="tag">Java<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Kernel/" rel="tag">Kernel<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Launcher/" rel="tag">Launcher<span class="mdui-ripple sidebar_archives-count">17</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Lib/" rel="tag">Lib<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Linux/" rel="tag">Linux<span class="mdui-ripple sidebar_archives-count">18</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Markdown/" rel="tag">Markdown<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Material-Design/" rel="tag">Material Design<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OS-X/" rel="tag">OS X<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OTA/" rel="tag">OTA<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/QuickTime/" rel="tag">QuickTime<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SSH/" rel="tag">SSH<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Settings/" rel="tag">Settings<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SystemUI/" rel="tag">SystemUI<span class="mdui-ripple sidebar_archives-count">19</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/UAC/" rel="tag">UAC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Ubuntu/" rel="tag">Ubuntu<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WPS/" rel="tag">WPS<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Wifi/" rel="tag">Wifi<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WindTerm/" rel="tag">WindTerm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows/" rel="tag">Windows<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows-11/" rel="tag">Windows 11<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/androidmk/" rel="tag">androidmk<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/blog/" rel="tag">blog<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/build/" rel="tag">build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/feel/" rel="tag">feel<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/framework/" rel="tag">framework<span class="mdui-ripple sidebar_archives-count">58</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/inotify/" rel="tag">inotify<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/life/" rel="tag">life<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/ninja/" rel="tag">ninja<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/rsync/" rel="tag">rsync<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/standard/" rel="tag">standard<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/test/" rel="tag">test<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1/" rel="tag">企业微信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E7%94%9F%E6%B4%BB%E6%84%9F%E6%82%9F/" rel="tag">生活感悟<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+      <a href="/timeline" class="mdui-list-item mdui-ripple">时间轴</a>
+    
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-3");if(a){document.getElementsByClassName("mdui-collapse-item")[3].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+          <a href="http://www.niemingzhao.top" target="_blank" class="mdui-list-item mdui-p-l-2 mdui-text-color-theme-accent mdui-ripple" style="justify-content: center;">聂明照的博客</a>
+        
+        
+      </div>
+    </div>
+  </div>
+</aside>
+
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <style>#main article .mdui-card-content .text-center{text-align:center!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-19.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">android10.0(Q)编译安卓内核（pixel 2）</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2023-10-28 / <i class="iconfont">&#xe601;</i> 龙之叶 &nbsp;&nbsp; <span id="busuanzi_container_page_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_page_pv"></span></span></div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#qrcode', align: 'right'}"><i class="mdui-icon material-icons">devices</i></button>
+          <ul class="mdui-menu" id="qrcode">
+            
+              <li class="mdui-menu-item"><a class="mdui-text-center mdui-ripple">发送到手机</a></li>
+            
+            <li class="mdui-menu-item" disabled>
+              
+                <img src="//qr.liantu.com/api.php?w=246&m=10&text=http://longzhiye.top/2023/10/28/2023-10-28/">
+              
+            </li>
+          </ul>
+        
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="mdui-icon material-icons">share</i></button>
+          <ul class="mdui-menu" id="share_menu">
+            <li class="mdui-menu-item">
+              <a href="https://service.weibo.com/share/share.php?appkey=&title=android10.0(Q)编译安卓内核（pixel 2）&url=http://longzhiye.top/2023/10/28/2023-10-28/&pic=http://longzhiye.top/images/favicon.png&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://twitter.com/intent/tweet?text=android10.0(Q)编译安卓内核（pixel 2）&url=http://longzhiye.top/2023/10/28/2023-10-28/&via=龙之叶" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=http://longzhiye.top/2023/10/28/2023-10-28/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://plus.google.com/share?url=http://longzhiye.top/2023/10/28/2023-10-28/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://longzhiye.top/2023/10/28/2023-10-28/&title=android10.0(Q)编译安卓内核（pixel 2）" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://connect.qq.com/widget/shareqq/index.html?site=龙之叶的博客&title=android10.0(Q)编译安卓内核（pixel 2）&pics=http://longzhiye.top/images/favicon.png&url=http://longzhiye.top/2023/10/28/2023-10-28/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://telegram.me/share/url?url=http://longzhiye.top/2023/10/28/2023-10-28/&text=android10.0(Q)编译安卓内核（pixel 2）" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+            </li>
+          </ul>
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h3 id="下载内核源码"><a href="#下载内核源码" class="headerlink" title="下载内核源码"></a>下载内核源码</h3><h4 id="1-查看内核版本"><a href="#1-查看内核版本" class="headerlink" title="1.查看内核版本"></a>1.查看内核版本</h4><p>首先需要看一下内核的版本，可以在手机中看到内核版本</p>
+<p><img src="/images/20231028/20231028001.JPG"></p>
+<h4 id="2-下载该内核版本对应的源码"><a href="#2-下载该内核版本对应的源码" class="headerlink" title="2.下载该内核版本对应的源码"></a>2.下载该内核版本对应的源码</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/mount/project/androidq</span><br><span class="line">git <span class="built_in">clone</span> https://aosp.tuna.tsinghua.edu.cn/android/kernel/msm.git</span><br><span class="line"><span class="built_in">cd</span> msm</span><br><span class="line">git checkout 4fecde07e68d</span><br></pre></td></tr></table></figure>
+<p>执行结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">longzhiye@longzhiye-laptop:~/mount/project/androidq$ git <span class="built_in">clone</span> https://aosp.tuna.tsinghua.edu.cn/android/kernel/msm.git</span><br><span class="line">正克隆到 <span class="string">&#x27;msm&#x27;</span>...</span><br><span class="line">warning: 重定向到 https://aosp.tuna.tsinghua.edu.cn/kernel/msm.git/</span><br><span class="line">remote: Enumerating objects: 2324949, <span class="keyword">done</span>.</span><br><span class="line">remote: Counting objects: 100% (2324949/2324949), <span class="keyword">done</span>.</span><br><span class="line">remote: Compressing objects: 100% (521905/521905), <span class="keyword">done</span>.</span><br><span class="line">remote: Total 11825131 (delta 1865339), reused 2217253 (delta 1796210), pack-reused 9500182</span><br><span class="line">接收对象中: 100% (11825131/11825131), 2.98 GiB | 16.48 MiB/s, 完成.</span><br><span class="line">处理 delta 中: 100% (9920545/9920545), 完成.</span><br><span class="line"></span><br><span class="line">longzhiye@longzhiye-laptop:~/mount/project/androidq$ <span class="built_in">cd</span> msm/</span><br><span class="line">longzhiye@longzhiye-laptop:~/mount/project/androidq/msm$ git checkout 4fecde07e68d</span><br><span class="line">正在检出文件: 100% (56480/56480), 完成.</span><br><span class="line">注意：正在检出 <span class="string">&#x27;4fecde07e68d&#x27;</span>。</span><br><span class="line"></span><br><span class="line">您正处于分离头指针状态。您可以查看、做试验性的修改及提交，并且您可以通过另外</span><br><span class="line">的检出分支操作丢弃在这个状态下所做的任何提交。</span><br><span class="line"></span><br><span class="line">如果您想要通过创建分支来保留在此状态下所做的提交，您可以通过在检出命令添加</span><br><span class="line">参数 -b 来实现（现在或稍后）。例如：</span><br><span class="line"></span><br><span class="line">  git checkout -b &lt;新分支名&gt;</span><br><span class="line"></span><br><span class="line">HEAD 目前位于 4fecde07e68d Merge android-msm-wahoo-4.4-qt-qpr2 into android-msm-wahoo-4.4-qt-qpr3</span><br></pre></td></tr></table></figure>
+<p>这里的分支”4fecde07e68d”就是上面的手机截图中内核版本里g后面的数字</p>
+<h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><h4 id="3-安装libssl（不装编译的时候会报错）"><a href="#3-安装libssl（不装编译的时候会报错）" class="headerlink" title="3.安装libssl（不装编译的时候会报错）"></a>3.安装libssl（不装编译的时候会报错）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install libssl-dev</span><br></pre></td></tr></table></figure>
+<p>执行结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">longzhiye@longzhiye-laptop:~/mount/project/androidq/msm$ sudo apt install libssl-dev</span><br><span class="line">[sudo] longzhiye 的密码： </span><br><span class="line">正在读取软件包列表... 完成</span><br><span class="line">正在分析软件包的依赖关系树       </span><br><span class="line">正在读取状态信息... 完成       </span><br><span class="line">下列软件包是自动安装的并且现在不需要了：</span><br><span class="line">  gir1.2-goa-1.0 gir1.2-snapd-1</span><br><span class="line">使用<span class="string">&#x27;sudo apt autoremove&#x27;</span>来卸载它(它们)。</span><br><span class="line">将会同时安装下列软件：</span><br><span class="line">  libssl1.1</span><br><span class="line">建议安装：</span><br><span class="line">  libssl-doc</span><br><span class="line">下列【新】软件包将被安装：</span><br><span class="line">  libssl-dev</span><br><span class="line">下列软件包将被升级：</span><br><span class="line">  libssl1.1</span><br><span class="line">升级了 1 个软件包，新安装了 1 个软件包，要卸载 0 个软件包，有 71 个软件包未被升级。</span><br><span class="line">需要下载 2,870 kB 的归档。</span><br><span class="line">解压缩后会消耗 7,850 kB 的额外空间。</span><br><span class="line">您希望继续执行吗？ [Y/n] y</span><br><span class="line">获取:1 http://security.ubuntu.com/ubuntu bionic-security/main amd64 libssl1.1 amd64 1.1.1-1ubuntu2.1~18.04.23 [1,303 kB]</span><br><span class="line">获取:2 http://security.ubuntu.com/ubuntu bionic-security/main amd64 libssl-dev amd64 1.1.1-1ubuntu2.1~18.04.23 [1,568 kB]</span><br><span class="line">已下载 2,870 kB，耗时 5秒 (553 kB/s)    </span><br><span class="line">正在预设定软件包 ...</span><br><span class="line">(正在读取数据库 ... 系统当前共安装有 204375 个文件和目录。)</span><br><span class="line">正准备解包 .../libssl1.1_1.1.1-1ubuntu2.1~18.04.23_amd64.deb  ...</span><br><span class="line">正在将 libssl1.1:amd64 (1.1.1-1ubuntu2.1~18.04.23) 解包到 (1.1.1-1ubuntu2.1~18.04.22) 上 ...</span><br><span class="line">正在选中未选择的软件包 libssl-dev:amd64。</span><br><span class="line">正准备解包 .../libssl-dev_1.1.1-1ubuntu2.1~18.04.23_amd64.deb  ...</span><br><span class="line">正在解包 libssl-dev:amd64 (1.1.1-1ubuntu2.1~18.04.23) ...</span><br><span class="line">正在设置 libssl1.1:amd64 (1.1.1-1ubuntu2.1~18.04.23) ...</span><br><span class="line">正在设置 libssl-dev:amd64 (1.1.1-1ubuntu2.1~18.04.23) ...</span><br><span class="line">正在处理用于 libc-bin (2.27-3ubuntu1.6) 的触发器 ...</span><br></pre></td></tr></table></figure>
+<h4 id="4-去掉内核校验（不然重刷内核后触屏没有反应）"><a href="#4-去掉内核校验（不然重刷内核后触屏没有反应）" class="headerlink" title="4.去掉内核校验（不然重刷内核后触屏没有反应）"></a>4.去掉内核校验（不然重刷内核后触屏没有反应）</h4><p><strong>$aosp\msm\arch\arm64\configs\wahoo_defconfig</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CONFIG_MODVERSIONS=y</span><br><span class="line">CONFIG_MODULE_SRCVERSION_ALL=y</span><br><span class="line">修改为</span><br><span class="line"># CONFIG_MODVERSIONS=y</span><br><span class="line"># CONFIG_MODULE_SRCVERSION_ALL=y</span><br></pre></td></tr></table></figure>
+<p><img src="/images/20231028/20231028003.JPG"></p>
+<p><strong>$aosp\msm\kernel\module.c</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">        return -ENOEXEC;</span><br><span class="line">修改为</span><br><span class="line">        // return -ENOEXEC;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/20231028/20231028004.JPG"></p>
+<h4 id="5-将编译工具链加入到环境变量中并编译"><a href="#5-将编译工具链加入到环境变量中并编译" class="headerlink" title="5.将编译工具链加入到环境变量中并编译"></a>5.将编译工具链加入到环境变量中并编译</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> msm</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/home/longzhiye/mount/project/androidq/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/home/longzhiye/mount/project/androidq/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/home/longzhiye/mount/project/androidq/prebuilts/misc/linux-x86/dtc</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/home/longzhiye/mount/project/androidq/prebuilts/misc/linux-x86/libufdt</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/home/longzhiye/mount/project/androidq/prebuilts/misc/linux-x86/lz4</span><br><span class="line"><span class="built_in">export</span> ARCH=arm64</span><br><span class="line"><span class="built_in">export</span> CROSS_COMPILE=/home/longzhiye/mount/project/androidq/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin/aarch64-linux-android-</span><br><span class="line"><span class="built_in">export</span> CROSS_COMPILE_ARM32=/home/longzhiye/mount/project/androidq/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin/arm-linux-androideabi-</span><br><span class="line"><span class="built_in">export</span> CC=/home/longzhiye/mount/project/androidq/prebuilts/clang/host/linux-x86/clang-3289846/bin/clang</span><br><span class="line">make wahoo_defconfig</span><br><span class="line">make -j4</span><br></pre></td></tr></table></figure>
+<p>运行结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">longzhiye@longzhiye-laptop:~/mount/project/androidq$ <span class="built_in">cd</span> msm/</span><br><span class="line">longzhiye@longzhiye-laptop:~/mount/project/androidq/msm$ <span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/home/longzhiye/mount/project/androidq/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin</span><br><span class="line">longzhiye@longzhiye-laptop:~/mount/project/androidq/msm$ <span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/home/longzhiye/mount/project/androidq/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin</span><br><span class="line">longzhiye@longzhiye-laptop:~/mount/project/androidq/msm$ <span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/home/longzhiye/mount/project/androidq/prebuilts/misc/linux-x86/dtc</span><br><span class="line">longzhiye@longzhiye-laptop:~/mount/project/androidq/msm$ <span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/home/longzhiye/mount/project/androidq/prebuilts/misc/linux-x86/libufdt</span><br><span class="line">longzhiye@longzhiye-laptop:~/mount/project/androidq/msm$ <span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/home/longzhiye/mount/project/androidq/prebuilts/misc/linux-x86/lz4</span><br><span class="line">longzhiye@longzhiye-laptop:~/mount/project/androidq/msm$ <span class="built_in">export</span> ARCH=arm64</span><br><span class="line">longzhiye@longzhiye-laptop:~/mount/project/androidq/msm$ <span class="built_in">export</span> CROSS_COMPILE=/home/longzhiye/mount/project/androidq/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin/aarch64-linux-android-</span><br><span class="line">longzhiye@longzhiye-laptop:~/mount/project/androidq/msm$ <span class="built_in">export</span> CROSS_COMPILE_ARM32=/home/longzhiye/mount/project/androidq/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin/arm-linux-androideabi-</span><br><span class="line">longzhiye@longzhiye-laptop:~/mount/project/androidq/msm$ <span class="built_in">export</span> CC=/home/longzhiye/mount/project/androidq/prebuilts/clang/host/linux-x86/clang-3289846/bin/clang</span><br><span class="line">longzhiye@longzhiye-laptop:~/mount/project/androidq/msm$ make wahoo_defconfig</span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># configuration written to .config</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#### build completed successfully (2 seconds) ####</span></span><br><span class="line"></span><br><span class="line">longzhiye@longzhiye-laptop:~/mount/project/androidq/msm$ make -j4</span><br><span class="line">Android GCC has been deprecated <span class="keyword">in</span> favor of Clang, and will be removed from</span><br><span class="line">Android <span class="keyword">in</span> 2020-01 as per the deprecation plan <span class="keyword">in</span>:</span><br><span class="line">https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+/master/GCC_4_9_DEPRECATION.md</span><br><span class="line"></span><br><span class="line">......</span><br><span class="line"></span><br><span class="line">drivers/thermal/thermal_core.c:43:26: fatal error: ../base/base.h: No such file or directory</span><br><span class="line"> <span class="comment">#include &lt;../base/base.h&gt;</span></span><br><span class="line">                          ^</span><br><span class="line">compilation terminated.</span><br><span class="line">scripts/Makefile.build:276: recipe <span class="keyword">for</span> target <span class="string">&#x27;drivers/thermal/thermal_core.o&#x27;</span> failed</span><br><span class="line">make[2]: *** [drivers/thermal/thermal_core.o] Error 1</span><br><span class="line">scripts/Makefile.build:483: recipe <span class="keyword">for</span> target <span class="string">&#x27;drivers/thermal&#x27;</span> failed</span><br><span class="line">make[1]: *** [drivers/thermal] Error 2</span><br><span class="line">make[1]: *** 正在等待未完成的任务....</span><br><span class="line">  CC      drivers/soc/qcom/wlan_firmware_service_v01.o</span><br><span class="line">Android GCC has been deprecated <span class="keyword">in</span> favor of Clang, and will be removed from</span><br><span class="line">Android <span class="keyword">in</span> 2020-01 as per the deprecation plan <span class="keyword">in</span>:</span><br><span class="line">https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+/master/GCC_4_9_DEPRECATION.md</span><br></pre></td></tr></table></figure>
+<p>报错信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">drivers/thermal/thermal_core.c:43:26: fatal error: ../base/base.h: No such file or directory</span><br><span class="line"> <span class="comment">#include &lt;../base/base.h&gt;</span></span><br></pre></td></tr></table></figure>
+<p>修改”drivers/thermal/thermal_core.c”文件<br><strong>$aosp\msm\drivers\thermal\thermal_core.c</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;&lt;../base/base.h&gt;&quot;</span><br><span class="line">修改为</span><br><span class="line">#include &quot;../base/base.h&quot;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/20231028/20231028005.JPG"></p>
+<p>继续编译</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j4</span><br></pre></td></tr></table></figure>
+<p>编译成功会有如下提示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">  Building modules, stage 2.</span><br><span class="line">  DTC     <span class="built_in">arch</span>/arm64/boot/dts/qcom/msm8998-v2.1-soc.dtb</span><br><span class="line">  MODPOST 9 modules</span><br><span class="line">Android GCC has been deprecated <span class="keyword">in</span> favor of Clang, and will be removed from</span><br><span class="line">Android <span class="keyword">in</span> 2020-01 as per the deprecation plan <span class="keyword">in</span>:</span><br><span class="line">https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+/master/GCC_4_9_DEPRECATION.md</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  CAT     <span class="built_in">arch</span>/arm64/boot/Image.lz4-dtb</span><br><span class="line"></span><br><span class="line"><span class="comment">#### build completed successfully (9 seconds) ####</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="打包并刷入手机"><a href="#打包并刷入手机" class="headerlink" title="打包并刷入手机"></a>打包并刷入手机</h3><h4 id="6-打包"><a href="#6-打包" class="headerlink" title="6.打包"></a>6.打包</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ..</span><br><span class="line"><span class="built_in">export</span> TARGET_PREBUILT_KERNEL=/home/longzhiye/mount/project/androidq/msm/arch/arm64/boot/Image.lz4-dtb</span><br><span class="line"><span class="built_in">source</span> build/envsetup.sh</span><br><span class="line">lunch aosp_walleye-userdebug</span><br><span class="line">time make bootimage</span><br></pre></td></tr></table></figure>
+<p>运行结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">longzhiye@longzhiye-laptop:~/mount/project/androidq/msm$ <span class="built_in">cd</span> ..</span><br><span class="line">longzhiye@longzhiye-laptop:~/mount/project/androidq$ <span class="built_in">export</span> TARGET_PREBUILT_KERNEL=/home/longzhiye/mount/project/androidq/msm/arch/arm64/boot/Image.lz4-dtb</span><br><span class="line">longzhiye@longzhiye-laptop:~/mount/project/androidq$ <span class="built_in">source</span> build/envsetup.sh</span><br><span class="line">longzhiye@longzhiye-laptop:~/mount/project/androidq$ lunch aosp_walleye-userdebug</span><br><span class="line"></span><br><span class="line">============================================</span><br><span class="line">PLATFORM_VERSION_CODENAME=REL</span><br><span class="line">PLATFORM_VERSION=10</span><br><span class="line">TARGET_PRODUCT=aosp_walleye</span><br><span class="line">TARGET_BUILD_VARIANT=userdebug</span><br><span class="line"></span><br><span class="line">......</span><br><span class="line"></span><br><span class="line">OUT_DIR=out</span><br><span class="line">PRODUCT_SOONG_NAMESPACES=device/google/wahoo vendor/google/camera hardware/google/pixel</span><br><span class="line">============================================</span><br><span class="line">20:31:39 Disallowed PATH tool <span class="string">&quot;locale&quot;</span> used: []string&#123;<span class="string">&quot;locale&quot;</span>, <span class="string">&quot;-a&quot;</span>&#125;</span><br><span class="line">20:31:39 See https://android.googlesource.com/platform/build/+/master/Changes.md<span class="comment">#PATH_Tools for more information.</span></span><br><span class="line">20:31:43 Disallowed PATH tool <span class="string">&quot;locale&quot;</span> used: []string&#123;<span class="string">&quot;locale&quot;</span>, <span class="string">&quot;-a&quot;</span>&#125;</span><br><span class="line">20:31:43 See https://android.googlesource.com/platform/build/+/master/Changes.md<span class="comment">#PATH_Tools for more information.</span></span><br><span class="line">[100% 2/2] Target boot image from recovery: out/target/product/walleye/boot.img</span><br><span class="line"></span><br><span class="line"><span class="comment">#### build completed successfully (18 seconds) ####</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">real    0m18.171s</span><br><span class="line">user    0m21.882s</span><br><span class="line">sys     0m7.009s</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-刷入手机"><a href="#7-刷入手机" class="headerlink" title="7.刷入手机"></a>7.刷入手机</h4><p>手机进入fastboot模式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cd ~/mount/project/androidq</span><br><span class="line">source build/envsetup.sh</span><br><span class="line">lunch aosp_walleye-userdebug</span><br><span class="line">adb reboot bootloader</span><br><span class="line">cd out/target/product/walleye/</span><br><span class="line">fastboot flash boot boot.img</span><br><span class="line">fastboot reboot</span><br></pre></td></tr></table></figure>
+
+<p>成功刷入手机，开机后进入查看内核界面，”Kernel verion”已经发生变化</p>
+<p><img src="/images/20231028/20231028002.JPG"></p>
+
+      
+      <blockquote>
+        
+        <strong>本文链接：</strong><br><a href="http://longzhiye.top/2023/10/28/2023-10-28/">http://longzhiye.top/2023/10/28/2023-10-28/</a>
+      </blockquote>
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Android/" rel="tag">Android</a><a class="mdui-ripple article_tags-link" href="/tags/Framework/" rel="tag">Framework</a><a class="mdui-ripple article_tags-link" href="/tags/Kernel/" rel="tag">Kernel</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2023/10/29/2023-10-29/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android系统SELinux详解'}">上一篇</span>
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2023/10/24/2023-10-24/">
+        <span class="mdui-p-x-3" mdui-tooltip="{content: '你知道吗？“1024”是个节！'}">下一篇</span>
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+
+
+
+</main>
+  <footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="http://github.com/longzhiye" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe7ab;</i></a>
+    
+    
+    
+      <a href="https://www.zhihu.com/people/long-zhi-xie-61" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe6c0;</i></a>
+    
+    
+    
+      <a href="tencent://tencent:////message/?uin=951898105&Menu=yes" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2022 - 2025 龙之叶<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>
+    <br>
+      <span id="busuanzi_container_site_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_site_pv"></span></span> &nbsp;&nbsp;
+      <span id="busuanzi_container_site_uv" style="display: none;"><i class="iconfont">&#xe601;</i> <span id="busuanzi_value_site_uv"></span></span>
+    
+  </div>
+</footer>
+
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+  
+<script src="/custom.js"></script>
+
+</body>
+</html>

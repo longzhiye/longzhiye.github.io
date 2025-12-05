@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>修改Android 12解锁失败等待时间规则详解 | 龙之叶的博客</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="alternate" href="/atom.xml" title="龙之叶的博客" type="application/atom+xml">
+  <meta name="description" content="修改Android 12解锁失败等待时间规则详解">
+<meta property="og:type" content="article">
+<meta property="og:title" content="修改Android 12解锁失败等待时间规则详解">
+<meta property="og:url" content="http://longzhiye.top/2022/09/08/2022-09-08/index.html">
+<meta property="og:site_name" content="龙之叶的博客">
+<meta property="og:description" content="修改Android 12解锁失败等待时间规则详解">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://longzhiye.top/images/20220908/20220908001.png">
+<meta property="og:image" content="http://longzhiye.top/images/20220908/20220908002.png">
+<meta property="article:published_time" content="2022-09-07T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-04T08:39:58.946Z">
+<meta property="article:author" content="龙之叶">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Android12">
+<meta property="article:tag" content="源码">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://longzhiye.top/images/20220908/20220908001.png">
+
+  <meta name="keywords" content=",Android,Android12,源码">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="龙之叶的博客">
+  <meta name="msapplication-starturl" content="http://longzhiye.top/2022/09/08/2022-09-08/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="龙之叶的博客">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <link rel="canonical" href="http://longzhiye.top/2022/09/08/2022-09-08/">
+  
+
+  
+  
+
+  
+  
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/custom.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(!a){document.getElementsByTagName("body")[0].className+=" mdui-drawer-body-left"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">龙之叶的博客</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+	<!--
+    <a href="/atom.xml" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'RSS'}"><i class="mdui-icon material-icons">rss_feed</i></a>
+	-->
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(a){document.getElementById("sidebar").className+=" mdui-drawer-close"};</script>
+  <div class="mdui-grid-tile">
+    <img src="/images/banner.png" style="height: 160px;">
+    <img src="/images/avatar.png" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;background-color:#fff;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">龙之叶</div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>生命不息，折腾不止</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:longzhiye163@163.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'longzhiye163@163.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-0");if(a){document.getElementsByClassName("mdui-collapse-item")[0].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">archive</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2025/10/">十月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/09/">九月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/08/">八月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/07/">七月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/06/">六月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/03/">三月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/02/">二月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/01/">一月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/10/">十月 2024<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/09/">九月 2024<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/08/">八月 2024<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/03/">三月 2024<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/02/">二月 2024<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/01/">一月 2024<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/12/">十二月 2023<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/11/">十一月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/10/">十月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/09/">九月 2023<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/08/">八月 2023<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/06/">六月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/05/">五月 2023<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/04/">四月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/03/">三月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/02/">二月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/09/">九月 2022<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/04/">四月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/03/">三月 2017<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/02/">二月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/01/">一月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/12/">十二月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/11/">十一月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/10/">十月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/08/">八月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-1");if(a){document.getElementsByClassName("mdui-collapse-item")[1].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">class</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">108</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E8%B5%84%E8%AE%AF/">资讯<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E9%80%9A%E7%9F%A5/">通知<span class="mdui-ripple sidebar_archives-count">4</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-2");if(a){document.getElementsByClassName("mdui-collapse-item")[2].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/ANR/" rel="tag">ANR<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/APP/" rel="tag">APP<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android/" rel="tag">Android<span class="mdui-ripple sidebar_archives-count">98</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android12/" rel="tag">Android12<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android13/" rel="tag">Android13<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android14/" rel="tag">Android14<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android16/" rel="tag">Android16<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AndroidStudio/" rel="tag">AndroidStudio<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AutoDraw/" rel="tag">AutoDraw<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Build/" rel="tag">Build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Crash/" rel="tag">Crash<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Foxmail/" rel="tag">Foxmail<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Framework/" rel="tag">Framework<span class="mdui-ripple sidebar_archives-count">20</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GPS%E8%BD%A8%E8%BF%B9%E5%9B%BE/" rel="tag">GPS轨迹图<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Git/" rel="tag">Git<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GitHub/" rel="tag">GitHub<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Google/" rel="tag">Google<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Java/" rel="tag">Java<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Kernel/" rel="tag">Kernel<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Launcher/" rel="tag">Launcher<span class="mdui-ripple sidebar_archives-count">17</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Lib/" rel="tag">Lib<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Linux/" rel="tag">Linux<span class="mdui-ripple sidebar_archives-count">18</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Markdown/" rel="tag">Markdown<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Material-Design/" rel="tag">Material Design<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OS-X/" rel="tag">OS X<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OTA/" rel="tag">OTA<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/QuickTime/" rel="tag">QuickTime<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SSH/" rel="tag">SSH<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Settings/" rel="tag">Settings<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SystemUI/" rel="tag">SystemUI<span class="mdui-ripple sidebar_archives-count">19</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/UAC/" rel="tag">UAC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Ubuntu/" rel="tag">Ubuntu<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WPS/" rel="tag">WPS<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Wifi/" rel="tag">Wifi<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WindTerm/" rel="tag">WindTerm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows/" rel="tag">Windows<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows-11/" rel="tag">Windows 11<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/androidmk/" rel="tag">androidmk<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/blog/" rel="tag">blog<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/build/" rel="tag">build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/feel/" rel="tag">feel<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/framework/" rel="tag">framework<span class="mdui-ripple sidebar_archives-count">58</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/inotify/" rel="tag">inotify<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/life/" rel="tag">life<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/ninja/" rel="tag">ninja<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/rsync/" rel="tag">rsync<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/standard/" rel="tag">standard<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/test/" rel="tag">test<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1/" rel="tag">企业微信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E7%94%9F%E6%B4%BB%E6%84%9F%E6%82%9F/" rel="tag">生活感悟<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+      <a href="/timeline" class="mdui-list-item mdui-ripple">时间轴</a>
+    
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-3");if(a){document.getElementsByClassName("mdui-collapse-item")[3].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+          <a href="http://www.niemingzhao.top" target="_blank" class="mdui-list-item mdui-p-l-2 mdui-text-color-theme-accent mdui-ripple" style="justify-content: center;">聂明照的博客</a>
+        
+        
+      </div>
+    </div>
+  </div>
+</aside>
+
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <style>#main article .mdui-card-content .text-center{text-align:center!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-6.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">修改Android 12解锁失败等待时间规则详解</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2022-09-08 / <i class="iconfont">&#xe601;</i> 龙之叶 &nbsp;&nbsp; <span id="busuanzi_container_page_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_page_pv"></span></span></div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#qrcode', align: 'right'}"><i class="mdui-icon material-icons">devices</i></button>
+          <ul class="mdui-menu" id="qrcode">
+            
+              <li class="mdui-menu-item"><a class="mdui-text-center mdui-ripple">发送到手机</a></li>
+            
+            <li class="mdui-menu-item" disabled>
+              
+                <img src="//qr.liantu.com/api.php?w=246&m=10&text=http://longzhiye.top/2022/09/08/2022-09-08/">
+              
+            </li>
+          </ul>
+        
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="mdui-icon material-icons">share</i></button>
+          <ul class="mdui-menu" id="share_menu">
+            <li class="mdui-menu-item">
+              <a href="https://service.weibo.com/share/share.php?appkey=&title=修改Android 12解锁失败等待时间规则详解&url=http://longzhiye.top/2022/09/08/2022-09-08/&pic=http://longzhiye.top/images/favicon.png&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://twitter.com/intent/tweet?text=修改Android 12解锁失败等待时间规则详解&url=http://longzhiye.top/2022/09/08/2022-09-08/&via=龙之叶" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=http://longzhiye.top/2022/09/08/2022-09-08/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://plus.google.com/share?url=http://longzhiye.top/2022/09/08/2022-09-08/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://longzhiye.top/2022/09/08/2022-09-08/&title=修改Android 12解锁失败等待时间规则详解" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://connect.qq.com/widget/shareqq/index.html?site=龙之叶的博客&title=修改Android 12解锁失败等待时间规则详解&pics=http://longzhiye.top/images/favicon.png&url=http://longzhiye.top/2022/09/08/2022-09-08/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://telegram.me/share/url?url=http://longzhiye.top/2022/09/08/2022-09-08/&text=修改Android 12解锁失败等待时间规则详解" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+            </li>
+          </ul>
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>解锁的类型有:Pin码解锁、密码解锁、图案解锁和指纹解锁<br>修改解锁失败的等待时间:做过SystemUI相关模块都知道解锁这一块的验证密码等等操作一般是通过JNI通过Native做的验证操作，数据获取一般也是涉及到C的逻辑。由于考虑其实系统其他的界面功能上也会有解锁的这几种方式，例如：Settings里面的设置解锁方式那里，因此修改锁屏上的解锁等待时间，要修改到共有接口，因此这个功能的添加，并不是这么简单的去修改SystemUI的，但是在网上搜索相关修改等待时间的blog，资料比较少，因此在这把修改的步骤记录下来。</p>
+<p>主要需求有以下3点:<br><strong>1.每次都有5次解锁。<br>2.随着尝试次数的增加，时间增长。<br>3.关机重启后仍然能计算时间。（指纹解锁不需要）</strong></p>
+<h3 id="1-定位修改的起始点"><a href="#1-定位修改的起始点" class="headerlink" title="1.定位修改的起始点"></a>1.定位修改的起始点</h3><p>定位需要修改的地方，尝试使用Layout Inspector获取界面失败了，使用monitor工具，获取如下</p>
+<p><img src="/images/20220908/20220908001.png"></p>
+<p>就可以获取某个控件的id，然后锁定layout布局了，然后就可以找到相关的代码了。</p>
+<h3 id="2-分析整体的修改逻辑"><a href="#2-分析整体的修改逻辑" class="headerlink" title="2.分析整体的修改逻辑"></a>2.分析整体的修改逻辑</h3><p>以此类推，因此我们发现要修改的这几种解锁方式主要分为两大类，两大类为：1、PIN码、密码和图案 2、指纹解锁</p>
+<p>分为两大类的主要原因是因为指纹解锁的主要逻辑并不在Keyguard里面而是<strong>SystemUI</strong>模块里面，因为在<strong>Android 7.0</strong>的代码上Keyguard和SystemUI是分开的，Android 12则合到了一起。</p>
+<h3 id="3-具体修改的实现"><a href="#3-具体修改的实现" class="headerlink" title="3.具体修改的实现"></a>3.具体修改的实现</h3><p>修改PIN码、密码和图案解锁</p>
+<p>通过上面的工具定位代码得知，相关类如下：</p>
+<p><img src="/images/20220908/20220908002.png"></p>
+<p>如图，其实相关类为<strong>KeyguardPINView、KeyguardPassworkView</strong>和<strong>KeyguardPatternView</strong></p>
+<p>这几个就是PIN码、密码和图案对应的自定义View，而其中的点击并操作的逻辑也是在这里面，感觉根据MVC的设计原则，感觉有点不符合这点啊哈哈哈。。。结果View和Model放到一起了。</p>
+<p>其实为什么PIN码和密码放到一起呢？因为他们有个共同的父类<strong>KeyguardAbsKeyInputView.java</strong>,关于解锁逻辑的显示控制也在父类里，因此PIN码和密码解锁在这个父类里做操作就可以了。</p>
+<p><strong>com.android.keyguard.KeyguardAbsKeyInputViewController.java</strong>其中代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">new LockPatternChecker.OnCheckCallback() &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onEarlyMatched() &#123;</span><br><span class="line">        mLatencyTracker.onActionEnd(ACTION_CHECK_CREDENTIAL);</span><br><span class="line"></span><br><span class="line">        onPasswordChecked(userId, true /* matched */, 0 /* timeoutMs */,</span><br><span class="line">                true /* isValidPassword */);</span><br><span class="line">        password.zeroize();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onChecked(boolean matched, int timeoutMs) &#123;</span><br><span class="line">        mLatencyTracker.onActionEnd(ACTION_CHECK_CREDENTIAL_UNLOCKED);</span><br><span class="line">        mView.setPasswordEntryInputEnabled(true);</span><br><span class="line">        mPendingLockCheck = null;</span><br><span class="line">        if (!matched) &#123;</span><br><span class="line">            onPasswordChecked(userId, false /* matched */, timeoutMs,</span><br><span class="line">                    true /* isValidPassword */);</span><br><span class="line">        &#125;</span><br><span class="line">        password.zeroize();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onCancelled() &#123;</span><br><span class="line">        // We already got dismissed with the early matched callback, so we cancelled</span><br><span class="line">        // the check. However, we still need to note down the latency.</span><br><span class="line">        mLatencyTracker.onActionEnd(ACTION_CHECK_CREDENTIAL_UNLOCKED);</span><br><span class="line">        password.zeroize();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其实关于锁屏PIN码、密码和图案解锁都是依靠这个<strong>LockPatternChecker.checkPassword</strong>方法去验证密码，然后利用<strong>LockPatternChecker.OnCheckCallback</strong>这个回调来返回验证结果，这个验证结果的回调也是通过JNI一系列步骤完成的。</p>
+<p>先看其中的两个回调方法</p>
+<p>1、onChecked 这个回调方法是当验证失败的时候才会回调，这里会返回matched，这里会返回false，timeoutMs这里就是时间间隔。</p>
+<p>2、onEarlyMatched 这个回调方法是当验证成功的时候才会回调。</p>
+<p>发现问题：</p>
+<p>其实刚开始做这个功能的时候并没有考虑做全局的，就想在这里做一个时间的拦截，然后自己把这个时间间隔改了，就能完成需求，其实后来测试并不行，所以这里就牵扯出了发现的几个问题。</p>
+<p>经测试发现，如下问题：</p>
+<p>1、系统默认返回都是30×1000</p>
+<p>2、默认锁屏第三次尝试解锁时候，并不是5次。</p>
+<p>3、就算你强制能让第三次尝试的还能输入密码尝试解锁，但是系统下边是锁定的，并不能进行正常的解锁尝试（即输入的正常密码，并不能解锁成功，返回仍然是失败）</p>
+<p>因此，根据需求要做成全局的，就找到根源把这个返回时间修改成自己想要的这样，所有实现这个回调的应用都能获取到新制定规则的时间（这里是指Settings（其实每个应用）那边其实也是实现这边的回调接口，然后系统返回这个时间都能接受到最新的时间规则）。</p>
+<p>这样就一直追，追到了这个类<strong>gatekeeper.cpp</strong>。（其实做系统开发，修改或者添加功能，就是找到一个突破口，一直追追）其实真正的返回时间的是在这里写好的。如下：</p>
+<p><strong>/system/gatekeeper/gatekeeper.cpp</strong> 的ComputeRetryTimeout函数</p>
+<p>原生代码:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line"> * Calculates the timeout in milliseconds as a function of the failure</span><br><span class="line"> * counter &#x27;x&#x27; as follows:</span><br><span class="line"> *</span><br><span class="line"> * [0, 4] -&gt; 0</span><br><span class="line"> * 5 -&gt; 30</span><br><span class="line"> * [6, 10] -&gt; 0</span><br><span class="line"> * [11, 29] -&gt; 30</span><br><span class="line"> * [30, 139] -&gt; 30 * (2^((x - 30)/10))</span><br><span class="line"> * [140, inf) -&gt; 1 day</span><br><span class="line"> *</span><br><span class="line"> */</span><br><span class="line">uint32_t GateKeeper::ComputeRetryTimeout(const failure_record_t *record) &#123;</span><br><span class="line">    static const int failure_timeout_ms = 30000;</span><br><span class="line">    if (record-&gt;failure_counter == 0) return 0;</span><br><span class="line"></span><br><span class="line">    if (record-&gt;failure_counter &gt; 0 &amp;&amp; record-&gt;failure_counter &lt;= 10) &#123;</span><br><span class="line">        if (record-&gt;failure_counter % 5 == 0) &#123;</span><br><span class="line">            return failure_timeout_ms;</span><br><span class="line">        &#125;  else &#123;</span><br><span class="line">            return 0;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else if (record-&gt;failure_counter &lt; 30) &#123;</span><br><span class="line">        return failure_timeout_ms;</span><br><span class="line">    &#125; else if (record-&gt;failure_counter &lt; 140) &#123;</span><br><span class="line">        return failure_timeout_ms &lt;&lt; ((record-&gt;failure_counter - 30) / 10);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return DAY_IN_MS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据上边可以看出，30000这个数字很敏感嘛，系统一直返回的就是这个30000ms，终于找到了，是一个固定值。其实细看这个方法可以看出来，它是通过记录失败的次数然后进行了判断，返回时间间隔。</p>
+<p>总结上边代码：</p>
+<p>1、当失败0次，返回0ms</p>
+<p>2、当失败大于0，失败小于10次，就是当前两次时，每次失败5次后，返回30000ms，意思是这总前两次都可以尝试5次机会</p>
+<p>3、当失败次数小于30次，就是当总次数是10次到30次时，返回30000ms，意思是第二次以后为每次就只有一次尝试机会解锁，就要等待时间。直到总次数为30次时。</p>
+<p>4、当总次数大于30次到140次，就是需要左移运算出毫秒数。</p>
+<p>这里有两种次数，一种是每次解锁都有5次尝试机会（但是只有前两次），后边每次都要等待时间，这里就是前边我们遇到的问题。</p>
+<p>因此修改这个方法的规则，解决问题</p>
+<p>修改后代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">uint32_t GateKeeper::ComputeRetryTimeout(const failure_record_t *record) &#123;</span><br><span class="line">    static const int failure_timeout_ms = 60*1000;</span><br><span class="line">    if (record-&gt;failure_counter == 0) return 0;</span><br><span class="line">    if (record-&gt;failure_counter &gt; 0) &#123;</span><br><span class="line">        if (record-&gt;failure_counter % 5 == 0) &#123;</span><br><span class="line">                if(record-&gt;failure_counter/5 == 1)&#123;</span><br><span class="line">                    return 2*failure_timeout_ms;</span><br><span class="line">                &#125;else if(record-&gt;failure_counter/5 == 2)&#123;</span><br><span class="line">                    return 5*failure_timeout_ms;</span><br><span class="line">                &#125;else if(record-&gt;failure_counter/5 == 3)&#123;</span><br><span class="line">                    return 15*failure_timeout_ms;</span><br><span class="line">                &#125;else if(record-&gt;failure_counter/5 == 4)&#123;</span><br><span class="line">                    return 30*failure_timeout_ms;</span><br><span class="line">                &#125;else if(record-&gt;failure_counter/5 == 5)&#123;</span><br><span class="line">                    return 60*failure_timeout_ms;</span><br><span class="line">                &#125;else if(record-&gt;failure_counter/5 &gt;= 6)&#123;</span><br><span class="line">                    return 120*failure_timeout_ms;</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;  else &#123;</span><br><span class="line">            return 0;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return 2*failure_timeout_ms;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样，我们就修改了它原生的规则。实现时间的动态改变，随着尝试次数的增加。</p>
+<p>写到这已经满足了需求上的前两条需求了，现在就要满足实现第三条关机重启仍然能计算时间。</p>
+<p>根据逻辑如下代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">void onPasswordChecked(int userId, boolean matched, int timeoutMs, boolean isValidPassword) &#123;</span><br><span class="line">    boolean dismissKeyguard = KeyguardUpdateMonitor.getCurrentUser() == userId;</span><br><span class="line">    if (matched) &#123;</span><br><span class="line">        getKeyguardSecurityCallback().reportUnlockAttempt(userId, true, 0);</span><br><span class="line">        if (dismissKeyguard) &#123;</span><br><span class="line">            mDismissing = true;</span><br><span class="line">            mLatencyTracker.onActionStart(LatencyTracker.ACTION_LOCKSCREEN_UNLOCK);</span><br><span class="line">            getKeyguardSecurityCallback().dismiss(true, userId);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        if (isValidPassword) &#123;</span><br><span class="line">            getKeyguardSecurityCallback().reportUnlockAttempt(userId, false, timeoutMs);</span><br><span class="line">            if (timeoutMs &gt; 0) &#123;</span><br><span class="line">                long deadline = mLockPatternUtils.setLockoutAttemptDeadline(</span><br><span class="line">                        userId, timeoutMs);</span><br><span class="line">                handleAttemptLockout(deadline);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if (timeoutMs == 0) &#123;</span><br><span class="line">            mMessageAreaController.setMessage(mView.getWrongPasswordStringId());</span><br><span class="line">        &#125;</span><br><span class="line">        mView.resetPasswordText(true /* animate */, false /* announce deletion if no match */);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其实这里就是上边说的回调接口调用的方法，来处理验证密码失败或者成功的逻辑，其中上边逻辑处理成功就是matched为true的时候，失败为false的时候，因此看false这边通过这句代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">long deadline = mLockPatternUtils.setLockoutAttemptDeadline(</span><br><span class="line">                                userId, timeoutMs);</span><br></pre></td></tr></table></figure>
+
+<p>设置了时间，然后返回一个终止时间（就是计时结束的时间戳），然后去实现倒计时处理的。</p>
+<p>来看一下，这个方法是怎么记录时间戳的？</p>
+<p><code>/frameworks/base/core/java/com/android/internal/widget/LockPatternUtils.java</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">* Set and store the lockout deadline, meaning the user can&#x27;t attempt their unlock</span><br><span class="line">* pattern until the deadline has passed.</span><br><span class="line">* @return the chosen deadline.</span><br><span class="line">*/</span><br><span class="line">@UnsupportedAppUsage</span><br><span class="line">public long setLockoutAttemptDeadline(int userId, int timeoutMs) &#123;</span><br><span class="line">    final long deadline = SystemClock.elapsedRealtime() + timeoutMs;</span><br><span class="line">    if (userId == USER_FRP) &#123;</span><br><span class="line">        // For secure password storage (that is required for FRP), the underlying storage also</span><br><span class="line">        // enforces the deadline. Since we cannot store settings for the FRP user, don&#x27;t.</span><br><span class="line">        return deadline;</span><br><span class="line">    &#125;</span><br><span class="line">    mLockoutDeadlines.put(userId, deadline);</span><br><span class="line">    return deadline;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>由代码得知，其实参数是时间间隔，然后通过**SystemClock.elapsedRealtime()**这个方法获取开机时间加上时间间隔，然后得到计时结束的时间戳存储起来。</p>
+<p>其实每次亮屏后会出现倒计时的界面是重新获取了计时结束的时间戳，如下代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public void onPause() &#123;</span><br><span class="line">    super.onPause();</span><br><span class="line">    mResumed = false;</span><br><span class="line"></span><br><span class="line">    if (mCountdownTimer != null) &#123;</span><br><span class="line">        mCountdownTimer.cancel();</span><br><span class="line">        mCountdownTimer = null;</span><br><span class="line">    &#125;</span><br><span class="line">    if (mPendingLockCheck != null) &#123;</span><br><span class="line">        mPendingLockCheck.cancel(false);</span><br><span class="line">        mPendingLockCheck = null;</span><br><span class="line">    &#125;</span><br><span class="line">    reset();</span><br><span class="line">&#125;</span><br><span class="line">     </span><br><span class="line">@Override</span><br><span class="line">public void reset() &#123;</span><br><span class="line">    // start fresh</span><br><span class="line">    mDismissing = false;</span><br><span class="line">    mView.resetPasswordText(false /* animate */, false /* announce */);</span><br><span class="line">    // if the user is currently locked out, enforce it.</span><br><span class="line">    long deadline = mLockPatternUtils.getLockoutAttemptDeadline(</span><br><span class="line">            KeyguardUpdateMonitor.getCurrentUser());</span><br><span class="line">    /* UNISOC: Modify for bug1692403, 1760268 &#123;@ */</span><br><span class="line">    if (shouldLockout(deadline)) &#123;</span><br><span class="line">        handleAttemptLockout(deadline);</span><br><span class="line">    &#125; else if (KeyguardSecurityContainerController.mDeadLine == 0</span><br><span class="line">            &amp;&amp; mView.getVisibility() == View.VISIBLE) &#123;</span><br><span class="line">        resetState();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中的**mLockPatternUtils.getLockoutAttemptDeadline(KeyguardUpdateMonitor.getCurrentUser());**方法就是获取的计时结束时间戳，通过判断是否时间戳是否失效，设置界面倒计时是否显示，所以再看一下获取的计时结束时间戳的方法如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">    * @return The elapsed time in millis in the future when the user is allowed to</span><br><span class="line">    *   attempt to enter their lock pattern, or 0 if the user is welcome to</span><br><span class="line">    *   enter a pattern.</span><br><span class="line">    */</span><br><span class="line">public long getLockoutAttemptDeadline(int userId) &#123;</span><br><span class="line">    final long deadline = mLockoutDeadlines.get(userId, 0L);</span><br><span class="line">    final long now = SystemClock.elapsedRealtime();</span><br><span class="line">    if (deadline &lt; now &amp;&amp; deadline != 0) &#123;</span><br><span class="line">        // timeout expired</span><br><span class="line">        mLockoutDeadlines.put(userId, 0);</span><br><span class="line">        return 0L;</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    if (deadline &gt; (now + timeoutMs)) &#123;</span><br><span class="line">        // device was rebooted, set new deadline</span><br><span class="line">        deadline = now + timeoutMs;</span><br><span class="line">        setLong(LOCKOUT_ATTEMPT_DEADLINE, deadline, userId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return deadline;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过获取存储的计时结束时间戳，然后对比现在的时间，因为**SystemClock.elapsedRealtime()**获取的是开机到现在的时间，所以只要关机重启，就会走下边的判断会根据最新的时间加上时间间隔，存储起来作为开机后的计时结束时间戳。因此就看到开后会重新等待30秒的现象，因此我们在这里想要实现效果修改逻辑。</p>
+<p>添加代码接口，一个set，一个get，如下代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">    * Set and store the lockout deadline by SystemCurrentTime, meaning the user can&#x27;t attempt his/her unlock</span><br><span class="line">    * pattern until the deadline has passed.</span><br><span class="line">    * @return the chosen deadline.</span><br><span class="line">    */</span><br><span class="line">public long setLockoutAttemptDeadlineBySystemCurrentTime(int userId, int timeoutMs) &#123;</span><br><span class="line">    final long deadline = System.currentTimeMillis() + timeoutMs;</span><br><span class="line">    setLong(LOCKOUT_ATTEMPT_DEADLINE_CURRENTTIME, deadline, userId);</span><br><span class="line">    setLong(LOCKOUT_ATTEMPT_TIMEOUT_MS, timeoutMs, userId);</span><br><span class="line">    return deadline;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">    * @return The SystemCurrentTime in millis in the future when the user is allowed to</span><br><span class="line">    *   attempt to enter his/her lock pattern, or 0 if the user is welcome to</span><br><span class="line">    *   enter a pattern.</span><br><span class="line">    */</span><br><span class="line">public long getLockoutAttemptDeadlineBySystemCurrentTime(int userId) &#123;</span><br><span class="line">    long deadline = getLong(LOCKOUT_ATTEMPT_DEADLINE_CURRENTTIME, 0L, userId);</span><br><span class="line">    final long now = System.currentTimeMillis();</span><br><span class="line">    if (deadline &lt; now &amp;&amp; deadline != 0) &#123;</span><br><span class="line">        // timeout expired</span><br><span class="line">        setLong(LOCKOUT_ATTEMPT_DEADLINE_CURRENTTIME, 0, userId);</span><br><span class="line">        setLong(LOCKOUT_ATTEMPT_TIMEOUT_MS, 0, userId);</span><br><span class="line">        return 0L;</span><br><span class="line">    &#125;</span><br><span class="line">    return deadline;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样把对应的方法set和get方法替换了(KeyguardAbsKeyInputView.java这是PIN码和密码解锁，KeyguardPatternView.java这里是图案的)，就可以了。这样就满足了PIN码、密码和图案解锁的需求。</p>
+
+      
+      <blockquote>
+        
+        <strong>本文链接：</strong><br><a href="http://longzhiye.top/2022/09/08/2022-09-08/">http://longzhiye.top/2022/09/08/2022-09-08/</a>
+      </blockquote>
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Android/" rel="tag">Android</a><a class="mdui-ripple article_tags-link" href="/tags/Android12/" rel="tag">Android12</a><a class="mdui-ripple article_tags-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2022/09/09/2022-09-09/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android 12 编译framewok和services详解'}">上一篇</span>
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2022/09/06/2022-09-06/">
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android 12 双击power键启动相机源码解析'}">下一篇</span>
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+
+
+
+</main>
+  <footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="http://github.com/longzhiye" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe7ab;</i></a>
+    
+    
+    
+      <a href="https://www.zhihu.com/people/long-zhi-xie-61" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe6c0;</i></a>
+    
+    
+    
+      <a href="tencent://tencent:////message/?uin=951898105&Menu=yes" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2022 - 2025 龙之叶<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>
+    <br>
+      <span id="busuanzi_container_site_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_site_pv"></span></span> &nbsp;&nbsp;
+      <span id="busuanzi_container_site_uv" style="display: none;"><i class="iconfont">&#xe601;</i> <span id="busuanzi_value_site_uv"></span></span>
+    
+  </div>
+</footer>
+
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+  
+<script src="/custom.js"></script>
+
+</body>
+</html>

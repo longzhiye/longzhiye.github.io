@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>Android 13 取色引擎详解 | 龙之叶的博客</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="alternate" href="/atom.xml" title="龙之叶的博客" type="application/atom+xml">
+  <meta name="description" content="Android 13 取色引擎详解">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 13 取色引擎详解">
+<meta property="og:url" content="http://longzhiye.top/2023/08/19/2023-08-19/index.html">
+<meta property="og:site_name" content="龙之叶的博客">
+<meta property="og:description" content="Android 13 取色引擎详解">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://longzhiye.top/images/20230819/20230819001.png">
+<meta property="og:image" content="http://longzhiye.top/images/20230819/20230819002.png">
+<meta property="article:published_time" content="2023-08-18T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-04T08:39:58.950Z">
+<meta property="article:author" content="龙之叶">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Framework">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://longzhiye.top/images/20230819/20230819001.png">
+
+  <meta name="keywords" content=",Android,Framework">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="龙之叶的博客">
+  <meta name="msapplication-starturl" content="http://longzhiye.top/2023/08/19/2023-08-19/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="龙之叶的博客">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <link rel="canonical" href="http://longzhiye.top/2023/08/19/2023-08-19/">
+  
+
+  
+  
+
+  
+  
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/custom.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(!a){document.getElementsByTagName("body")[0].className+=" mdui-drawer-body-left"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">龙之叶的博客</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+	<!--
+    <a href="/atom.xml" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'RSS'}"><i class="mdui-icon material-icons">rss_feed</i></a>
+	-->
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(a){document.getElementById("sidebar").className+=" mdui-drawer-close"};</script>
+  <div class="mdui-grid-tile">
+    <img src="/images/banner.png" style="height: 160px;">
+    <img src="/images/avatar.png" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;background-color:#fff;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">龙之叶</div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>生命不息，折腾不止</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:longzhiye163@163.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'longzhiye163@163.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-0");if(a){document.getElementsByClassName("mdui-collapse-item")[0].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">archive</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2025/10/">十月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/09/">九月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/08/">八月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/07/">七月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/06/">六月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/03/">三月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/02/">二月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/01/">一月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/10/">十月 2024<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/09/">九月 2024<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/08/">八月 2024<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/03/">三月 2024<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/02/">二月 2024<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/01/">一月 2024<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/12/">十二月 2023<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/11/">十一月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/10/">十月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/09/">九月 2023<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/08/">八月 2023<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/06/">六月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/05/">五月 2023<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/04/">四月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/03/">三月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/02/">二月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/09/">九月 2022<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/04/">四月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/03/">三月 2017<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/02/">二月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/01/">一月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/12/">十二月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/11/">十一月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/10/">十月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/08/">八月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-1");if(a){document.getElementsByClassName("mdui-collapse-item")[1].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">class</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">108</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E8%B5%84%E8%AE%AF/">资讯<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E9%80%9A%E7%9F%A5/">通知<span class="mdui-ripple sidebar_archives-count">4</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-2");if(a){document.getElementsByClassName("mdui-collapse-item")[2].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/ANR/" rel="tag">ANR<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/APP/" rel="tag">APP<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android/" rel="tag">Android<span class="mdui-ripple sidebar_archives-count">98</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android12/" rel="tag">Android12<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android13/" rel="tag">Android13<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android14/" rel="tag">Android14<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android16/" rel="tag">Android16<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AndroidStudio/" rel="tag">AndroidStudio<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AutoDraw/" rel="tag">AutoDraw<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Build/" rel="tag">Build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Crash/" rel="tag">Crash<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Foxmail/" rel="tag">Foxmail<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Framework/" rel="tag">Framework<span class="mdui-ripple sidebar_archives-count">20</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GPS%E8%BD%A8%E8%BF%B9%E5%9B%BE/" rel="tag">GPS轨迹图<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Git/" rel="tag">Git<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GitHub/" rel="tag">GitHub<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Google/" rel="tag">Google<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Java/" rel="tag">Java<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Kernel/" rel="tag">Kernel<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Launcher/" rel="tag">Launcher<span class="mdui-ripple sidebar_archives-count">17</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Lib/" rel="tag">Lib<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Linux/" rel="tag">Linux<span class="mdui-ripple sidebar_archives-count">18</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Markdown/" rel="tag">Markdown<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Material-Design/" rel="tag">Material Design<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OS-X/" rel="tag">OS X<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OTA/" rel="tag">OTA<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/QuickTime/" rel="tag">QuickTime<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SSH/" rel="tag">SSH<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Settings/" rel="tag">Settings<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SystemUI/" rel="tag">SystemUI<span class="mdui-ripple sidebar_archives-count">19</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/UAC/" rel="tag">UAC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Ubuntu/" rel="tag">Ubuntu<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WPS/" rel="tag">WPS<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Wifi/" rel="tag">Wifi<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WindTerm/" rel="tag">WindTerm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows/" rel="tag">Windows<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows-11/" rel="tag">Windows 11<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/androidmk/" rel="tag">androidmk<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/blog/" rel="tag">blog<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/build/" rel="tag">build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/feel/" rel="tag">feel<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/framework/" rel="tag">framework<span class="mdui-ripple sidebar_archives-count">58</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/inotify/" rel="tag">inotify<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/life/" rel="tag">life<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/ninja/" rel="tag">ninja<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/rsync/" rel="tag">rsync<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/standard/" rel="tag">standard<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/test/" rel="tag">test<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1/" rel="tag">企业微信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E7%94%9F%E6%B4%BB%E6%84%9F%E6%82%9F/" rel="tag">生活感悟<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+      <a href="/timeline" class="mdui-list-item mdui-ripple">时间轴</a>
+    
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-3");if(a){document.getElementsByClassName("mdui-collapse-item")[3].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+          <a href="http://www.niemingzhao.top" target="_blank" class="mdui-list-item mdui-p-l-2 mdui-text-color-theme-accent mdui-ripple" style="justify-content: center;">聂明照的博客</a>
+        
+        
+      </div>
+    </div>
+  </div>
+</aside>
+
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <style>#main article .mdui-card-content .text-center{text-align:center!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-3.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">Android 13 取色引擎详解</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2023-08-19 / <i class="iconfont">&#xe601;</i> 龙之叶 &nbsp;&nbsp; <span id="busuanzi_container_page_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_page_pv"></span></span></div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#qrcode', align: 'right'}"><i class="mdui-icon material-icons">devices</i></button>
+          <ul class="mdui-menu" id="qrcode">
+            
+              <li class="mdui-menu-item"><a class="mdui-text-center mdui-ripple">发送到手机</a></li>
+            
+            <li class="mdui-menu-item" disabled>
+              
+                <img src="//qr.liantu.com/api.php?w=246&m=10&text=http://longzhiye.top/2023/08/19/2023-08-19/">
+              
+            </li>
+          </ul>
+        
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="mdui-icon material-icons">share</i></button>
+          <ul class="mdui-menu" id="share_menu">
+            <li class="mdui-menu-item">
+              <a href="https://service.weibo.com/share/share.php?appkey=&title=Android 13 取色引擎详解&url=http://longzhiye.top/2023/08/19/2023-08-19/&pic=http://longzhiye.top/images/favicon.png&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://twitter.com/intent/tweet?text=Android 13 取色引擎详解&url=http://longzhiye.top/2023/08/19/2023-08-19/&via=龙之叶" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=http://longzhiye.top/2023/08/19/2023-08-19/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://plus.google.com/share?url=http://longzhiye.top/2023/08/19/2023-08-19/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://longzhiye.top/2023/08/19/2023-08-19/&title=Android 13 取色引擎详解" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://connect.qq.com/widget/shareqq/index.html?site=龙之叶的博客&title=Android 13 取色引擎详解&pics=http://longzhiye.top/images/favicon.png&url=http://longzhiye.top/2023/08/19/2023-08-19/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://telegram.me/share/url?url=http://longzhiye.top/2023/08/19/2023-08-19/&text=Android 13 取色引擎详解" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+            </li>
+          </ul>
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h2 id="1、-应用如何获取壁纸颜色？"><a href="#1、-应用如何获取壁纸颜色？" class="headerlink" title="1、 应用如何获取壁纸颜色？"></a>1、 应用如何获取壁纸颜色？</h2><h3 id="1-1、调用getWallpaperColors获取壁纸颜色"><a href="#1-1、调用getWallpaperColors获取壁纸颜色" class="headerlink" title="1.1、调用getWallpaperColors获取壁纸颜色"></a>1.1、调用getWallpaperColors获取壁纸颜色</h3><p>其实WallpaperManager从很早之前就提供了getWallpaperColors接口<br><strong>/frameworks/base/core/java/android/app/WallpaperManager.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">    <span class="meta">@UnsupportedAppUsage</span></span><br><span class="line">    <span class="keyword">public</span> <span class="meta">@Nullable</span> WallpaperColors <span class="title function_">getWallpaperColors</span><span class="params">(<span class="type">int</span> which, <span class="type">int</span> userId)</span> &#123;</span><br><span class="line">        StrictMode.assertUiContext(mContext, <span class="string">&quot;getWallpaperColors&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> sGlobals.getWallpaperColors(which, userId, mContext.getDisplayId());</span><br><span class="line">    &#125;</span><br><span class="line">...</span><br><span class="line">    </span><br><span class="line">        WallpaperColors <span class="title function_">getWallpaperColors</span><span class="params">(<span class="type">int</span> which, <span class="type">int</span> userId, <span class="type">int</span> displayId)</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (which != FLAG_LOCK &amp;&amp; which != FLAG_SYSTEM) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(</span><br><span class="line">                        <span class="string">&quot;Must request colors for exactly one kind of wallpaper&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> mService.getWallpaperColors(which, userId, displayId);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (RemoteException e) &#123;</span><br><span class="line">                <span class="comment">// Can&#x27;t get colors, connection lost.</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2、注册OnColorsChangedListener接口监听壁纸颜色"><a href="#1-2、注册OnColorsChangedListener接口监听壁纸颜色" class="headerlink" title="1.2、注册OnColorsChangedListener接口监听壁纸颜色"></a>1.2、注册OnColorsChangedListener接口监听壁纸颜色</h3><h4 id="1-2-1、获取整个壁纸颜色"><a href="#1-2-1、获取整个壁纸颜色" class="headerlink" title="1.2.1、获取整个壁纸颜色"></a>1.2.1、获取整个壁纸颜色</h4><p><strong>/frameworks/base/core/java/android/app/WallpaperManager.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addOnColorsChangedListener</span><span class="params">(<span class="meta">@NonNull</span> OnColorsChangedListener listener,</span></span><br><span class="line"><span class="params">            <span class="meta">@NonNull</span> Handler handler)</span> &#123;</span><br><span class="line">        addOnColorsChangedListener(listener, handler, mContext.getUserId());</span><br><span class="line">    &#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h4 id="使用范例："><a href="#使用范例：" class="headerlink" title="使用范例："></a>使用范例：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">WallpaperManager wallpaperManager=(WallpaperManager) getSystemService(Context.WALLPAPER_SERVICE);</span><br><span class="line">        wallpaperManager.addOnColorsChangedListener(<span class="keyword">new</span> <span class="title class_">WallpaperManager</span>.OnColorsChangedListener() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onColorsChanged</span><span class="params">(WallpaperColors colors, <span class="type">int</span> which)</span> &#123;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
+<p>1.2.2、获取壁纸区域颜色(需要源码引用)<br><strong>/frameworks/base/core/java/android/app/WallpaperManager.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@hide</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addOnColorsChangedListener</span><span class="params">(<span class="meta">@NonNull</span> LocalWallpaperColorConsumer callback,</span></span><br><span class="line"><span class="params">            List&lt;RectF&gt; regions)</span> <span class="keyword">throws</span> IllegalArgumentException &#123;</span><br><span class="line">        <span class="keyword">for</span> (RectF region : regions) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!LOCAL_COLOR_BOUNDS.contains(region)) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Regions must be within bounds &quot;</span></span><br><span class="line">                        + LOCAL_COLOR_BOUNDS);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        sGlobals.addOnColorsChangedListener(callback, regions, FLAG_SYSTEM,</span><br><span class="line">                                                 mContext.getUserId(), mContext.getDisplayId());</span><br><span class="line">    &#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>==Tip: LocalWallpaperColorConsumer是hide接口，非源码编译的Apk无法引用==</p>
+<h4 id="使用范例：-1"><a href="#使用范例：-1" class="headerlink" title="使用范例："></a>使用范例：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">addOnColorsChangedListener(<span class="keyword">new</span> <span class="title class_">LocalWallpaperColorConsumer</span>() &#123;</span><br><span class="line">    <span class="meta">@java</span>.lang.Override</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onColorsChanged</span><span class="params">(RectF area, WallpaperColors colors)</span> &#123;</span><br><span class="line">                </span><br><span class="line">    &#125;</span><br><span class="line">&#125;,handler);</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3、使用WallpaperColors"><a href="#1-3、使用WallpaperColors" class="headerlink" title="1.3、使用WallpaperColors"></a>1.3、使用WallpaperColors</h3><p>取出的数据都封装在WallpaperColors中，可通过以下接口获取到原始数据<br><strong>/frameworks/base/core/java/android/app/WallpaperColors.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//获取墙纸最具视觉代表性的颜色。“视觉上具有代表性”是指在图像中很容易被注意到，可能发生在高频率。不为空</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@NonNull</span> Color <span class="title function_">getPrimaryColor</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> mMainColors.get(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//获取壁纸的第二个最杰出的颜色。可以为空</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@Nullable</span> Color <span class="title function_">getSecondaryColor</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> mMainColors.size() &lt; <span class="number">2</span> ? <span class="literal">null</span> : mMainColors.get(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//获得壁纸的第三个最杰出的颜色。可以为空</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@Nullable</span> Color <span class="title function_">getTertiaryColor</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> mMainColors.size() &lt; <span class="number">3</span> ? <span class="literal">null</span> : mMainColors.get(<span class="number">2</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//最杰出的颜色列表,按重要性排序</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@NonNull</span> List&lt;Color&gt; <span class="title function_">getMainColors</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> Collections.unmodifiableList(mMainColors);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//得到所有提取出来的颜色，key是颜色的rgb int值 ，value是出现次数 </span></span><br><span class="line"> <span class="keyword">public</span> <span class="meta">@NonNull</span> Map&lt;Integer, Integer&gt; <span class="title function_">getAllColors</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> Collections.unmodifiableMap(mAllColors);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>框架中只是负责提取出原始颜色，但有些时候直接使用原始颜色，并不能达到最好的效果。</p>
+<p>例如：PixelLauncher的插件实现颜色动态变化，除了从Wallpaper中拿到颜色，还进行了二次加工，使其更符合Material Desgin的风格，这也是符合“Monet”主题系统 中的一部分，目前是没有开源的。所以一方或三方若想使用该特性，可以按需进行选择和二次加工。</p>
+<h2 id="2、根据壁纸取色，能取出多少种颜色，颜色的格式和使用场景是什么？"><a href="#2、根据壁纸取色，能取出多少种颜色，颜色的格式和使用场景是什么？" class="headerlink" title="2、根据壁纸取色，能取出多少种颜色，颜色的格式和使用场景是什么？"></a>2、根据壁纸取色，能取出多少种颜色，颜色的格式和使用场景是什么？</h2><p>在Android 13上，内存低的机器 ，最多取出五种色值，内存高的机器，最多取出128种颜色。<br><strong>/frameworks/base/core/java/android/app/WallpaperColors.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> WallpaperColors <span class="title function_">fromBitmap</span><span class="params">(<span class="meta">@NonNull</span> Bitmap bitmap,</span></span><br><span class="line"><span class="params">            <span class="meta">@FloatRange</span> (from = <span class="number">0f</span>, to = <span class="number">1f</span>)</span> <span class="type">float</span> dimAmount) &#123;</span><br><span class="line">...</span><br><span class="line">        <span class="keyword">if</span> (ActivityManager.isLowRamDeviceStatic()) &#123;</span><br><span class="line">            palette = Palette</span><br><span class="line">                    .from(bitmap, <span class="keyword">new</span> <span class="title class_">VariationalKMeansQuantizer</span>())</span><br><span class="line">                    .maximumColorCount(<span class="number">5</span>)</span><br><span class="line">                    .resizeBitmapArea(MAX_WALLPAPER_EXTRACTION_AREA)</span><br><span class="line">                    .generate();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            palette = Palette</span><br><span class="line">                    .from(bitmap, <span class="keyword">new</span> <span class="title class_">CelebiQuantizer</span>())</span><br><span class="line">                    .maximumColorCount(<span class="number">128</span>)</span><br><span class="line">                    .resizeBitmapArea(MAX_WALLPAPER_EXTRACTION_AREA)</span><br><span class="line">                    .generate();</span><br><span class="line">        &#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<ul>
+<li>取出的是一个WallpaperColors对象，其中包含三种主颜色，以及一个保存了所有提取出颜色的Color数组(Hide)。</li>
+<li>目前的应用场景主要是PixelLauncher、SystemUI、GBoard</li>
+</ul>
+<h2 id="3、能从动态壁纸中取色吗？"><a href="#3、能从动态壁纸中取色吗？" class="headerlink" title="3、能从动态壁纸中取色吗？"></a>3、能从动态壁纸中取色吗？</h2><p>很可惜，Google并没有为动态壁纸提供默认的取色逻辑。</p>
+<p>壁纸的取色，最终会调用到WallpaperService的onComputeColors中，但该方法是空实现，框架只是提供了最基本的获取接口而已。</p>
+<p>所以在Android 13之前，无论是静态壁纸或是动态 壁纸，若想要其他模块能获取到壁纸颜色的话，需要壁纸提供方，在实现WallpaperService的Engine时，也一并实现onCompleteColors方法，然后在颜色变化时调用notifyColorsChanged。<br><strong>/frameworks/base/core/java/android/service/wallpaper/WallpaperService.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">notifyColorsChanged</span><span class="params">()</span> &#123;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">//关键调用</span></span><br><span class="line">        <span class="keyword">final</span> <span class="type">WallpaperColors</span> <span class="variable">newColors</span> <span class="operator">=</span> onComputeColors();</span><br><span class="line">            <span class="keyword">if</span> (mConnection != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="comment">//通知给监听壁纸颜色变化的模块</span></span><br><span class="line">                mConnection.onWallpaperColorsChanged(newColors, mDisplay.getDisplayId());</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                 Log.w(TAG, <span class="string">&quot;Can&#x27;t notify system because wallpaper connection &quot;</span></span><br><span class="line">                        + <span class="string">&quot;was not established.&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            ...</span><br><span class="line">        &#125; <span class="keyword">catch</span> (RemoteException e) &#123;</span><br><span class="line">            Log.w(TAG, <span class="string">&quot;Can&#x27;t notify system because wallpaper connection was lost.&quot;</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//重写该方法</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@Nullable</span> WallpaperColors <span class="title function_">onComputeColors</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>如图：<br>特性|&lt; Android 13|Android 13<br>–|–|–<br>静态壁纸|没有默认实现|提供了默认实现，可以根据区域取色<br>动态壁纸|空实现|空实现</p>
+<h2 id="4、壁纸取色失败会使用默认颜色吗？"><a href="#4、壁纸取色失败会使用默认颜色吗？" class="headerlink" title="4、壁纸取色失败会使用默认颜色吗？"></a>4、壁纸取色失败会使用默认颜色吗？</h2><p>壁纸其实是通过Palette接口进行颜色提取的，基本上都能取到至少一种颜色。当真的取出失败或取出的颜色如果不符合期望，需要采用另外一套默认颜色，这是由各个各个业务去处理的，比如Launcher中的LauncherAppWidgetHostView，重写了setColorResources方法<br><strong>/packages/apps/Launcher3/src/com/android/launcher3/widget/LauncherAppWidgetHostView.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setColorResources</span><span class="params">(<span class="meta">@Nullable</span> SparseIntArray colors)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (colors == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">//关键点1，提取不到颜色，会重置插件的颜色</span></span><br><span class="line">        resetColorResources();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">//关键点2，设置插件的颜色</span></span><br><span class="line">        <span class="built_in">super</span>.setColorResources(colors);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h2 id="5、Widget-取色的整体流程是怎样？"><a href="#5、Widget-取色的整体流程是怎样？" class="headerlink" title="5、Widget 取色的整体流程是怎样？"></a>5、Widget 取色的整体流程是怎样？</h2><p>具体流程见下图：</p>
+<p><img src="/images/20230819/20230819001.png"></p>
+<p>PixelLauncher是通过LocalWallpaperColorsExtractor的实现类进行颜色提取，该类继承于LocalColorExtractor，该类存在于Launcher3中，是空实现。可以看出，Google专门将Monet算法部分折分隐藏，只公开框架部分。</p>
+<p>而LocalWallpaperColorsExtractor是通过调用WallpaperManager.addOnColorsChangedListener接口，获取onColorsChanged(RectF rectF, WallpaperColors wallpaperColors)中的返回信息，然后再对WallpaperColors中的颜色信息进行二次加工处理。</p>
+<h2 id="6、Widget-能使用的颜色数量和范围"><a href="#6、Widget-能使用的颜色数量和范围" class="headerlink" title="6、Widget 能使用的颜色数量和范围"></a>6、Widget 能使用的颜色数量和范围</h2><p>Widget能使用的色值数量没有限制，从android.R.color.system_neutrall_0（#FFFFFF） 到android.R.color.system_accent3_1000（#000000）都是合法范围。</p>
+<h2 id="7、为什么现有第三方Launcher即使在Android13上，Widget的取色也会无效，而-Pixel-Launcher可以。"><a href="#7、为什么现有第三方Launcher即使在Android13上，Widget的取色也会无效，而-Pixel-Launcher可以。" class="headerlink" title="7、为什么现有第三方Launcher即使在Android13上，Widget的取色也会无效，而 Pixel Launcher可以。"></a>7、为什么现有第三方Launcher即使在Android13上，Widget的取色也会无效，而 Pixel Launcher可以。</h2><p>第三方 Launcher 代码中虽然已经有调用AppWidgetHostView.setColorResources，但是因为其提取颜色的LocalColorExtractor是空实现，所以没有实际效果。而Pixel Launcher 自己写了一个LocalWallpaperColorsExtractor去继承LocalColorExtractor。详见以下代码：</p>
+<p><strong>/packages/apps/Launcher3/src/com/android/launcher3/widget/LocalColorExtractor.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> LocalColorExtractor <span class="title function_">newInstance</span><span class="params">(Context context)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> Overrides.getObject(WallpaperColors.class, context.getApplicationContext(),</span><br><span class="line">            R.string.local_colors_extraction_class);</span><br><span class="line">&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>local_colors_extraction_class 该值定义在PixelLauncher中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;string name=&quot;local_colors_extraction_class&quot;&gt;com.google.android.apps.nexuslauncher.widget.LocalWallpaperColorsExtractor&lt;/string&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="8、是否可以固定设置一套或者几套颜色，去overlay-壁纸的取色？"><a href="#8、是否可以固定设置一套或者几套颜色，去overlay-壁纸的取色？" class="headerlink" title="8、是否可以固定设置一套或者几套颜色，去overlay 壁纸的取色？"></a>8、是否可以固定设置一套或者几套颜色，去overlay 壁纸的取色？</h2><p>可以，Android 13已经在secure表中预定义了theme_customization_overlay_packages字段，在其中配置了是否要根据主屏幕变色还是预置颜色，然后进行资源Overlay的。<br>Android 原生设置入口</p>
+<p><img src="/images/20230819/20230819002.png"></p>
+<p>theme_customization_overlay_packages字段含义<br>字段|含义|取值范围<br>–|–|–<br>android.theme.customization.color_index|选择颜色索引|0~n<br>android.theme.customization.system_palette|中立色|color<br>android.theme.customization.accent_color|强调色|color<br>android.theme.customization.color_source|采用跟随壁纸颜色还是基本颜色|present \ home_wallpaper \ lock_wallpaper<br>android.theme.customization.color_both”|区分当前壁纸设置类型|1 锁屏和主屏幕， 0 只设置其中一项</p>
+<p>我们可以直接使用或借鉴这套逻辑，预置几套色值，并设置为使用基本颜色。</p>
+
+      
+      <blockquote>
+        
+        <strong>本文链接：</strong><br><a href="http://longzhiye.top/2023/08/19/2023-08-19/">http://longzhiye.top/2023/08/19/2023-08-19/</a>
+      </blockquote>
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Android/" rel="tag">Android</a><a class="mdui-ripple article_tags-link" href="/tags/Framework/" rel="tag">Framework</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2023/08/20/2023-08-20/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Linux(Ubuntu)自定义命令的使用'}">上一篇</span>
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2023/08/13/2023-08-13/">
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android单独编译framework模块'}">下一篇</span>
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+
+
+
+</main>
+  <footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="http://github.com/longzhiye" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe7ab;</i></a>
+    
+    
+    
+      <a href="https://www.zhihu.com/people/long-zhi-xie-61" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe6c0;</i></a>
+    
+    
+    
+      <a href="tencent://tencent:////message/?uin=951898105&Menu=yes" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2022 - 2025 龙之叶<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>
+    <br>
+      <span id="busuanzi_container_site_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_site_pv"></span></span> &nbsp;&nbsp;
+      <span id="busuanzi_container_site_uv" style="display: none;"><i class="iconfont">&#xe601;</i> <span id="busuanzi_value_site_uv"></span></span>
+    
+  </div>
+</footer>
+
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+  
+<script src="/custom.js"></script>
+
+</body>
+</html>

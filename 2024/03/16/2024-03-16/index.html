@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>Android13 开机时间优化 | 龙之叶的博客</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="alternate" href="/atom.xml" title="龙之叶的博客" type="application/atom+xml">
+  <meta name="description" content="Android13 开机时间优化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android13 开机时间优化">
+<meta property="og:url" content="http://longzhiye.top/2024/03/16/2024-03-16/index.html">
+<meta property="og:site_name" content="龙之叶的博客">
+<meta property="og:description" content="Android13 开机时间优化">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://longzhiye.top/images/20240316/20240316001.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20240316/20240316002.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20240316/20240316003.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20240316/20240316004.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20240316/20240316005.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20240316/20240316006.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20240316/20240316007.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20240316/20240316008.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20240316/20240316009.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20240316/20240316010.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20240316/20240316011.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20240316/20240316012.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20240316/20240316013.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20240316/20240316014.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20240316/20240316015.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20240316/20240316016.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20240316/20240316017.jpg">
+<meta property="article:published_time" content="2024-03-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-04T08:39:58.971Z">
+<meta property="article:author" content="龙之叶">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="framework">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://longzhiye.top/images/20240316/20240316001.jpg">
+
+  <meta name="keywords" content=",Android,Linux,framework">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="龙之叶的博客">
+  <meta name="msapplication-starturl" content="http://longzhiye.top/2024/03/16/2024-03-16/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="龙之叶的博客">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <link rel="canonical" href="http://longzhiye.top/2024/03/16/2024-03-16/">
+  
+
+  
+  
+
+  
+  
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/custom.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(!a){document.getElementsByTagName("body")[0].className+=" mdui-drawer-body-left"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">龙之叶的博客</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+	<!--
+    <a href="/atom.xml" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'RSS'}"><i class="mdui-icon material-icons">rss_feed</i></a>
+	-->
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(a){document.getElementById("sidebar").className+=" mdui-drawer-close"};</script>
+  <div class="mdui-grid-tile">
+    <img src="/images/banner.png" style="height: 160px;">
+    <img src="/images/avatar.png" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;background-color:#fff;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">龙之叶</div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>生命不息，折腾不止</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:longzhiye163@163.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'longzhiye163@163.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-0");if(a){document.getElementsByClassName("mdui-collapse-item")[0].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">archive</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2025/10/">十月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/09/">九月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/08/">八月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/07/">七月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/06/">六月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/03/">三月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/02/">二月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/01/">一月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/10/">十月 2024<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/09/">九月 2024<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/08/">八月 2024<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/03/">三月 2024<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/02/">二月 2024<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/01/">一月 2024<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/12/">十二月 2023<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/11/">十一月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/10/">十月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/09/">九月 2023<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/08/">八月 2023<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/06/">六月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/05/">五月 2023<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/04/">四月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/03/">三月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/02/">二月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/09/">九月 2022<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/04/">四月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/03/">三月 2017<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/02/">二月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/01/">一月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/12/">十二月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/11/">十一月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/10/">十月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/08/">八月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-1");if(a){document.getElementsByClassName("mdui-collapse-item")[1].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">class</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">108</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E8%B5%84%E8%AE%AF/">资讯<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E9%80%9A%E7%9F%A5/">通知<span class="mdui-ripple sidebar_archives-count">4</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-2");if(a){document.getElementsByClassName("mdui-collapse-item")[2].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/ANR/" rel="tag">ANR<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/APP/" rel="tag">APP<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android/" rel="tag">Android<span class="mdui-ripple sidebar_archives-count">98</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android12/" rel="tag">Android12<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android13/" rel="tag">Android13<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android14/" rel="tag">Android14<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android16/" rel="tag">Android16<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AndroidStudio/" rel="tag">AndroidStudio<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AutoDraw/" rel="tag">AutoDraw<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Build/" rel="tag">Build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Crash/" rel="tag">Crash<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Foxmail/" rel="tag">Foxmail<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Framework/" rel="tag">Framework<span class="mdui-ripple sidebar_archives-count">20</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GPS%E8%BD%A8%E8%BF%B9%E5%9B%BE/" rel="tag">GPS轨迹图<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Git/" rel="tag">Git<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GitHub/" rel="tag">GitHub<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Google/" rel="tag">Google<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Java/" rel="tag">Java<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Kernel/" rel="tag">Kernel<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Launcher/" rel="tag">Launcher<span class="mdui-ripple sidebar_archives-count">17</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Lib/" rel="tag">Lib<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Linux/" rel="tag">Linux<span class="mdui-ripple sidebar_archives-count">18</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Markdown/" rel="tag">Markdown<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Material-Design/" rel="tag">Material Design<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OS-X/" rel="tag">OS X<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OTA/" rel="tag">OTA<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/QuickTime/" rel="tag">QuickTime<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SSH/" rel="tag">SSH<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Settings/" rel="tag">Settings<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SystemUI/" rel="tag">SystemUI<span class="mdui-ripple sidebar_archives-count">19</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/UAC/" rel="tag">UAC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Ubuntu/" rel="tag">Ubuntu<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WPS/" rel="tag">WPS<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Wifi/" rel="tag">Wifi<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WindTerm/" rel="tag">WindTerm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows/" rel="tag">Windows<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows-11/" rel="tag">Windows 11<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/androidmk/" rel="tag">androidmk<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/blog/" rel="tag">blog<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/build/" rel="tag">build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/feel/" rel="tag">feel<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/framework/" rel="tag">framework<span class="mdui-ripple sidebar_archives-count">58</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/inotify/" rel="tag">inotify<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/life/" rel="tag">life<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/ninja/" rel="tag">ninja<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/rsync/" rel="tag">rsync<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/standard/" rel="tag">standard<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/test/" rel="tag">test<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1/" rel="tag">企业微信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E7%94%9F%E6%B4%BB%E6%84%9F%E6%82%9F/" rel="tag">生活感悟<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+      <a href="/timeline" class="mdui-list-item mdui-ripple">时间轴</a>
+    
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-3");if(a){document.getElementsByClassName("mdui-collapse-item")[3].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+          <a href="http://www.niemingzhao.top" target="_blank" class="mdui-list-item mdui-p-l-2 mdui-text-color-theme-accent mdui-ripple" style="justify-content: center;">聂明照的博客</a>
+        
+        
+      </div>
+    </div>
+  </div>
+</aside>
+
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <style>#main article .mdui-card-content .text-center{text-align:center!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-14.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">Android13 开机时间优化</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2024-03-16 / <i class="iconfont">&#xe601;</i> 龙之叶 &nbsp;&nbsp; <span id="busuanzi_container_page_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_page_pv"></span></span></div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#qrcode', align: 'right'}"><i class="mdui-icon material-icons">devices</i></button>
+          <ul class="mdui-menu" id="qrcode">
+            
+              <li class="mdui-menu-item"><a class="mdui-text-center mdui-ripple">发送到手机</a></li>
+            
+            <li class="mdui-menu-item" disabled>
+              
+                <img src="//qr.liantu.com/api.php?w=246&m=10&text=http://longzhiye.top/2024/03/16/2024-03-16/">
+              
+            </li>
+          </ul>
+        
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="mdui-icon material-icons">share</i></button>
+          <ul class="mdui-menu" id="share_menu">
+            <li class="mdui-menu-item">
+              <a href="https://service.weibo.com/share/share.php?appkey=&title=Android13 开机时间优化&url=http://longzhiye.top/2024/03/16/2024-03-16/&pic=http://longzhiye.top/images/favicon.png&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://twitter.com/intent/tweet?text=Android13 开机时间优化&url=http://longzhiye.top/2024/03/16/2024-03-16/&via=龙之叶" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=http://longzhiye.top/2024/03/16/2024-03-16/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://plus.google.com/share?url=http://longzhiye.top/2024/03/16/2024-03-16/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://longzhiye.top/2024/03/16/2024-03-16/&title=Android13 开机时间优化" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://connect.qq.com/widget/shareqq/index.html?site=龙之叶的博客&title=Android13 开机时间优化&pics=http://longzhiye.top/images/favicon.png&url=http://longzhiye.top/2024/03/16/2024-03-16/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://telegram.me/share/url?url=http://longzhiye.top/2024/03/16/2024-03-16/&text=Android13 开机时间优化" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+            </li>
+          </ul>
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>实际生活当中，针对某些应用场景，对Android启动时间要求比较严格，比如车载，车都开出去几公里了，IVI系统还没起来，这就比较尴尬，所以，优化Android启动时间是一项非常重要的工作。本文将根据本人实际工作经验，详细讲述Android开机时间相关的内容，基于Android13。</p>
+<h1 id="开机时间检测方法"><a href="#开机时间检测方法" class="headerlink" title="开机时间检测方法"></a>开机时间检测方法</h1><h4 id="logcat"><a href="#logcat" class="headerlink" title="logcat"></a>logcat</h4><p>长按power键开机，等待adb进程启动后（一般出现Android字样后），执行如下命令抓取开机logcat</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb logcat -b all &gt; logcat.txt</span><br></pre></td></tr></table></figure>
+
+<p>打开logcat.txt，搜索logcat关键字 <strong>”boot_progress“、“sf_stop_bootanim”、“wm_boot_animation_done”</strong> </p>
+<p><img src="/images/20240316/20240316001.jpg"></p>
+<p><img src="/images/20240316/20240316002.jpg"></p>
+<p><img src="/images/20240316/20240316003.jpg"></p>
+<p>或者直接执行以下命令过滤logcat</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb logcat -b events | grep -E &quot;boot_progress|sf_stop_bootanim|wm_boot_animation_done&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/20240316/20240316004.jpg"></p>
+<p>以上是Android系统启动的各个阶段耗时，可以看到，整个开机过程耗时23.283秒，其中从按下power键到zygote启动，耗时7.646秒。各阶段的解释如下：</p>
+<table>
+<thead>
+<tr>
+<th>启动阶段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>boot_progress_start</td>
+<td>Linux kernel启动到Zygote进程启动的时间，包含从kernel启动到Init启动Zygote的时间</td>
+</tr>
+<tr>
+<td>boot_progress_preload_start</td>
+<td>ART虚拟机启动耗时/Zygote开始启动</td>
+</tr>
+<tr>
+<td>boot_progress_preload_end</td>
+<td>虚拟机资源装载耗时/Zygote启动结束</td>
+</tr>
+<tr>
+<td>boot_progress_system_run</td>
+<td>System Server进程启动耗时</td>
+</tr>
+<tr>
+<td>boot_progress_pms_start</td>
+<td>Android一些在PMS前需要启动服务的启动耗时，package scan开始</td>
+</tr>
+<tr>
+<td>boot_progress_pms_system_scan_start</td>
+<td>system目录开始scan时间点</td>
+</tr>
+<tr>
+<td>boot_progress_pms_data_scan_start</td>
+<td>data目录开始scan时间点/system目录扫描耗时</td>
+</tr>
+<tr>
+<td>boot_progress_pms_scan_end</td>
+<td>扫描结束时间点/data目录扫描耗时</td>
+</tr>
+<tr>
+<td>boot_progress_pms_ready</td>
+<td>PMS启动扫描包耗时</td>
+</tr>
+<tr>
+<td>boot_progress_ams_ready</td>
+<td>PMS后的系统服务启动时间</td>
+</tr>
+<tr>
+<td>boot_progress_enable_screen</td>
+<td>AMS启动完成后开始激活屏幕</td>
+</tr>
+<tr>
+<td>sf_stop_bootanim</td>
+<td>surfaceflinger结束开机动画</td>
+</tr>
+<tr>
+<td>wm_boot_animation_done</td>
+<td>从enable_screen到animation_done包含壁纸和keyguard的绘制时间</td>
+</tr>
+</tbody></table>
+<p>注意，logcat只能看到上层启动后的log，即zygote启动后，开机期间kernel层的耗时无法通过logcat观察。</p>
+<h4 id="串口log和kernel-log"><a href="#串口log和kernel-log" class="headerlink" title="串口log和kernel log"></a>串口log和kernel log</h4><ul>
+<li>串口log可以使用串口线连接Android设备和PC，使用串口工具抓取log，常用的串口工具有很多，xshell、MobaXterm等。</li>
+<li>kernel log是在开机后执行如下命令抓取：</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell dmesg &gt; dmesg.txt</span><br></pre></td></tr></table></figure>
+
+<p>log里面搜关键字 <strong>“KPI” 、”first stage” 、”second stage”</strong> ，此关键字为kernel的各个启动阶段。<br>uart log和kernel log都可以显示整个开机过程时间。</p>
+<p><img src="/images/20240316/20240316005.jpg"></p>
+<p>左侧为启动时间轴，右侧为启动log。</p>
+<h4 id="bootchart"><a href="#bootchart" class="headerlink" title="bootchart"></a>bootchart</h4><p>bootchart 是一个用于 linux 启动过程性能分析的开源工具软件，在系统启动过程中自动收集 CPU 占用率、磁盘吞吐率、进程等信息，并以图形方式显示分析结果，可用作指导优化系统启动过程。<br>bootchart 让用户可以很直观的查看系统启动的过程和各个过程耗费的时间，以便让用户能够分析启动过程，从而进行优化以提高启动时间。</p>
+<ul>
+<li>安装bootchart</li>
+</ul>
+<p>Ubuntu16.04和18.04可通过一下命令安装</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install bootchart</span><br><span class="line">sudo apt-get install pybootchartgui </span><br></pre></td></tr></table></figure>
+
+<p>Ubuntu20.04上无法定位<strong>pybootchartgui</strong></p>
+<p><img src="/images/20240316/20240316006.jpg"></p>
+<p>这时可以手动下载，然后放到python编译器搜寻的目录下。<br>下载地址：<a target="_blank" rel="noopener" href="https://github.com/xrmx/bootchart/releases">github.com/xrmx/bootchart/releases</a><br>下载好后解压</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf bootchart-0.14.9.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p>得到目录<strong>bootchart-0.14.9</strong>，进入到该目录</p>
+<p><img src="/images/20240316/20240316007.jpg"></p>
+<p>将图中的<strong>pybootchartgui</strong>目录复制到 <strong>/usr/lib/python3.8/</strong> 目录下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cp -r /usr/lib/python3.8/bootchart-0.14.9/pybootchartgui/ /usr/lib/python3.8/</span><br></pre></td></tr></table></figure>
+
+<p> <strong>/usr/lib/python3.8/</strong> 是python编译器搜寻的目录之一，完整的搜寻目录列表可通过以下命令查看</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 -c &quot;import sys;print(sys.path)&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/20240316/20240316008.jpg"></p>
+<p>所以，我们可以将pybootchartgui目录复制到以上任意目录中，只要能被python编译器搜寻到即可。<br>最后还需要注意一下，复制完后需要将 <strong>main.py.in</strong> 重命名为 <strong>main.py</strong> ，否者会报如下错误，此问题在github的<a target="_blank" rel="noopener" href="https://github.com/xrmx/bootchart/issues/97">issue</a>中有提到</p>
+<p><img src="/images/20240316/20240316009.jpg"></p>
+<p>重命名命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mv /usr/lib/python3.8/pybootchartgui/main.py.in /usr/lib/python3.8/pybootchartgui/main.py</span><br></pre></td></tr></table></figure>
+
+<p>最后我们将<strong>bootchart</strong>和<strong>pybootchartgui</strong>这两个文件复制到 <strong>/usr/bin/</strong> 目录下（文件附文末）。<br>这两个文件是一样的，也就意味着你可以通过 <strong>bootchart</strong> 或者 <strong>pybootchartgui</strong> 来生成 <strong>bootchart.png</strong>。</p>
+<h4 id="生成bootchart-png开机图"><a href="#生成bootchart-png开机图" class="headerlink" title="生成bootchart.png开机图"></a>生成bootchart.png开机图</h4><blockquote>
+<ul>
+<li>准备userdebug或者userroot设备</li>
+<li>开启bootchart</li>
+</ul>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">adb root </span><br><span class="line">adb shell</span><br><span class="line">touch /data/bootchart/ enabled</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>检查是否生成了enabled</li>
+</ul>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="built_in">ls</span> /data/bootchart/</span></span><br><span class="line">enabled</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>重启设备</li>
+</ul>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb reboot</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>等待开机进入Launcher，查看 <strong>/data/bootchart/</strong> 下是否有生成header文件，即bootchart日志是否生成</li>
+</ul>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">adb root</span><br><span class="line">adb shell</span><br><span class="line">ls /data/bootchart/</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>拷贝 /data/bootchart/ 下的 4 个文件到本地</li>
+</ul>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">proc_diskstats.log</span><br><span class="line">proc_ps.log</span><br><span class="line">proc_stat.log</span><br><span class="line">header</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Pull指令：</span></span><br><span class="line">adb pull /data/bootchart/</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>进入到 bootchart 目录（刚刚 pull 的文件夹），执行指令将这 4 个文件打包起来（在 bootchart 目录中打开终端）</li>
+</ul>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -czf bootchart.tgz *</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>执行指令，生成 bootchart.png 文件(./指代当前目录)</li>
+</ul>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bootchart ./ bootchart.tgz</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>拷贝 bootchart.png 到你需要的地方，双击查看</li>
+</ul>
+</blockquote>
+<h4 id="bootchart-png示例图"><a href="#bootchart-png示例图" class="headerlink" title="bootchart.png示例图"></a>bootchart.png示例图</h4><p>bootchart图可以很直观的看到整个开机过程的时间节点以及CPU、磁盘的使用情况</p>
+<p><img src="/images/20240316/20240316010.jpg"></p>
+<ul>
+<li>bootchart.png讲解</li>
+</ul>
+<p><img src="/images/20240316/20240316011.jpg"></p>
+<blockquote>
+<p>第一行：时间<br>第二行：Linux版本<br>第三行：odm release fingerprint<br>第三行：cpu架构<br>第四行：kernel配置选项<br>第五行：开机耗时</p>
+</blockquote>
+<p><img src="/images/20240316/20240316012.jpg"></p>
+<p>开机过程中，CPU的使用率、I/O状态、磁盘吞吐量、磁盘使用率</p>
+<p><img src="/images/20240316/20240316013.jpg"></p>
+<blockquote>
+<p>第一行：代表整个机器开机的时间，每一格代表1秒<br>第二行：代表init从长格子开始的位置开始启动<br>最后一行：开始zygote的启动，后面就是java 世界：system_server及app进程</p>
+</blockquote>
+<p><img src="/images/20240316/20240316014.jpg"></p>
+<p>kernel相关的启动部分，启动时间看下init什么时候启动的就知道了。</p>
+<h1 id="影响开机时间的Android启动流程"><a href="#影响开机时间的Android启动流程" class="headerlink" title="影响开机时间的Android启动流程"></a>影响开机时间的Android启动流程</h1><h4 id="开机框架"><a href="#开机框架" class="headerlink" title="开机框架"></a>开机框架</h4><p>引用<a target="_blank" rel="noopener" href="https://gityuan.com/">Gityuan</a>大佬的一张开机流程图</p>
+<p><img src="/images/20240316/20240316015.jpg"></p>
+<p>Android启动流程大体为：BootRom -&gt; BootLoader -&gt; Kernel -&gt; Init -&gt; Zygote -&gt; SystemServer -&gt;Launcher</p>
+<p><img src="/images/20240316/20240316016.jpg"></p>
+<h4 id="Loader层"><a href="#Loader层" class="headerlink" title="Loader层"></a>Loader层</h4><ul>
+<li>Boot ROM</li>
+</ul>
+<p>电源按下，引导芯片代码开始从预定义的地方（固化在ROM）开始执行，加载引导程序到RAM,然后执行。</p>
+<ul>
+<li>Boot Loader</li>
+</ul>
+<p>这是Android系统系统之前的引导程序，主要用来检测外部的RAM以及设置网络、内存、初始化硬件参数等。</p>
+<h4 id="Kernel层"><a href="#Kernel层" class="headerlink" title="Kernel层"></a>Kernel层</h4><p>Kernel层是指Android内核层，到这里才刚刚开始进入Android系统。</p>
+<ul>
+<li>启动<strong>swapper进程</strong>(pid=0)，该进程又称为idle进程,，系统初始化过程Kernel由无到有开创的第一个进程,，用于初始化进程管理、内存管理，加载Display、Camera Driver、Binder Driver等相关工作（图中kernel层蓝色区块）。</li>
+<li>启动<strong>kthreadd进程</strong>(pid=2)，是Linux系统的内核进程，会创建内核工作线程kworkder，软中断线程ksoftirqd，thermal等一系列内核守护进程。kthreadd进程是所有内核进程的父进程。</li>
+</ul>
+<p>Linux内核加载主要包括初始化kernel核心（内存初始化，打开中断，初始化进程表等）、初始化驱动、启动内核后台（daemons)线程、安装根（root)文件系统等。后续启动第一个用户级进程init(pid=1)。</p>
+<h4 id="Native层"><a href="#Native层" class="headerlink" title="Native层"></a>Native层</h4><p>Native层主要包括启动init进程（Android的第一个用户空间进程）、HAL层（硬件抽象层）以及开机动画等。init进程是所有用户进程的鼻祖。同时init进程也会孵化一系列用户进程，还会启动关键的服务以及孵化Zygote进程。</p>
+<ul>
+<li>init进程会孵化出ueventd、logd、healthd、installd、adbd、lmkd等用户守护进程。</li>
+<li>init进程还启动servicemanager(binder服务管家)、bootanim(开机动画)等重要服务。</li>
+<li>init进程孵化出Zygote进程，Zygote进程是Android系统的第一个Java进程，Zygote是所有Java进程的父进程，Zygote进程本身是由init进程孵化而来的。</li>
+</ul>
+<h4 id="Framework层"><a href="#Framework层" class="headerlink" title="Framework层"></a>Framework层</h4><p>Framework层分为Java frameword和C++ framework，分别由system_server进程和media_server进程负责启动和管理。</p>
+<p>zygote本身是一个native的应用程序，刚开始的名字为“app_process”，运行过程中，通过系统调用将自己名字改为zygote。在上图中的红色线，便是zygote fork出来的进程，所有的app进程都是由zygote fork产生的。</p>
+<p>下面列举Zygote进程孵化的部分子进程：</p>
+<table>
+<thead>
+<tr>
+<th>进程名</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>system_server</td>
+<td>Java framework的各种service都依赖此进程</td>
+</tr>
+<tr>
+<td>com.android.phone</td>
+<td>电话应用进程</td>
+</tr>
+<tr>
+<td>android.process.acore</td>
+<td>通讯录进程</td>
+</tr>
+<tr>
+<td>android.process.media</td>
+<td>多媒体应用进程</td>
+</tr>
+<tr>
+<td>com.android.settings</td>
+<td>设置进程</td>
+</tr>
+<tr>
+<td>com.android.wifi</td>
+<td>wifi应用进程</td>
+</tr>
+</tbody></table>
+<ul>
+<li>zygote进程</li>
+</ul>
+<p>由init进程通过解析init.rc文件后fork生成的，Zygote进程主要包含：</p>
+<blockquote>
+<ul>
+<li>加载ZygoteInit类，注册Zygote Socket服务端套接字</li>
+<li>加载虚拟机</li>
+<li>preloadClasses</li>
+<li>preloadResouces</li>
+</ul>
+</blockquote>
+<ul>
+<li>system_server进程</li>
+</ul>
+<p>由zygote进程fork而来，system_server是zygote孵化的第一个进程，system_server负责启动和管理整个java framework，包含ActivityManager、PowerManager等服务。</p>
+<ul>
+<li>media_server进程</li>
+</ul>
+<p>由init进程fork而来，负责启动和管理整个C++ framework，包含SurfaceFlinger、AudioFlinger、Camera Service等服务。</p>
+<h4 id="app层"><a href="#app层" class="headerlink" title="app层"></a>app层</h4><ul>
+<li>zygote进程孵化出的第一个app进程是Launcher，这是用户看到的桌面app。</li>
+<li>zygote进程还会创建Browser，Phone，Email等app进程，每个app至少运行在一个进程上。</li>
+<li>所有的app进程都是由zygote进程fork生成的。</li>
+</ul>
+<p>具体的启动过程，此文不便详述，都是代码分析，复杂且枯燥。</p>
+<h1 id="开机时间优化方案"><a href="#开机时间优化方案" class="headerlink" title="开机时间优化方案"></a>开机时间优化方案</h1><p>以下均为framework层的优化，kernel层优化不在研究范围。</p>
+<h4 id="精简方向"><a href="#精简方向" class="headerlink" title="精简方向"></a>精简方向</h4><p>精简初始化脚本：减少开机时的初始化时间。<br>高通平台关注以下.rc &amp; .sh文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">init.rc  </span><br><span class="line">init.target.rc  </span><br><span class="line">init.qcom.rc  </span><br><span class="line">init.sh</span><br><span class="line">init.qcom.sh  </span><br><span class="line">init.qcom.post_boot.sh</span><br></pre></td></tr></table></figure>
+
+<h4 id="裁剪方向"><a href="#裁剪方向" class="headerlink" title="裁剪方向"></a>裁剪方向</h4><p>移除非必须Apks、Features、Sensor等，减少PackageScan时间。</p>
+<ul>
+<li><h4 id="裁剪预置APK"><a href="#裁剪预置APK" class="headerlink" title="裁剪预置APK"></a><strong>裁剪预置APK</strong></h4></li>
+</ul>
+<p>针对具体应用场景，可以将没用的apk裁剪掉，比如automotive可以裁掉Launcher，因为automotive自带CarLauncher。</p>
+<p>可通过如下命令查看设备中所有的apk：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell pm list package -f</span><br></pre></td></tr></table></figure>
+
+<p>Android中的内置APK介绍见：<a target="_blank" rel="noopener" href="https://docs.qq.com/sheet/DSU9kTmtid25EdXl3">Android主要应用和进程说明</a></p>
+<p>裁剪方法：</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">diff --git /build/make/core/main.mk /build/make/core/main.mk</span></span><br><span class="line"><span class="comment">index a8f46c1..d9d507b 100644</span></span><br><span class="line"><span class="comment">--- a/core/main.mk</span></span><br><span class="line"><span class="comment">+++ b/core/main.mk</span></span><br><span class="line"><span class="meta">@@ -1267,6 +1267,7 @@</span> define product-installed-files</span><br><span class="line">   $(eval ### Filter out the overridden packages and executables before doing expansion) \</span><br><span class="line">   $(eval _pif_overrides := $(call module-overrides,$(_pif_modules))) \</span><br><span class="line">   $(eval _pif_modules := $(filter-out $(_pif_overrides), $(_pif_modules))) \</span><br><span class="line"><span class="addition">+  $(eval _pif_modules := $(filter-out $(modules_product_packages_remove), $(_pif_modules))) \</span></span><br><span class="line">   $(eval _pif_modules := $(filter-out $(PRODUCT_PACKAGES_DEL), $(_pif_modules))) \</span><br><span class="line">   $(eval ### Resolve the :32 :64 module name) \</span><br><span class="line">   $(eval _pif_modules := $(sort $(call resolve-bitness-for-modules,TARGET,$(_pif_modules)))) \</span><br><span class="line"><span class="meta">@@ -1363,6 +1364,9 @@</span> else ifdef FULL_BUILD</span><br><span class="line">	 endif</span><br><span class="line">   endif</span><br><span class="line"> </span><br><span class="line"><span class="addition">+  # App removal list</span></span><br><span class="line"><span class="addition">+  modules_product_packages_remove := $(PRODUCT_PACKAGES_REMOVE)</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">diff --git /build/make/core/product.mk /build/make/core/product.mk</span></span><br><span class="line"><span class="comment">index 90e960b..c556037 100644</span></span><br><span class="line"><span class="comment">--- a/core/product.mk</span></span><br><span class="line"><span class="comment">+++ b/core/product.mk</span></span><br><span class="line"><span class="meta">@@ -40,6 +40,9 @@</span> _product_list_vars += PRODUCT_PACKAGES_ENG</span><br><span class="line"> _product_list_vars += PRODUCT_PACKAGES_TESTS</span><br><span class="line"> _product_var_list += PRODUCT_PACKAGES_DEL</span><br><span class="line"> </span><br><span class="line"><span class="addition">+# App removal list</span></span><br><span class="line"><span class="addition">+_product_list_vars+= PRODUCT_PACKAGES_REMOVE</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"> # The device that this product maps to.</span><br><span class="line"> _product_single_value_vars += PRODUCT_DEVICE</span><br><span class="line"> _product_single_value_vars += PRODUCT_MANUFACTURER</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">diff --git /device/qcom/&#123;product&#125;/&#123;product&#125;.mk /device/qcom/&#123;product&#125;/&#123;product&#125;.mk</span></span><br><span class="line"><span class="comment">index 163cac2..89a3078 100755</span></span><br><span class="line"><span class="comment">--- a/&#123;product&#125;.mk</span></span><br><span class="line"><span class="comment">+++ b/&#123;product&#125;.mk</span></span><br><span class="line"><span class="meta">@@ -60,6 +60,8 @@</span> PRODUCT_BUILD_USERDATA_IMAGE := true</span><br><span class="line"><span class="addition">+# App removal list</span></span><br><span class="line"><span class="addition">+PRODUCT_PACKAGES_REMOVE += \</span></span><br><span class="line"><span class="addition">+	Calendar \</span></span><br><span class="line"><span class="addition">+	Email \</span></span><br><span class="line"><span class="addition">+	SnapdragonMusic \</span></span><br><span class="line"><span class="addition">+	DeskClock \</span></span><br></pre></td></tr></table></figure>
+
+<p>注意： <strong>/device/qcom/{product}/{product}.mk</strong> 取决于厂商的产品名称</p>
+<ul>
+<li><h4 id="移除不需要的Features"><a href="#移除不需要的Features" class="headerlink" title="移除不需要的Features"></a><strong>移除不需要的Features</strong></h4></li>
+</ul>
+<p>针对具体应用场景，可以将没用的Features裁剪掉，比如automotive可以裁掉 <strong><feature name="android.software.print" /></strong> </p>
+<p>可通过如下命令查看设备中所有的Features：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell pm list features</span><br></pre></td></tr></table></figure>
+
+<p>裁剪方法：</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">diff --git /frameworks/native/data/etc/android.software.print.xml /frameworks/native/data/etc/android.software.print.xml</span></span><br><span class="line"><span class="comment">index 713a7f7..e76bb88 100644</span></span><br><span class="line"><span class="comment">--- /frameworks/native/data/etc/android.software.print.xml</span></span><br><span class="line"><span class="comment">+++ /frameworks/native/data/etc/android.software.print.xml</span></span><br><span class="line"><span class="meta">@@ -15,5 +15,5 @@</span></span><br><span class="line"> --&gt;</span><br><span class="line"> </span><br><span class="line"> &lt;permissions&gt;</span><br><span class="line"><span class="deletion">-    &lt;feature name=&quot;android.software.print&quot; /&gt;</span></span><br><span class="line"><span class="addition">+&lt;!--    &lt;feature name=&quot;android.software.print&quot; /&gt;--&gt;</span></span><br><span class="line"> &lt;/permissions&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h4 id="禁用不需要的Sensors"><a href="#禁用不需要的Sensors" class="headerlink" title="禁用不需要的Sensors"></a><strong>禁用不需要的Sensors</strong></h4></li>
+</ul>
+<p>针对具体应用场景，可以将没用的Sensor裁剪掉。<br>可通过如下命令查看设备中所有支持的Sensor：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell dumpsys sensorservice</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置优化方向"><a href="#配置优化方向" class="headerlink" title="配置优化方向"></a>配置优化方向</h4><ul>
+<li><h4 id="优化PinnerService配置"><a href="#优化PinnerService配置" class="headerlink" title="优化PinnerService配置"></a><strong>优化PinnerService配置</strong></h4></li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://source.android.google.cn/docs/core/tests/debug/jank_jitter?hl=zh-cn">PinnerService</a>是用于锁定某些模块在内存中，避免这些模块被移出\移入内存从而提高程序的运行效率。优化目的是减少非首次开机启动Service的时间。</p>
+<p>修改 <strong>/frameworks/base/core/res/res/values/config.xml</strong> ，添加如下配置：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resources</span> <span class="attr">xmlns:xliff</span>=<span class="string">&quot;urn:oasis:names:tc:xliff:document:1.2&quot;</span>&gt;</span></span><br><span class="line">... ...</span><br><span class="line">   <span class="comment">&lt;!-- Default files to pin via Pinner Service --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">string-array</span> <span class="attr">translatable</span>=<span class="string">&quot;false&quot;</span> <span class="attr">name</span>=<span class="string">&quot;config_defaultPinnerServiceFiles&quot;</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">item</span>&gt;</span>&quot;/system/framework/arm/boot-framework.art&quot;<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">item</span>&gt;</span>&quot;/system/lib/libjavacrypto.so&quot;<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">item</span>&gt;</span>&quot;/system/lib/libhidltransport.so&quot;<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">item</span>&gt;</span>&quot;/system/framework/arm/boot-core-libart.oat&quot;<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">item</span>&gt;</span>&quot;/system/framework/arm/boot-conscrypt.oat&quot;<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">item</span>&gt;</span>&quot;/system/framework/arm/boot-core-libart.art&quot;<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">item</span>&gt;</span>&quot;/system/framework/arm/boot-ext.art&quot;<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">item</span>&gt;</span>&quot;/system/framework/arm/boot.art&quot;<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">item</span>&gt;</span>&quot;/system/framework/arm/boot-framework.art&quot;<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">string-array</span>&gt;</span></span><br><span class="line">... ...</span><br><span class="line"> <span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：芯片商（例如高通）的代码可能会存在客制化，AOSP的位置可能会被覆盖，如果有，则以芯片商的代码为准。</p>
+<ul>
+<li><h4 id="使用32Bit程序"><a href="#使用32Bit程序" class="headerlink" title="使用32Bit程序"></a><strong>使用32Bit程序</strong></h4></li>
+</ul>
+<p>定义了32Bit的程序，机器在apk的使用及服务的申明都会有略微的精简，在设备启动时加载的资源会少，故加载时间会少。<br>修改方式：<br><strong>/device/qcom/{product}/BoardConfig.mk</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">TARGET_ARCH := arm</span><br><span class="line">TARGET_ARCH_VARIANT := armv8-2a</span><br><span class="line">TARGET_CPU_ABI := armeabi-v7a</span><br><span class="line">TARGET_CPU_ABI2 := armeabi</span><br><span class="line">TARGET_CPU_VARIANT := cortex-a9</span><br><span class="line"></span><br><span class="line">#TARGET_2ND_ARCH := arm</span><br><span class="line">#TARGET_2ND_ARCH_VARIANT := armv8-2a</span><br><span class="line">#TARGET_2ND_CPU_ABI := armeabi-v7a</span><br><span class="line">#TARGET_2ND_CPU_ABI2 := armeabi</span><br><span class="line">#TARGET_2ND_CPU_VARIANT := cortex-a9</span><br></pre></td></tr></table></figure>
+
+<p><strong>device/generic/art/armv8/armv8.mk</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># Force 32bits executables.</span><br><span class="line">PRODUCT_DEFAULT_PROPERTY_OVERRIDES += ro.zygote=zygote32</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h4 id="关闭默认开关"><a href="#关闭默认开关" class="headerlink" title="关闭默认开关"></a><strong>关闭默认开关</strong></h4></li>
+</ul>
+<p>默认关闭功能开关，开机期间不再自动启动，加快开机进度。</p>
+<p>主要修改 <strong>/frameworks/base/packages/SettingsProvider/res/values/defaults.xml</strong> </p>
+<ul>
+<li>1.关闭锁屏显示通知</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">     <span class="comment">&lt;!-- Default for Settings.Secure.LOCK_SCREEN_SHOW_NOTIFICATIONS, 1==on --&gt;</span></span><br><span class="line">-    <span class="tag">&lt;<span class="name">integer</span> <span class="attr">name</span>=<span class="string">&quot;def_lock_screen_show_notifications&quot;</span>&gt;</span>1<span class="tag">&lt;/<span class="name">integer</span>&gt;</span></span><br><span class="line">+    <span class="tag">&lt;<span class="name">integer</span> <span class="attr">name</span>=<span class="string">&quot;def_lock_screen_show_notifications&quot;</span>&gt;</span>0<span class="tag">&lt;/<span class="name">integer</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>2.关闭手势唤醒</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">     <span class="comment">&lt;!-- Default for Settings.Secure.WAKE_GESTURE_ENABLED --&gt;</span></span><br><span class="line">-    <span class="tag">&lt;<span class="name">bool</span> <span class="attr">name</span>=<span class="string">&quot;def_wake_gesture_enabled&quot;</span>&gt;</span>true<span class="tag">&lt;/<span class="name">bool</span>&gt;</span></span><br><span class="line">+    <span class="tag">&lt;<span class="name">bool</span> <span class="attr">name</span>=<span class="string">&quot;def_wake_gesture_enabled&quot;</span>&gt;</span>false<span class="tag">&lt;/<span class="name">bool</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>3.关闭双击唤醒</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">     <span class="comment">&lt;!-- Default state of tap to wake --&gt;</span></span><br><span class="line">-    <span class="tag">&lt;<span class="name">bool</span> <span class="attr">name</span>=<span class="string">&quot;def_double_tap_to_wake&quot;</span>&gt;</span>true<span class="tag">&lt;/<span class="name">bool</span>&gt;</span></span><br><span class="line">+    <span class="tag">&lt;<span class="name">bool</span> <span class="attr">name</span>=<span class="string">&quot;def_double_tap_to_wake&quot;</span>&gt;</span>false<span class="tag">&lt;/<span class="name">bool</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>4.关闭充电振动</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">     <span class="comment">&lt;!-- Default for Settings.Secure.CHARGING_VIBRATION_ENABLED --&gt;</span></span><br><span class="line">-    <span class="tag">&lt;<span class="name">bool</span> <span class="attr">name</span>=<span class="string">&quot;def_charging_vibration_enabled&quot;</span>&gt;</span>true<span class="tag">&lt;/<span class="name">bool</span>&gt;</span></span><br><span class="line">+    <span class="tag">&lt;<span class="name">bool</span> <span class="attr">name</span>=<span class="string">&quot;def_charging_vibration_enabled&quot;</span>&gt;</span>false<span class="tag">&lt;/<span class="name">bool</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>5.关闭充电提示音</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">     <span class="comment">&lt;!-- Default for Settings.Secure.CHARGING_SOUNDS_ENABLED --&gt;</span></span><br><span class="line">-    <span class="tag">&lt;<span class="name">bool</span> <span class="attr">name</span>=<span class="string">&quot;def_charging_sounds_enabled&quot;</span>&gt;</span>true<span class="tag">&lt;/<span class="name">bool</span>&gt;</span></span><br><span class="line">+    <span class="tag">&lt;<span class="name">bool</span> <span class="attr">name</span>=<span class="string">&quot;def_charging_sounds_enabled&quot;</span>&gt;</span>false<span class="tag">&lt;/<span class="name">bool</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>6.关闭蓝牙和wifi</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bool</span> <span class="attr">name</span>=<span class="string">&quot;def_bluetooth_on&quot;</span>&gt;</span>false<span class="tag">&lt;/<span class="name">bool</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bool</span> <span class="attr">name</span>=<span class="string">&quot;def_wifi_display_on&quot;</span>&gt;</span>false<span class="tag">&lt;/<span class="name">bool</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>7.关闭自动旋转</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bool</span> <span class="attr">name</span>=<span class="string">&quot;def_accelerometer_rotation&quot;</span>&gt;</span>false<span class="tag">&lt;/<span class="name">bool</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>8.关闭Wifi Debugging</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Disable WiFi Debugging --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bool</span> <span class="attr">translatable</span>=<span class="string">&quot;false&quot;</span> <span class="attr">name</span>=<span class="string">&quot;config_wifi_enable_wifi_firmware_debugging&quot;</span>&gt;</span>false<span class="tag">&lt;/<span class="name">bool</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h4 id="删除开机动画"><a href="#删除开机动画" class="headerlink" title="删除开机动画"></a><strong>删除开机动画</strong></h4></li>
+</ul>
+<p>Animation的资源大小和播放时长一直是影响开机时间的重要因素之一，移除开机动画将有效地加快开机速度。</p>
+<p><strong>frameworks/base/cmds/bootanimation/BootAnimationUtil.cpp</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">bootAnimationDisabled</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="type">char</span> value[PROPERTY_VALUE_MAX];</span><br><span class="line">	<span class="comment">//将获取结果改为1，则无法进入到开机动画流程中</span></span><br><span class="line">	<span class="comment">//property_get(&quot;debug.sf.nobootanimation&quot;, value, &quot;0&quot;);</span></span><br><span class="line">	<span class="built_in">property_get</span>(<span class="string">&quot;debug.sf.nobootanimation&quot;</span>, value, <span class="string">&quot;1&quot;</span>);</span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">atoi</span>(value) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">property_get</span>(<span class="string">&quot;ro.boot.quiescent&quot;</span>, value, <span class="string">&quot;0&quot;</span>);</span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">atoi</span>(value) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="comment">// Only show the bootanimation for quiescent boots if this system property is set to enabled</span></span><br><span class="line">		<span class="keyword">if</span> (!<span class="built_in">property_get_bool</span>(<span class="string">&quot;ro.bootanim.quiescent.enabled&quot;</span>, <span class="literal">false</span>)) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h4 id="开机过程CPU满载"><a href="#开机过程CPU满载" class="headerlink" title="开机过程CPU满载"></a><strong>开机过程CPU满载</strong></h4></li>
+</ul>
+<p>开机过程中让CPU火力全开，能有效减少开机时间</p>
+<p><strong>/device/qcom/common/rootdir/etc/init.qcom.rc</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> on early-init</span><br><span class="line">+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor performance</span><br><span class="line">+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor performance</span><br><span class="line">+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor performance</span><br><span class="line">+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor performance</span><br><span class="line">+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor performance</span><br><span class="line">+    write /sys/devices/system/cpu/cpu5/cpufreq/scaling_governor performance</span><br><span class="line">+    write /sys/devices/system/cpu/cpu6/cpufreq/scaling_governor performance</span><br><span class="line">+    write /sys/devices/system/cpu/cpu7/cpufreq/scaling_governor performance</span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<blockquote>
+<ul>
+<li>init.qcom.rc是高通定制的init脚本，是开机时必然执行的。</li>
+<li>如果CPU原本就已经满载了，那么此修改则无效果。</li>
+<li>不同平台CPU的配置不尽相同。</li>
+</ul>
+</blockquote>
+<ul>
+<li><h4 id="移除SystemService"><a href="#移除SystemService" class="headerlink" title="移除SystemService"></a><strong>移除SystemService</strong></h4></li>
+</ul>
+<p>SystemServer进程启动后，会启动很多SystemService，根据实际场景，裁剪非必要的Service</p>
+<p><strong>frameworks/base/services/java/com/android/server/SystemServer.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Start services.</span></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">	t.traceBegin(<span class="string">&quot;StartServices&quot;</span>);</span><br><span class="line">	startBootstrapServices(t);</span><br><span class="line">	startCoreServices(t);</span><br><span class="line">	startOtherServices(t);</span><br><span class="line">	startApexServices(t);</span><br><span class="line">&#125; <span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">	Slog.e(<span class="string">&quot;System&quot;</span>, <span class="string">&quot;******************************************&quot;</span>);</span><br><span class="line">	Slog.e(<span class="string">&quot;System&quot;</span>, <span class="string">&quot;************ Failure starting system services&quot;</span>, ex);</span><br><span class="line">	<span class="keyword">throw</span> ex;</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">	t.traceEnd(); <span class="comment">// StartServices</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可裁剪的Service如下，仅供参考</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1.VibratorService          震动器服务  </span><br><span class="line">2.ClipboardService         粘贴板服务  </span><br><span class="line">3.FingerprintService       指纹  </span><br><span class="line"></span><br><span class="line">4.BatteryService           电池服务，当电量不足时发广播  </span><br><span class="line">5.AlarmManagerService      闹钟服务   </span><br><span class="line">6.WallpaperManagerService  壁纸管理服务  </span><br><span class="line">7.StatusBarManagerService  状态栏管理服务  </span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<blockquote>
+<ul>
+<li>从framework层的角度去看问题，我们会发现功能及服务的裁剪，是最直接、最有效地时间及空间优化方法，它可以做到时间与空间的两者兼顾。</li>
+<li>注意app与Service，Service与Service之间的耦合性，避免引起机器的异常，无法开机；</li>
+</ul>
+</blockquote>
+<ul>
+<li><h4 id="移除app源码"><a href="#移除app源码" class="headerlink" title="移除app源码"></a><strong>移除app源码</strong></h4></li>
+</ul>
+<p>修改下面文件中的 PRODUCT_PACKAGES 字段的内容，将不需要的内置应用的名称删除，这样可以缩短 scan packages 的过程。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1.build/target/product/core.mk  </span><br><span class="line">2.build/target/product/full_base.mk  </span><br><span class="line">3.build/target/product/full_base_telephony.mk  </span><br><span class="line">4.build/target/product/generic_no_telephony.mk  </span><br></pre></td></tr></table></figure>
+
+<p>同时，可以删除 <strong>/packages/apps/</strong> 路径下不必要的 app 源码，这样可以缩短编译时间。</p>
+<ul>
+<li><h4 id="apk-odex"><a href="#apk-odex" class="headerlink" title="apk odex"></a><strong>apk odex</strong></h4></li>
+</ul>
+<p>apk odex优化就是以空间换时间，加快apk启动速度，缺点是会消耗内存。</p>
+<p>在 <strong>/device/qcom/{product}/{product}.mk</strong> 加入 <strong>WITH_DEXPREOPT=true</strong> , 打开odex优化</p>
+<p>Android.bp中添加</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">android_app &#123;</span><br><span class="line">	dex_preopt: &#123;</span><br><span class="line">        enabled: true,</span><br><span class="line">	&#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Android.mk中添加</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LOCAL_DEX_PREOPT := true</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h4 id="PMS优化"><a href="#PMS优化" class="headerlink" title="PMS优化"></a><strong>PMS优化</strong></h4></li>
+</ul>
+<p>Apk的扫描安装耗时是大头。通常采用多线程方案，针对Dir或者Dir中的package进行多线程扫描.</p>
+<p>PMS多线程扫描apk，4线程改成8线程，注意，如果客户做了CPU绑核， Android所分配的CPU资源受到限制，导致改成8线程之后反向优化了。</p>
+<p><strong>frameworks/base/services/core/java/com/android/server/pm/ParallelPackageParser.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ParallelPackageParser</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">QUEUE_CAPACITY</span> <span class="operator">=</span> <span class="number">30</span>;</span><br><span class="line"><span class="comment">//    private static final int MAX_THREADS = 4;</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MAX_THREADS</span> <span class="operator">=</span> <span class="number">8</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//省略部分代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h4 id="Zygote优化"><a href="#Zygote优化" class="headerlink" title="Zygote优化"></a><strong>Zygote优化</strong></h4></li>
+</ul>
+<p>Zygote主要是优化class和resource的预加载，可以减少部分不需要预加载的class和resource，具体优化哪些，根据实际需求来添加。<br>注意：并不是预加载越少越好，如果开机必须启动的进程所需要的class和resource在zygote阶段被优化了，那么也会在该进程自启动时也会去加载，这样优化就是无效的。</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">diff --git /frameworks/base/config/preloaded-classes /frameworks/base/config/preloaded-classes</span></span><br><span class="line"><span class="comment">index f2530519247..d6ac1e22e3f 100644</span></span><br><span class="line"><span class="comment">--- /frameworks/base/config/preloaded-classes</span></span><br><span class="line"><span class="comment">+++ /frameworks/base/config/preloaded-classes</span></span><br><span class="line"><span class="meta">@@ -806,7 +806,6 @@</span> android.app.VoiceInteractor$Request</span><br><span class="line"> android.app.VoiceInteractor</span><br><span class="line"> android.app.Vr2dDisplayProperties$1</span><br><span class="line"> android.app.Vr2dDisplayProperties</span><br><span class="line"><span class="deletion">-android.app.VrManager</span></span><br><span class="line"> android.app.WaitResult$1</span><br><span class="line"> android.app.WaitResult</span><br><span class="line"> android.app.WallpaperColors$1</span><br><span class="line"><span class="meta">@@ -2471,12 +2470,6 @@</span> android.hardware.display.Time$1</span><br><span class="line"> android.hardware.display.Time</span><br><span class="line"> android.hardware.display.VirtualDisplayConfig$1</span><br><span class="line"> android.hardware.display.VirtualDisplayConfig</span><br><span class="line"><span class="deletion">-android.hardware.display.WifiDisplay$1</span></span><br><span class="line"><span class="deletion">-android.hardware.display.WifiDisplay</span></span><br><span class="line"><span class="deletion">-android.hardware.display.WifiDisplaySessionInfo$1</span></span><br><span class="line"><span class="deletion">-android.hardware.display.WifiDisplaySessionInfo</span></span><br><span class="line"><span class="deletion">-android.hardware.display.WifiDisplayStatus$1</span></span><br><span class="line"><span class="deletion">-android.hardware.display.WifiDisplayStatus</span></span><br><span class="line"> android.hardware.face.Face$1</span><br><span class="line"> android.hardware.face.Face</span><br><span class="line"> android.hardware.face.FaceManager$1</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h4 id="移除手势导航"><a href="#移除手势导航" class="headerlink" title="移除手势导航"></a><strong>移除手势导航</strong></h4></li>
+</ul>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">diff --git /frameworks/base/packages/overlays/Android.mk /frameworks/base/packages/overlays/Android.mk</span></span><br><span class="line"><span class="comment">index 69641e69a9f..71f5fd00520 100644</span></span><br><span class="line"><span class="comment">--- /frameworks/base/packages/overlays/Android.mk</span></span><br><span class="line"><span class="comment">+++ /frameworks/base/packages/overlays/Android.mk</span></span><br><span class="line"><span class="meta">@@ -20,17 +20,8 @@</span> LOCAL_LICENSE_KINDS := SPDX-license-identifier-Apache-2.0</span><br><span class="line"> LOCAL_LICENSE_CONDITIONS := notice</span><br><span class="line"> LOCAL_NOTICE_FILE := $(LOCAL_PATH)/../../NOTICE</span><br><span class="line"> LOCAL_REQUIRED_MODULES := \</span><br><span class="line"><span class="deletion">-	DisplayCutoutEmulationCornerOverlay \</span></span><br><span class="line"><span class="deletion">-	DisplayCutoutEmulationDoubleOverlay \</span></span><br><span class="line"><span class="deletion">-    DisplayCutoutEmulationHoleOverlay \</span></span><br><span class="line"><span class="deletion">-	DisplayCutoutEmulationTallOverlay \</span></span><br><span class="line"><span class="deletion">-	DisplayCutoutEmulationWaterfallOverlay \</span></span><br><span class="line">	FontNotoSerifSourceOverlay \</span><br><span class="line">	NavigationBarMode3ButtonOverlay \</span><br><span class="line"><span class="deletion">-	NavigationBarModeGesturalOverlay \</span></span><br><span class="line"><span class="deletion">-	NavigationBarModeGesturalOverlayNarrowBack \</span></span><br><span class="line"><span class="deletion">-	NavigationBarModeGesturalOverlayWideBack \</span></span><br><span class="line"><span class="deletion">-	NavigationBarModeGesturalOverlayExtraWideBack \</span></span><br><span class="line">	preinstalled-packages-platform-overlays.xml</span><br><span class="line"> </span><br><span class="line"> include $(BUILD_PHONY_PACKAGE)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h4 id="关闭壁纸服务"><a href="#关闭壁纸服务" class="headerlink" title="关闭壁纸服务"></a><strong>关闭壁纸服务</strong></h4></li>
+</ul>
+<p><strong>frameworks/base/core/res/res/values/config.xml</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- True if WallpaperService is enabled --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bool</span> <span class="attr">name</span>=<span class="string">&quot;config_enableWallpaperService&quot;</span>&gt;</span>true<span class="tag">&lt;/<span class="name">bool</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h4 id="调整窗口动画渲染"><a href="#调整窗口动画渲染" class="headerlink" title="调整窗口动画渲染"></a><strong>调整窗口动画渲染</strong></h4></li>
+</ul>
+<p><strong>frameworks/base/packages/SettingsProvider/res/values/defaults.xml</strong></p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">-    &lt;fraction name=&quot;def_window_animation_scale&quot;&gt;100%&lt;/fraction&gt;</span></span><br><span class="line"><span class="deletion">-    &lt;fraction name=&quot;def_window_transition_scale&quot;&gt;100%&lt;/fraction&gt;</span></span><br><span class="line"><span class="addition">+    &lt;fraction name=&quot;def_window_animation_scale&quot;&gt;25%&lt;/fraction&gt;</span></span><br><span class="line"><span class="addition">+    &lt;fraction name=&quot;def_window_transition_scale&quot;&gt;25%&lt;/fraction&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果想关闭animaton，直接将数值改为0即可。<br>注意：芯片商可能会定制 <strong>defaults.xml</strong> ，所以在修改时请留意是否改全。</p>
+<ul>
+<li><h4 id="专项优化"><a href="#专项优化" class="headerlink" title="专项优化"></a><strong>专项优化</strong></h4></li>
+</ul>
+<p>针对实际项目，如果加了自定义的开机自启动项，那么可以抓trace，看看整个开机过程哪个启动项耗时较长</p>
+<p>例如：</p>
+<p><img src="/images/20240316/20240316017.jpg"></p>
+<p>上图可以看到 <strong>avm_worker</strong> 存在耗时异常， 该进程为 android 侧的 360 环视功能， 可以找对应开发确认是否需要开机启动。</p>
+<ul>
+<li><h4 id="Google优化方案"><a href="#Google优化方案" class="headerlink" title="Google优化方案"></a><strong>Google优化方案</strong></h4></li>
+</ul>
+<p>详见：<a target="_blank" rel="noopener" href="https://source.android.google.cn/docs/core/perf/boot-times?hl=zh-cn">source.android.google.cn/docs/core/perf/boot-times?hl=zh-cn</a></p>
+<h3 id="实战总结"><a href="#实战总结" class="headerlink" title="实战总结"></a>实战总结</h3><p>对于Android开机时间优化，framework层可优化的空间较小，通过trace可以看到，一个Service的启动或者众多apk的扫描操作，往往都是在几毫秒或者几十毫秒内完成的，所以，即使关闭某个service的启动或者裁剪部分apk，优化效果也是毫秒级别的，不是很明显，但聚少成多，通过多种优化方案，累加优化时间，最终呈现出来的优化效果就是肉眼可见的。</p>
+<p>而Kernel层的优化空间往往是较大的，都是秒级别的优化幅度，通过底层和上层双向优化，最终能达到比较理想的优化效果。</p>
+<h4 id="bootchart安装包"><a href="#bootchart安装包" class="headerlink" title="bootchart安装包"></a>bootchart安装包</h4><p>链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1BKVd348fZV8xkYLj9hfTzA?pwd=253x">pan.baidu.com/s/1BKVd348fZV8xkYLj9hfTzA?pwd=253x</a> 提取码: 253x</p>
+
+      
+      <blockquote>
+        
+        <strong>本文链接：</strong><br><a href="http://longzhiye.top/2024/03/16/2024-03-16/">http://longzhiye.top/2024/03/16/2024-03-16/</a>
+      </blockquote>
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Android/" rel="tag">Android</a><a class="mdui-ripple article_tags-link" href="/tags/Linux/" rel="tag">Linux</a><a class="mdui-ripple article_tags-link" href="/tags/framework/" rel="tag">framework</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2024/08/24/2024-08-24/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android13 动态控制状态栏和导航栏'}">上一篇</span>
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2024/03/10/2024-03-10/">
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android应用保活攻略'}">下一篇</span>
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+
+
+
+</main>
+  <footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="http://github.com/longzhiye" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe7ab;</i></a>
+    
+    
+    
+      <a href="https://www.zhihu.com/people/long-zhi-xie-61" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe6c0;</i></a>
+    
+    
+    
+      <a href="tencent://tencent:////message/?uin=951898105&Menu=yes" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2022 - 2025 龙之叶<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>
+    <br>
+      <span id="busuanzi_container_site_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_site_pv"></span></span> &nbsp;&nbsp;
+      <span id="busuanzi_container_site_uv" style="display: none;"><i class="iconfont">&#xe601;</i> <span id="busuanzi_value_site_uv"></span></span>
+    
+  </div>
+</footer>
+
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+  
+<script src="/custom.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>ANR问题分析总结 | 龙之叶的博客</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="alternate" href="/atom.xml" title="龙之叶的博客" type="application/atom+xml">
+  <meta name="description" content="ANR问题分析总结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ANR问题分析总结">
+<meta property="og:url" content="http://longzhiye.top/2024/01/20/2024-01-20/index.html">
+<meta property="og:site_name" content="龙之叶的博客">
+<meta property="og:description" content="ANR问题分析总结">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://longzhiye.top/images/20240120/202401201046.png">
+<meta property="og:image" content="http://longzhiye.top/images/20240120/202401201047.png">
+<meta property="article:published_time" content="2024-01-19T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-04T08:39:58.964Z">
+<meta property="article:author" content="龙之叶">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="framework">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://longzhiye.top/images/20240120/202401201046.png">
+
+  <meta name="keywords" content=",Android,framework">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="龙之叶的博客">
+  <meta name="msapplication-starturl" content="http://longzhiye.top/2024/01/20/2024-01-20/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="龙之叶的博客">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <link rel="canonical" href="http://longzhiye.top/2024/01/20/2024-01-20/">
+  
+
+  
+  
+
+  
+  
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/custom.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(!a){document.getElementsByTagName("body")[0].className+=" mdui-drawer-body-left"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">龙之叶的博客</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+	<!--
+    <a href="/atom.xml" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'RSS'}"><i class="mdui-icon material-icons">rss_feed</i></a>
+	-->
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(a){document.getElementById("sidebar").className+=" mdui-drawer-close"};</script>
+  <div class="mdui-grid-tile">
+    <img src="/images/banner.png" style="height: 160px;">
+    <img src="/images/avatar.png" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;background-color:#fff;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">龙之叶</div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>生命不息，折腾不止</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:longzhiye163@163.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'longzhiye163@163.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-0");if(a){document.getElementsByClassName("mdui-collapse-item")[0].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">archive</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2025/10/">十月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/09/">九月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/08/">八月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/07/">七月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/06/">六月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/03/">三月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/02/">二月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/01/">一月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/10/">十月 2024<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/09/">九月 2024<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/08/">八月 2024<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/03/">三月 2024<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/02/">二月 2024<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/01/">一月 2024<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/12/">十二月 2023<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/11/">十一月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/10/">十月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/09/">九月 2023<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/08/">八月 2023<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/06/">六月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/05/">五月 2023<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/04/">四月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/03/">三月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/02/">二月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/09/">九月 2022<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/04/">四月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/03/">三月 2017<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/02/">二月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/01/">一月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/12/">十二月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/11/">十一月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/10/">十月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/08/">八月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-1");if(a){document.getElementsByClassName("mdui-collapse-item")[1].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">class</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">108</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E8%B5%84%E8%AE%AF/">资讯<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E9%80%9A%E7%9F%A5/">通知<span class="mdui-ripple sidebar_archives-count">4</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-2");if(a){document.getElementsByClassName("mdui-collapse-item")[2].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/ANR/" rel="tag">ANR<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/APP/" rel="tag">APP<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android/" rel="tag">Android<span class="mdui-ripple sidebar_archives-count">98</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android12/" rel="tag">Android12<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android13/" rel="tag">Android13<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android14/" rel="tag">Android14<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android16/" rel="tag">Android16<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AndroidStudio/" rel="tag">AndroidStudio<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AutoDraw/" rel="tag">AutoDraw<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Build/" rel="tag">Build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Crash/" rel="tag">Crash<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Foxmail/" rel="tag">Foxmail<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Framework/" rel="tag">Framework<span class="mdui-ripple sidebar_archives-count">20</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GPS%E8%BD%A8%E8%BF%B9%E5%9B%BE/" rel="tag">GPS轨迹图<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Git/" rel="tag">Git<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GitHub/" rel="tag">GitHub<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Google/" rel="tag">Google<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Java/" rel="tag">Java<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Kernel/" rel="tag">Kernel<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Launcher/" rel="tag">Launcher<span class="mdui-ripple sidebar_archives-count">17</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Lib/" rel="tag">Lib<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Linux/" rel="tag">Linux<span class="mdui-ripple sidebar_archives-count">18</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Markdown/" rel="tag">Markdown<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Material-Design/" rel="tag">Material Design<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OS-X/" rel="tag">OS X<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OTA/" rel="tag">OTA<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/QuickTime/" rel="tag">QuickTime<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SSH/" rel="tag">SSH<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Settings/" rel="tag">Settings<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SystemUI/" rel="tag">SystemUI<span class="mdui-ripple sidebar_archives-count">19</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/UAC/" rel="tag">UAC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Ubuntu/" rel="tag">Ubuntu<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WPS/" rel="tag">WPS<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Wifi/" rel="tag">Wifi<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WindTerm/" rel="tag">WindTerm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows/" rel="tag">Windows<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows-11/" rel="tag">Windows 11<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/androidmk/" rel="tag">androidmk<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/blog/" rel="tag">blog<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/build/" rel="tag">build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/feel/" rel="tag">feel<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/framework/" rel="tag">framework<span class="mdui-ripple sidebar_archives-count">58</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/inotify/" rel="tag">inotify<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/life/" rel="tag">life<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/ninja/" rel="tag">ninja<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/rsync/" rel="tag">rsync<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/standard/" rel="tag">standard<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/test/" rel="tag">test<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1/" rel="tag">企业微信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E7%94%9F%E6%B4%BB%E6%84%9F%E6%82%9F/" rel="tag">生活感悟<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+      <a href="/timeline" class="mdui-list-item mdui-ripple">时间轴</a>
+    
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-3");if(a){document.getElementsByClassName("mdui-collapse-item")[3].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+          <a href="http://www.niemingzhao.top" target="_blank" class="mdui-list-item mdui-p-l-2 mdui-text-color-theme-accent mdui-ripple" style="justify-content: center;">聂明照的博客</a>
+        
+        
+      </div>
+    </div>
+  </div>
+</aside>
+
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <style>#main article .mdui-card-content .text-center{text-align:center!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-11.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">ANR问题分析总结</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2024-01-20 / <i class="iconfont">&#xe601;</i> 龙之叶 &nbsp;&nbsp; <span id="busuanzi_container_page_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_page_pv"></span></span></div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#qrcode', align: 'right'}"><i class="mdui-icon material-icons">devices</i></button>
+          <ul class="mdui-menu" id="qrcode">
+            
+              <li class="mdui-menu-item"><a class="mdui-text-center mdui-ripple">发送到手机</a></li>
+            
+            <li class="mdui-menu-item" disabled>
+              
+                <img src="//qr.liantu.com/api.php?w=246&m=10&text=http://longzhiye.top/2024/01/20/2024-01-20/">
+              
+            </li>
+          </ul>
+        
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="mdui-icon material-icons">share</i></button>
+          <ul class="mdui-menu" id="share_menu">
+            <li class="mdui-menu-item">
+              <a href="https://service.weibo.com/share/share.php?appkey=&title=ANR问题分析总结&url=http://longzhiye.top/2024/01/20/2024-01-20/&pic=http://longzhiye.top/images/favicon.png&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://twitter.com/intent/tweet?text=ANR问题分析总结&url=http://longzhiye.top/2024/01/20/2024-01-20/&via=龙之叶" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=http://longzhiye.top/2024/01/20/2024-01-20/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://plus.google.com/share?url=http://longzhiye.top/2024/01/20/2024-01-20/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://longzhiye.top/2024/01/20/2024-01-20/&title=ANR问题分析总结" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://connect.qq.com/widget/shareqq/index.html?site=龙之叶的博客&title=ANR问题分析总结&pics=http://longzhiye.top/images/favicon.png&url=http://longzhiye.top/2024/01/20/2024-01-20/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://telegram.me/share/url?url=http://longzhiye.top/2024/01/20/2024-01-20/&text=ANR问题分析总结" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+            </li>
+          </ul>
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>ANR(Application Not Responding)应用程序无响应。如果你应用程序在 UI 线程被阻塞太长时间，就会出现 ANR，通常出现 ANR，系统会弹出一个提示提示框，让用户知道，该程序正在被阻塞，是否继续等待还是关闭。</p>
+<h4 id="ANR类型"><a href="#ANR类型" class="headerlink" title="ANR类型"></a>ANR类型</h4><p>出现ANR的一般有以下几种类型：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>说明</th>
+<th>logcat日志关键字</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>KeyDispatchTimeout(常见)</td>
+<td>input事件在5S内没有处理完成发生了ANR</td>
+<td>Input event dispatching timed out</td>
+</tr>
+<tr>
+<td>BroadcastTimeout</td>
+<td>前台Broadcast：onReceiver在10S内没有处理完成发生ANR<br> 后台Broadcast：onReceiver在60s内没有处理完成发生ANR</td>
+<td>Timeout of broadcast BroadcastRecord</td>
+</tr>
+<tr>
+<td>ServiceTimeout</td>
+<td>前台Service：onCreate，onStart，onBind等生命周期在20s内没有处理完成发生ANR<br>后台Service：onCreate，onStart，onBind等生命周期在200s内没有处理完成发生ANR</td>
+<td>Timeout executing service</td>
+</tr>
+<tr>
+<td>ContentProviderTimeout</td>
+<td>ContentProvider 在10S内没有处理完成发生ANR</td>
+<td>timeout publishing content providers</td>
+</tr>
+</tbody></table>
+<h4 id="一、导出并查看-ANR-日志"><a href="#一、导出并查看-ANR-日志" class="headerlink" title="一、导出并查看 ANR 日志"></a>一、导出并查看 ANR 日志</h4><p>执行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb bugreport bugreport.zip</span><br><span class="line">adb pull /data/debuglogger/mobilelog</span><br></pre></td></tr></table></figure>
+<p>可以导出设备所有 bug 日志，执行命令后，在指定文件夹内得到一个 zip 文件，将文件解压后打开，文件目录如下所示：</p>
+<p><img src="/images/20240120/202401201046.png"></p>
+<p>其中，设备的 anr 日志会保存在该路径下：C:\Users\xxx\Desktop\bugreport\FS\data\anr，如图：</p>
+<p><img src="/images/20240120/202401201047.png"></p>
+<p>另外，该文件 C:\Users\xxx\Desktop\bugreport\bugreport-100110603-TP1A.220624.014-2022-10-12-09-49-59.txt 内也有有 anr 日志的打印，我们可以通过以下关键词搜索该文件的一些异常信息，如：</p>
+<ul>
+<li>“main” prio= 搜索 anr 相关信息</li>
+<li>beginning of crash 搜索 crash 相关信息</li>
+<li>CPU usage from 搜索 cpu 使用信息</li>
+</ul>
+<h4 id="二、ANR-日志如何分析"><a href="#二、ANR-日志如何分析" class="headerlink" title="二、ANR 日志如何分析"></a>二、ANR 日志如何分析</h4><p>一个 ANR 日志，会包含当前设备中所有进程的使用情况，每个进程开头都会<br>以 <strong>—– pid 17376 at date —–</strong> 来开头，<br>以 <strong>—– end 17376 —–</strong> 来结尾，<br>如下所示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">----- pid 17376 at 2022-10-11 09:52:04.264664750+0800 -----</span><br><span class="line">Cmd line: com.android.vending</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">----- end 17376 -----</span><br></pre></td></tr></table></figure>
+<p>另外，每个进程日志中都会有一些进程内存相关的信息，如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">----- pid 17376 at 2022-06-16 16:56:04 -----</span><br><span class="line">Cmd line: com.android.vending</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">Total number of allocations 274640   // 进程创建到现在一共创建了多少对象</span><br><span class="line">Total bytes allocated 13MB   // 进程创建到现在一共申请了多少内存</span><br><span class="line">Total bytes freed 5821KB   // 进程创建到现在一共释放了多少内存</span><br><span class="line">Free memory 4562KB   // 空闲内存（可用内存）</span><br><span class="line">Free memory until GC 4562KB   // GC前的空闲内存</span><br><span class="line">Free memory until OOME 248MB   // OOM之前的可用内存，当这个值很小的时候，已经处于内存紧张状态，应用可能占用了过多的内存</span><br><span class="line">Total memory11MB  // 当前总内存（已用+可用）</span><br><span class="line">Max memory 256MB  // 进程最多能申请的内存 </span><br><span class="line">...</span><br><span class="line">----- end 17376 -----</span><br></pre></td></tr></table></figure>
+<p>另外，每个进程日志中都会有进程堆栈信息，堆栈信息非常重要，它展示了发生 ANR 的进程当前的所有线程状态。如下所示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">----- pid 17376 at 2022-06-16 16:56:04 -----</span><br><span class="line">Cmd line: com.android.vending</span><br><span class="line">...</span><br><span class="line"><span class="built_in">suspend</span> all histogram:  Sum: 141.888ms 99% C.I. 0.012ms-91.709ms Avg: 4.892ms Max: 100.514ms</span><br><span class="line">DALVIK THREADS (56):</span><br><span class="line"><span class="string">&quot;Signal Catcher&quot;</span> daemon prio=10 tid=6 Runnable</span><br><span class="line">  | group=<span class="string">&quot;system&quot;</span> sCount=0 ucsCount=0 flags=0 obj=0x132c08e0 self=0xb400007dceb186f0</span><br><span class="line">  | sysTid=17386 <span class="built_in">nice</span>=-20 cgrp=default <span class="built_in">sched</span>=0/0 handle=0x7c47bdbcb0</span><br><span class="line">  | state=R schedstat=( 44080464 23366075 22 ) utm=3 stm=0 core=2 HZ=100</span><br><span class="line">  | stack=0x7c47ae4000-0x7c47ae6000 stackSize=991KB</span><br><span class="line">  | held mutexes= <span class="string">&quot;mutator lock&quot;</span>(shared held)</span><br><span class="line">  native: <span class="comment">#00 pc 00000000005376cc  /apex/com.android.art/lib64/libart.so (art::DumpNativeStack(std::__1::basic_ostream&lt;char, std::__1::char_traits&lt;char&gt; &gt;&amp;, int, BacktraceMap*, char const*, art::ArtMethod*, void*, bool)+128) (BuildId: 56e704c544e6c624201be2ab4933e853)</span></span><br><span class="line">  native: <span class="comment">#01 pc 00000000006f0e24  /apex/com.android.art/lib64/libart.so (art::Thread::DumpStack(std::__1::basic_ostream&lt;char, std::__1::char_traits&lt;char&gt; &gt;&amp;, bool, BacktraceMap*, bool) const+236) (BuildId: 56e704c544e6c624201be2ab4933e853)</span></span><br><span class="line">  native: <span class="comment">#02 pc 00000000006fe6b0  /apex/com.android.art/lib64/libart.so (art::DumpCheckpoint::Run(art::Thread*)+208) (BuildId: 56e704c544e6c624201be2ab4933e853)</span></span><br><span class="line">  native: <span class="comment">#03 pc 0000000000364174  /apex/com.android.art/lib64/libart.so (art::ThreadList::RunCheckpoint(art::Closure*, art::Closure*)+440) (BuildId: 56e704c544e6c624201be2ab4933e853)</span></span><br><span class="line">  native: <span class="comment">#04 pc 00000000006fce50  /apex/com.android.art/lib64/libart.so (art::ThreadList::Dump(std::__1::basic_ostream&lt;char, std::__1::char_traits&lt;char&gt; &gt;&amp;, bool)+280) (BuildId: 56e704c544e6c624201be2ab4933e853)</span></span><br><span class="line">  native: <span class="comment">#05 pc 00000000006fc844  /apex/com.android.art/lib64/libart.so (art::ThreadList::DumpForSigQuit(std::__1::basic_ostream&lt;char, std::__1::char_traits&lt;char&gt; &gt;&amp;)+292) (BuildId: 56e704c544e6c624201be2ab4933e853)</span></span><br><span class="line">  native: <span class="comment">#06 pc 00000000006d5914  /apex/com.android.art/lib64/libart.so (art::Runtime::DumpForSigQuit(std::__1::basic_ostream&lt;char, std::__1::char_traits&lt;char&gt; &gt;&amp;)+184) (BuildId: 56e704c544e6c624201be2ab4933e853)</span></span><br><span class="line">  native: <span class="comment">#07 pc 00000000006e19c0  /apex/com.android.art/lib64/libart.so (art::SignalCatcher::HandleSigQuit()+468) (BuildId: 56e704c544e6c624201be2ab4933e853)</span></span><br><span class="line">  native: <span class="comment">#08 pc 0000000000573e40  /apex/com.android.art/lib64/libart.so (art::SignalCatcher::Run(void*)+264) (BuildId: 56e704c544e6c624201be2ab4933e853)</span></span><br><span class="line">  native: <span class="comment">#09 pc 00000000000c1e40  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+208) (BuildId: 037ccd4f6c32456866be69c5a0a56591)</span></span><br><span class="line">  native: <span class="comment">#10 pc 0000000000054b50  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+64) (BuildId: 037ccd4f6c32456866be69c5a0a56591)</span></span><br><span class="line">  (no managed stack frames)</span><br><span class="line"><span class="string">&quot;main&quot;</span> prio=5 tid=1 Waiting</span><br><span class="line">  | group=<span class="string">&quot;main&quot;</span> sCount=1 ucsCount=0 flags=1 obj=0x720c41e8 self=0xb400007dceb13380</span><br><span class="line">  | sysTid=17376 <span class="built_in">nice</span>=0 cgrp=default <span class="built_in">sched</span>=0/0 handle=0x7f1ae4f4f8</span><br><span class="line">  | state=S schedstat=( 520024534 625550234 691 ) utm=28 stm=23 core=5 HZ=100</span><br><span class="line">  | stack=0x7fea717000-0x7fea719000 stackSize=8188KB</span><br><span class="line">  | held mutexes=</span><br><span class="line">  at jdk.internal.misc.Unsafe.park(Native method)</span><br><span class="line">  - waiting on an unknown object</span><br><span class="line">  at java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)</span><br><span class="line">  at aidy.get(PG:5)</span><br><span class="line">  at aihp.c(PG:1)</span><br><span class="line">  at gdu.az(PG:2)</span><br><span class="line">  at gge.j(PG:33)</span><br><span class="line">  - locked &lt;0x07048dde&gt; (a com.google.android.finsky.application.classic.ClassicApplication)</span><br><span class="line">  at gge.onCreate(PG:3)</span><br><span class="line">  at android.app.Instrumentation.callApplicationOnCreate(Instrumentation.java:1266)</span><br><span class="line">  at android.app.ActivityThread.handleBindApplication(ActivityThread.java:6826)</span><br><span class="line">  at android.app.ActivityThread.-$$Nest<span class="variable">$mhandleBindApplication</span>(unavailable:0)</span><br><span class="line">  at android.app.ActivityThread<span class="variable">$H</span>.handleMessage(ActivityThread.java:2171)</span><br><span class="line">  at android.os.Handler.dispatchMessage(Handler.java:106)</span><br><span class="line">  at android.os.Looper.loopOnce(Looper.java:201)</span><br><span class="line">  at android.os.Looper.loop(Looper.java:288)</span><br><span class="line">  at android.app.ActivityThread.main(ActivityThread.java:7941)</span><br><span class="line">  at java.lang.reflect.Method.invoke(Native method)</span><br><span class="line">  at com.android.internal.os.RuntimeInit<span class="variable">$MethodAndArgsCaller</span>.run(RuntimeInit.java:569)</span><br><span class="line">  at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1015)</span><br><span class="line"> ...</span><br><span class="line"><span class="string">&quot;Jit thread pool worker thread 0&quot;</span> daemon prio=5 tid=8 Native</span><br><span class="line">  | group=<span class="string">&quot;system&quot;</span> sCount=1 ucsCount=0 flags=1 obj=0x132c09d0 self=0xb400007dceb43e40</span><br><span class="line">  | sysTid=17389 <span class="built_in">nice</span>=9 cgrp=default <span class="built_in">sched</span>=0/0 handle=0x7c478e1cb0</span><br><span class="line">  | state=S schedstat=( 46231998 254143847 68 ) utm=3 stm=0 core=7 HZ=100</span><br><span class="line">  | stack=0x7c477e2000-0x7c477e4000 stackSize=1023KB</span><br><span class="line">  | held mutexes=</span><br><span class="line">  native: <span class="comment">#00 pc 000000000004f66c  /apex/com.android.runtime/lib64/bionic/libc.so (syscall+28) (BuildId: 037ccd4f6c32456866be69c5a0a56591)</span></span><br><span class="line">  native: <span class="comment">#01 pc 000000000047cc80  /apex/com.android.art/lib64/libart.so (art::ConditionVariable::WaitHoldingLocks(art::Thread*)+140) (BuildId: 56e704c544e6c624201be2ab4933e853)</span></span><br><span class="line">  native: <span class="comment">#02 pc 000000000047cb18  /apex/com.android.art/lib64/libart.so (art::ThreadPool::GetTask(art::Thread*)+120) (BuildId: 56e704c544e6c624201be2ab4933e853)</span></span><br><span class="line">  native: <span class="comment">#03 pc 0000000000619810  /apex/com.android.art/lib64/libart.so (art::ThreadPoolWorker::Run()+136) (BuildId: 56e704c544e6c624201be2ab4933e853)</span></span><br><span class="line">  native: <span class="comment">#04 pc 00000000006196f0  /apex/com.android.art/lib64/libart.so (art::ThreadPoolWorker::Callback(void*)+160) (BuildId: 56e704c544e6c624201be2ab4933e853)</span></span><br><span class="line">  native: <span class="comment">#05 pc 00000000000c1e40  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+208) (BuildId: 037ccd4f6c32456866be69c5a0a56591)</span></span><br><span class="line">  native: <span class="comment">#06 pc 0000000000054b50  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+64) (BuildId: 037ccd4f6c32456866be69c5a0a56591)</span></span><br><span class="line">  (no managed stack frames)</span><br><span class="line">...</span><br><span class="line">----- end 17376 -----</span><br></pre></td></tr></table></figure>
+
+<p>如上截图中，有三个线程，一个是 <strong>Signal Catcher</strong> 线程，一个是 <strong>main</strong> 线程，一个是 <strong>Jit thread pool worker thread 0</strong> ，他们的线程状态分别是 <strong>Runnable</strong> 、 <strong>blocked</strong> 和 <strong>native</strong> 状态。<br>而在 Java 中，线程状态有6种，如下所示：</p>
+<ul>
+<li><strong>NEW - 创建状态</strong>：当我们new一个Thread的时候，线程就处于创建状态；</li>
+<li><strong>RUNNABLE - 就绪或运行状态</strong>：当我们调用线程的 start() 方法，线程就会进入该状态；</li>
+</ul>
+<blockquote>
+<p>另外，还有两种情况也会使线程进入就绪状态：</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>线程之前处于阻塞状态，如果阻塞解除了，也会进入就绪状态</li>
+<li>线程之前处于运行状态，如果执行了 Thread.yield() 方法，则线程会进入就绪状态</li>
+</ul>
+</blockquote>
+<ul>
+<li><strong>BLOCKED - 阻塞状态</strong>：该状态下，线程正在阻塞等待某个锁。</li>
+<li><strong>WATING - 等待状态</strong>：当调用了以下某一个方法，线程就会处于等待状态：</li>
+</ul>
+<blockquote>
+<p>Object.wait<br>Thread.join<br>LockSupport.park<br>处于等待状态的线程正在等待另一个线程执行特定操作，例如：</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>在一个对象上调用了 Object.wait() 的线程正在等待另一个线程调用 Object.notify() 或 Object.notifyAll() 。</li>
+<li>已调用  Thread.join() 的线程正在等待指定线程终止。</li>
+</ul>
+</blockquote>
+<ul>
+<li><strong>TIMED_WAITING - 定时等待状态</strong>：指定等待时间的等待状态，当调用以下具有指定正等待时间的方法之一，线程就会处于定时等待状态：</li>
+</ul>
+<blockquote>
+<p>Thread.sleep(long millis)<br>Object.wait(long timeout)<br>Thread.join(long millis)<br>LockSupport.parkNanos(long nanos)<br>LockSupport .parkUntil(long deadline)</p>
+</blockquote>
+<ul>
+<li><strong>TERMINATED - 终止状态</strong>：终止状态，线程已完成执行就会进入此状态。</li>
+</ul>
+<hr>
+<p>那么，上述日志中的 <strong>native</strong> 状态是什么呢？<br>其实该状态是 cpp 代码中定义的线程状态，他跟 java 定义的线程状态关系如下：</p>
+<table>
+<thead>
+<tr>
+<th>java thread 状态</th>
+<th>cpp thread状态</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>TERMINATED</td>
+<td>ZOMBIE</td>
+<td>线程死亡，终止运行</td>
+</tr>
+<tr>
+<td>RUNNABLE</td>
+<td>RUNNING/RUNNABLE</td>
+<td>线程可运行或正在运行</td>
+</tr>
+<tr>
+<td>TIMED_WAITING</td>
+<td>TIMED_WAIT</td>
+<td>执行了带有超时参数的wait, sleep或join函数</td>
+</tr>
+<tr>
+<td>BLOCKED</td>
+<td>MONITOR</td>
+<td>线程阻塞，等待获取对象锁</td>
+</tr>
+<tr>
+<td>WAITING</td>
+<td>WAIT</td>
+<td>执行了无超时参数的wait函数</td>
+</tr>
+<tr>
+<td>NEW</td>
+<td>INITIALIZING</td>
+<td>新建，正在初始化，为其分配资源</td>
+</tr>
+<tr>
+<td>NEW</td>
+<td>STARTING</td>
+<td>新建，正在启动</td>
+</tr>
+<tr>
+<td>RUNNABLE</td>
+<td>NATIVE</td>
+<td>正在执行JNI本地函数</td>
+</tr>
+<tr>
+<td>WAITING</td>
+<td>VMWAIT</td>
+<td>正在等待VM资源</td>
+</tr>
+<tr>
+<td>RUNNABLE</td>
+<td>SUSPENDED</td>
+<td>线程暂停，通常是由于GC或debug被暂停</td>
+</tr>
+<tr>
+<td></td>
+<td>UNKNOWN</td>
+<td>未知状态</td>
+</tr>
+</tbody></table>
+<p>由上可知，<strong>native</strong> 状态对应的 <strong>java</strong> 线程状态是 <strong>runnable</strong> 状态。<br>堆栈信息是我们分析 <strong>ANR</strong> 的第一个重要的信息，一般来说：</p>
+<ul>
+<li>主线程处于 BLOCK / WAITING / TIMEWAITING 状态，基本上是函数阻塞导致的 anr</li>
+<li>若主线程无异常，则应该排查 CPU 负载和内存环境等其他因素</li>
+</ul>
+<p>另外，在 anr 日志中，还有一些常见参数，他们的含义如下：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>main</strong></td>
+<td>main标识是主线程，如果是线程，那么命名成“Thread-X”的格式,x表示线程id,逐步递增。</td>
+</tr>
+<tr>
+<td><strong>prio</strong></td>
+<td>线程优先级,默认是5</td>
+</tr>
+<tr>
+<td><strong>tid</strong></td>
+<td>tid不是线程的id，是线程唯一标识ID</td>
+</tr>
+<tr>
+<td><strong>group</strong></td>
+<td>是线程组名称</td>
+</tr>
+<tr>
+<td><strong>sCount</strong></td>
+<td>该线程被挂起的次数</td>
+</tr>
+<tr>
+<td><strong>dsCount</strong></td>
+<td>是线程被调试器挂起的次数</td>
+</tr>
+<tr>
+<td><strong>obj</strong></td>
+<td>对象地址</td>
+</tr>
+<tr>
+<td><strong>self</strong></td>
+<td>该线程Native的地址</td>
+</tr>
+<tr>
+<td><strong>sysTid</strong></td>
+<td>是线程号(主线程的线程号和进程号相同)</td>
+</tr>
+<tr>
+<td><strong>nice</strong></td>
+<td>是线程的调度优先级</td>
+</tr>
+<tr>
+<td><strong>sched</strong></td>
+<td>分别标志了线程的调度策略和优先级</td>
+</tr>
+<tr>
+<td><strong>cgrp</strong></td>
+<td>调度归属组</td>
+</tr>
+<tr>
+<td><strong>handle</strong></td>
+<td>线程处理函数的地址</td>
+</tr>
+<tr>
+<td><strong>state</strong></td>
+<td>是调度状态</td>
+</tr>
+<tr>
+<td><strong>schedstat</strong></td>
+<td>从 /proc/[pid]/task/[tid]/schedstat读出，三个值分别表示线程在cpu上执行的时间、线程的等待时间和线程执行的时间片长度，不支持这项信息的三个值都是0；</td>
+</tr>
+<tr>
+<td><strong>utm</strong></td>
+<td>是线程用户态下使用的时间值(单位是jiffies）</td>
+</tr>
+<tr>
+<td><strong>stm</strong></td>
+<td>是内核态下的调度时间值</td>
+</tr>
+<tr>
+<td><strong>core</strong></td>
+<td>是最后执行这个线程的cpu核的序号</td>
+</tr>
+</tbody></table>
+<h4 id="三、分析"><a href="#三、分析" class="headerlink" title="三、分析"></a>三、分析</h4><p>1.通过在 <strong>events_log</strong> 中检索 <strong>am_anr</strong> 关键字，就可以找到发生ANR的进程，譬如以下日志：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">10-16 00:48:27 820 907 I am_anr: [0,29533,com.android.systemui,1082670605,Broadcast of Intent &#123; act=android.intent.action.TIME_TICK flg=0x50000114 (has extras) &#125;]</span><br></pre></td></tr></table></figure>
+<p>表示在 <strong>10-16 00:48:27</strong> 这个时刻，<strong>PID</strong> 为 <strong>29533</strong> 进程发生了 ANR，进程名是 <strong>com.android.systemui</strong>。<br>接下来可以在  <strong>sys_log</strong> 检索 <strong>ANR in</strong> 关键字，找到发生 <strong>ANR</strong> 前后的 <strong>CPU</strong> 使用情况：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">10-16 00:50:10 820 907 E ActivityManager: ANR <span class="keyword">in</span> com.android.systemui, time=130090695</span><br><span class="line">10-16 00:50:10 820 907 E ActivityManager: Reason: Broadcast of Intent &#123; act=android.intent.action.TIME_TICK flg=0x50000114 (has extras) &#125;</span><br><span class="line">10-16 00:50:10 820 907 E ActivityManager: Load: 30.4 / 22.34 / 19.94</span><br><span class="line">10-16 00:50:10 820 907 E ActivityManager: Android time :[2015-10-16 00:50:05.76] [130191,266]</span><br><span class="line">10-16 00:50:10 820 907 E ActivityManager: CPU usage from 6753ms to -4ms ago:</span><br><span class="line">10-16 00:50:10 820 907 E ActivityManager:   47% 320/netd: 3.1% user + 44% kernel / faults: 14886 minor 3 major</span><br><span class="line">10-16 00:50:10 820 907 E ActivityManager:   15% 10007/com.sohu.sohuvideo: 2.8% user + 12% kernel / faults: 1144 minor</span><br><span class="line">10-16 00:50:10 820 907 E ActivityManager:   13% 10654/hif_thread: 0% user + 13% kernel</span><br><span class="line">10-16 00:50:10 820 907 E ActivityManager:   11% 175/mmcqd/0: 0% user + 11% kernel</span><br><span class="line">10-16 00:50:10 820 907 E ActivityManager:   5.1% 12165/app_process: 1.6% user + 3.5% kernel / faults: 9703 minor 540 major</span><br><span class="line">10-16 00:50:10 820 907 E ActivityManager:   3.3% 29533/com.android.systemui: 2.6% user + 0.7% kernel / faults: 8402 minor 343 major</span><br><span class="line">10-16 00:50:10 820 907 E ActivityManager:   3.2% 820/system_server: 0.8% user + 2.3% kernel / faults: 5120 minor 523 major</span><br><span class="line">10-16 00:50:10 820 907 E ActivityManager:   2.5% 11817/com.netease.pomelo.push.l.messageservice_V2: 0.7% user + 1.7% kernel / faults: 7728 minor 687 major</span><br><span class="line">10-16 00:50:10 820 907 E ActivityManager:   1.6% 11887/com.android.email: 0.5% user + 1% kernel / faults: 6259 minor 587 major</span><br><span class="line">10-16 00:50:10 820 907 E ActivityManager:   1.4% 11854/com.android.settings: 0.7% user + 0.7% kernel / faults: 5404 minor 471 major</span><br><span class="line">10-16 00:50:10 820 907 E ActivityManager:   1.4% 11869/android.process.acore: 0.7% user + 0.7% kernel / faults: 6131 minor 561 major</span><br><span class="line">10-16 00:50:10 820 907 E ActivityManager:   1.3% 11860/com.tencent.mobileqq: 0.1% user + 1.1% kernel / faults: 5542 minor 470 major</span><br><span class="line">...</span><br><span class="line">10-16 00:50:10 820 907 E ActivityManager:  +0% 12832/cat: 0% user + 0% kernel</span><br><span class="line">10-16 00:50:10 820 907 E ActivityManager:  +0% 13211/zygote64: 0% user + 0% kernel</span><br><span class="line">10-16 00:50:10 820 907 E ActivityManager: 87% TOTAL: 3% user + 18% kernel + 64% iowait + 0.5% softirq</span><br></pre></td></tr></table></figure>
+<p>这一段日志它包含的信息量非常多：</p>
+<ul>
+<li><strong>发生 ANR 的时间</strong>：events_log 中，ANR 的时间是 00：48：27，因为 AMS.appNotResponding() 首先会打印 events_log，然后再打印 syst_log， 所以，在 syst_log 中，找到ANR的时间是 00:50:10。可以从这个时间点之前的日志中，还原ANR出现时系统的运行状态。</li>
+<li><strong>打印ANR日志的进程</strong>：ANR日志都是在 system_server 进程的AMS线程打印的，在events_log和sys_log中，都能看到 820 和 907， 所以system_server的PID是 802，AMS 线程的 TID 是 907。ANR的监测机制实现在 AMS线程，分析一些受系统影响的ANR，需要知道system_server进程的运行状态。</li>
+<li><strong>发生ANR的进程</strong>：ANR in关键字就表明了当前ANR的进程是com.android.system.ui，通过events_log，知道进程的PID是 29533。</li>
+<li><strong>CPU使用统计时间段</strong>：CPU usage from XX to XX ago关键字表明了这是在ANR发生之前一段时间内的CPU统计。 类似的还有CPU usage from XX to XX after关键字，表明是ANR发生之后一段时间内的CPU统计。</li>
+<li><strong>发生ANR的原因</strong>：Reason关键字表明了当前发生ANR的原因是，处理TIME_TICK广播消息超时。 隐含的意思是TIME_TICK是一个串行广播消息，在 29533 的主线程中，执行BroadcastReceiver.onReceive()方法已经超过10秒。（也有可能时其他原因，导致systemui进程分配不到CPU时间，从而主线程处理广播消息超时，发生了ANR。）</li>
+</ul>
+<p><strong>2.Blocked——ANR</strong></p>
+<p><strong>Blocked</strong>关键字，在 ANR 日志里可以直接搜索 <strong>Blocked</strong>，看个例子：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;main&quot;</span> prio=5 tid=1 Blocked</span><br><span class="line">  | group=<span class="string">&quot;main&quot;</span> sCount=1 dsCount=0 obj=0x75bd5818 self=0x7f8549a000</span><br><span class="line">  | sysTid=29533 <span class="built_in">nice</span>=0 cgrp=bg_non_interactive <span class="built_in">sched</span>=0/0 handle=0x7f894bbe58</span><br><span class="line">  | state=S schedstat=( 289080040422 93461978317 904874 ) utm=20599 stm=8309 core=0 HZ=100</span><br><span class="line">  | stack=0x7fdffda000-0x7fdffdc000 stackSize=8MB</span><br><span class="line">  | held mutexes=</span><br><span class="line">  at com.mediatek.anrappmanager.MessageLogger.println(SourceFile:77)</span><br><span class="line">  - waiting to lock &lt;0x26b337a3&gt; (a com.mediatek.anrappmanager.MessageLogger) held by thread 49</span><br><span class="line">  at android.os.Looper.loop(Looper.java:195)</span><br><span class="line">  at android.app.ActivityThread.main(ActivityThread.java:5718)</span><br><span class="line">  at java.lang.reflect.Method.invoke!(Native method)</span><br><span class="line">  at java.lang.reflect.Method.invoke(Method.java:372)</span><br><span class="line">  at com.android.internal.os.ZygoteInit<span class="variable">$MethodAndArgsCaller</span>.run(ZygoteInit.java:975)</span><br><span class="line">  at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:770)</span><br></pre></td></tr></table></figure>
+<p>可以发现主线程 <strong>Blocked</strong>，并且这里有一行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- waiting to lock &lt;0x26b337a3&gt; (a com.mediatek.anrappmanager.MessageLogger) held by thread 49</span><br></pre></td></tr></table></figure>
+<p>其含义就是，主线程正在被 block， 其正在等待 线程49 释放锁，最终因此导致出现了 ANR。<br>可以接着搜关键字 <strong>tid=49</strong>，如果简单的话一般会是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;xxxThread&quot;</span> prio=5 tid=49 Sleeping</span><br></pre></td></tr></table></figure>
+<p>基本也可以定位到问题。</p>
+<p><strong>3.Slepping——ANR</strong></p>
+<p><strong>Slepping</strong>关键字，在 ANR 日志里可以直接搜索 <strong>Slepping</strong>，看个例子：<br>MainActivity 代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MainActivity</span> : AppCompatActivity() &#123;   </span><br><span class="line">    override fun <span class="title function_">onCreate</span><span class="params">(savedInstanceState: Bundle?)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 点击睡眠 10s</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    fun <span class="title function_">clickToSleep</span><span class="params">(view: View)</span> &#123;</span><br><span class="line">        Thread.sleep(<span class="number">10_000</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当点击按钮睡眠 10s 后，我们左滑或者点击返回键退出 MainActivity（由于主线程正在睡眠，所以此时是无法退出成功的），等待一段时间，系统将会弹出 ANR 弹窗。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;main&quot;</span> prio=5 tid=1 Sleeping</span><br><span class="line">  | group=<span class="string">&quot;main&quot;</span> sCount=1 dsCount=0 flags=1 obj=0x72e0ee78 self=0x79aafbcc00</span><br><span class="line">  | sysTid=16356 <span class="built_in">nice</span>=-10 cgrp=default <span class="built_in">sched</span>=0/0 handle=0x79ac524ed0</span><br><span class="line">  | state=S schedstat=( 1075827038 33414740 291 ) utm=93 stm=14 core=2 HZ=100</span><br><span class="line">  | stack=0x7fe35ed000-0x7fe35ef000 stackSize=8192KB</span><br><span class="line">  | held mutexes=</span><br><span class="line">  at java.lang.Thread.<span class="built_in">sleep</span>(Native method)</span><br><span class="line">  - sleeping on &lt;0x04fbafa5&gt; (a java.lang.Object)</span><br><span class="line">  at java.lang.Thread.<span class="built_in">sleep</span>(Thread.java:440)</span><br><span class="line">  - locked &lt;0x04fbafa5&gt; (a java.lang.Object)</span><br><span class="line">  at java.lang.Thread.<span class="built_in">sleep</span>(Thread.java:356)</span><br><span class="line">  at com.example.demoproject.view.MainActivity.clickToSleep(MainActivity.kt:57)</span><br><span class="line">  at java.lang.reflect.Method.invoke(Native method)</span><br><span class="line">  at androidx.appcompat.app.AppCompatViewInflater<span class="variable">$DeclaredOnClickListener</span>.onClick(AppCompatViewInflater.java:441)</span><br><span class="line">  at android.view.View.performClick(View.java:7259)</span><br><span class="line">  at com.google.android.material.button.MaterialButton.performClick(MaterialButton.java:1194)</span><br><span class="line">  at android.view.View.performClickInternal(View.java:7236)</span><br><span class="line">  at android.view.View.access<span class="variable">$3600</span>(View.java:801)</span><br><span class="line">  at android.view.View<span class="variable">$PerformClick</span>.run(View.java:27896)</span><br><span class="line">  at android.os.Handler.handleCallback(Handler.java:883)</span><br><span class="line">  at android.os.Handler.dispatchMessage(Handler.java:100)</span><br><span class="line">  at android.os.Looper.loop(Looper.java:214)</span><br><span class="line">  at android.app.ActivityThread.main(ActivityThread.java:7397)</span><br><span class="line">  at java.lang.reflect.Method.invoke(Native method)</span><br><span class="line">  at com.android.internal.os.RuntimeInit<span class="variable">$MethodAndArgsCaller</span>.run(RuntimeInit.java:492)</span><br><span class="line">  at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:935)</span><br></pre></td></tr></table></figure>
+<p>从堆栈信息中也很容易发现，在执行到 <strong>MainActivity.clickToSleep</strong> 方法时，线程进行了睡眠，最终导致 ANR。</p>
+<p><strong>4.耗时或死循环方法</strong></p>
+<p>例子如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MainActivity</span> : AppCompatActivity() &#123;</span><br><span class="line">    override fun <span class="title function_">onCreate</span><span class="params">(savedInstanceState: Bundle?)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">    fun <span class="title function_">click</span><span class="params">(view: View)</span> &#123;</span><br><span class="line">        doSomething()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> fun <span class="title function_">doSomething</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// 注意这里死循环</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            Log.i(<span class="string">&quot;testLog&quot;</span>, <span class="string">&quot;doSomething.. 当前线程名称=$&#123;Thread.currentThread().name&#125; 线程id=$&#123;Thread.currentThread().id&#125;&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当我们点击按钮时，会在主线程通过一个死循环不断打印 log，因此 <strong>doSomething()</strong> 方法我们可以认为是一个耗时方法，点击按钮后，我们左滑或者点击返回键退出 MainActivity（由于主线程正在忙碌中，所以此时是无法退出成功的），等待一段时间，系统将会弹出 ANR 弹窗。<br>ANR日志如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">----- pid 13231 at 2022-06-17 14:23:41 -----</span><br><span class="line">Cmd line: com.example.demoproject</span><br><span class="line">...</span><br><span class="line"><span class="string">&quot;main&quot;</span> prio=5 tid=1 Runnable</span><br><span class="line">  | group=<span class="string">&quot;main&quot;</span> sCount=0 dsCount=0 flags=0 obj=0x72b20e78 self=0x77fe5a6c00</span><br><span class="line">  | sysTid=13231 <span class="built_in">nice</span>=-10 cgrp=default <span class="built_in">sched</span>=0/0 handle=0x77ffb0eed0</span><br><span class="line">  | state=R schedstat=( 31694533124 58819622 723 ) utm=1310 stm=1859 core=5 HZ=100</span><br><span class="line">  | stack=0x7fdc2b7000-0x7fdc2b9000 stackSize=8192KB</span><br><span class="line">  | held mutexes= <span class="string">&quot;mutator lock&quot;</span>(shared held)</span><br><span class="line">  native: <span class="comment">#00 pc 00000000004108e8  /apex/com.android.runtime/lib64/libart.so (art::DumpNativeStack(std::__1::basic_ostream&lt;char, std::__1::char_traits&lt;char&gt;&gt;&amp;, int, BacktraceMap*, char const*, art::ArtMethod*, void*, bool)+140)</span></span><br><span class="line">  native: <span class="comment">#01 pc 00000000004f8040  /apex/com.android.runtime/lib64/libart.so (art::Thread::DumpStack(std::__1::basic_ostream&lt;char, std::__1::char_traits&lt;char&gt;&gt;&amp;, bool, BacktraceMap*, bool) const+512)</span></span><br><span class="line">  native: <span class="comment">#02 pc 000000000051297c  /apex/com.android.runtime/lib64/libart.so (art::DumpCheckpoint::Run(art::Thread*)+828)</span></span><br><span class="line">  native: <span class="comment">#03 pc 00000000004f8d4c  /apex/com.android.runtime/lib64/libart.so (art::Thread::RunCheckpointFunction()+176)</span></span><br><span class="line">  native: <span class="comment">#04 pc 00000000003713fc  /apex/com.android.runtime/lib64/libart.so (art::(anonymous namespace)::CheckJNI::ReleaseStringCharsInternal(char const*, _JNIEnv*, _jstring*, void const*, bool, bool)+1356)</span></span><br><span class="line">  native: <span class="comment">#05 pc 00000000001507cc  /system/lib64/libandroid_runtime.so (android::android_util_Log_println_native(_JNIEnv*, _jobject*, int, int, _jstring*, _jstring*)+232)</span></span><br><span class="line">  at android.util.Log.println_native(Native method)</span><br><span class="line">  at android.util.Log.i(Log.java:176)</span><br><span class="line">  at com.example.demoproject.view.MainActivity.doSomething(MainActivity.kt:52)</span><br><span class="line">  at com.example.demoproject.view.MainActivity.click2(MainActivity.kt:36)</span><br><span class="line">  at java.lang.reflect.Method.invoke(Native method)</span><br><span class="line">  at androidx.appcompat.app.AppCompatViewInflater<span class="variable">$DeclaredOnClickListener</span>.onClick(AppCompatViewInflater.java:441)</span><br><span class="line">  at android.view.View.performClick(View.java:7259)</span><br><span class="line">  at com.google.android.material.button.MaterialButton.performClick(MaterialButton.java:1194)</span><br><span class="line">  at android.view.View.performClickInternal(View.java:7236)</span><br><span class="line">  at android.view.View.access<span class="variable">$3600</span>(View.java:801)</span><br><span class="line">  at android.view.View<span class="variable">$PerformClick</span>.run(View.java:27896)</span><br><span class="line">  at android.os.Handler.handleCallback(Handler.java:883)</span><br><span class="line">  at android.os.Handler.dispatchMessage(Handler.java:100)</span><br><span class="line">  at android.os.Looper.loop(Looper.java:214)</span><br><span class="line">  at android.app.ActivityThread.main(ActivityThread.java:7397)</span><br><span class="line">  at java.lang.reflect.Method.invoke(Native method)</span><br><span class="line">  at com.android.internal.os.RuntimeInit<span class="variable">$MethodAndArgsCaller</span>.run(RuntimeInit.java:492)</span><br><span class="line">  at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:935)</span><br><span class="line">...</span><br><span class="line">----- end 16808 -----</span><br></pre></td></tr></table></figure>
+<p>发现主线程正处于 Runnable 状态，并不是处于空闲状态，堆栈信息中有一行关键日志：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">at com.example.demoproject.view.MainActivity.doSomething(MainActivity.kt:52)</span><br></pre></td></tr></table></figure>
+<p>各关键字：am_anr、ANR in、Reason、Blocked、Slepping。</p>
+
+      
+      <blockquote>
+        
+        <strong>本文链接：</strong><br><a href="http://longzhiye.top/2024/01/20/2024-01-20/">http://longzhiye.top/2024/01/20/2024-01-20/</a>
+      </blockquote>
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Android/" rel="tag">Android</a><a class="mdui-ripple article_tags-link" href="/tags/framework/" rel="tag">framework</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2024/01/21/2024-01-21/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        <span class="mdui-p-x-3" mdui-tooltip="{content: '应用启动的优化措施'}">上一篇</span>
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2024/01/14/2024-01-14/">
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android ART编译模式解析'}">下一篇</span>
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+
+
+
+</main>
+  <footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="http://github.com/longzhiye" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe7ab;</i></a>
+    
+    
+    
+      <a href="https://www.zhihu.com/people/long-zhi-xie-61" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe6c0;</i></a>
+    
+    
+    
+      <a href="tencent://tencent:////message/?uin=951898105&Menu=yes" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2022 - 2025 龙之叶<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>
+    <br>
+      <span id="busuanzi_container_site_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_site_pv"></span></span> &nbsp;&nbsp;
+      <span id="busuanzi_container_site_uv" style="display: none;"><i class="iconfont">&#xe601;</i> <span id="busuanzi_value_site_uv"></span></span>
+    
+  </div>
+</footer>
+
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+  
+<script src="/custom.js"></script>
+
+</body>
+</html>

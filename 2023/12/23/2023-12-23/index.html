@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>Android 事件分发机制详解（下） | 龙之叶的博客</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="alternate" href="/atom.xml" title="龙之叶的博客" type="application/atom+xml">
+  <meta name="description" content="Android 事件分发机制详解（下）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 事件分发机制详解（下）">
+<meta property="og:url" content="http://longzhiye.top/2023/12/23/2023-12-23/index.html">
+<meta property="og:site_name" content="龙之叶的博客">
+<meta property="og:description" content="Android 事件分发机制详解（下）">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://longzhiye.top/images/20231223/20231223001.png">
+<meta property="og:image" content="http://longzhiye.top/images/20231223/20231223002.png">
+<meta property="article:published_time" content="2023-12-22T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-04T08:39:58.960Z">
+<meta property="article:author" content="龙之叶">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="SystemUI">
+<meta property="article:tag" content="framework">
+<meta property="article:tag" content="Launcher">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://longzhiye.top/images/20231223/20231223001.png">
+
+  <meta name="keywords" content=",Android,SystemUI,framework,Launcher">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="龙之叶的博客">
+  <meta name="msapplication-starturl" content="http://longzhiye.top/2023/12/23/2023-12-23/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="龙之叶的博客">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <link rel="canonical" href="http://longzhiye.top/2023/12/23/2023-12-23/">
+  
+
+  
+  
+
+  
+  
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/custom.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(!a){document.getElementsByTagName("body")[0].className+=" mdui-drawer-body-left"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">龙之叶的博客</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+	<!--
+    <a href="/atom.xml" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'RSS'}"><i class="mdui-icon material-icons">rss_feed</i></a>
+	-->
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(a){document.getElementById("sidebar").className+=" mdui-drawer-close"};</script>
+  <div class="mdui-grid-tile">
+    <img src="/images/banner.png" style="height: 160px;">
+    <img src="/images/avatar.png" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;background-color:#fff;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">龙之叶</div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>生命不息，折腾不止</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:longzhiye163@163.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'longzhiye163@163.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-0");if(a){document.getElementsByClassName("mdui-collapse-item")[0].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">archive</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2025/10/">十月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/09/">九月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/08/">八月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/07/">七月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/06/">六月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/03/">三月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/02/">二月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/01/">一月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/10/">十月 2024<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/09/">九月 2024<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/08/">八月 2024<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/03/">三月 2024<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/02/">二月 2024<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/01/">一月 2024<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/12/">十二月 2023<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/11/">十一月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/10/">十月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/09/">九月 2023<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/08/">八月 2023<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/06/">六月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/05/">五月 2023<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/04/">四月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/03/">三月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/02/">二月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/09/">九月 2022<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/04/">四月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/03/">三月 2017<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/02/">二月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/01/">一月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/12/">十二月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/11/">十一月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/10/">十月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/08/">八月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-1");if(a){document.getElementsByClassName("mdui-collapse-item")[1].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">class</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">108</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E8%B5%84%E8%AE%AF/">资讯<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E9%80%9A%E7%9F%A5/">通知<span class="mdui-ripple sidebar_archives-count">4</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-2");if(a){document.getElementsByClassName("mdui-collapse-item")[2].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/ANR/" rel="tag">ANR<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/APP/" rel="tag">APP<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android/" rel="tag">Android<span class="mdui-ripple sidebar_archives-count">98</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android12/" rel="tag">Android12<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android13/" rel="tag">Android13<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android14/" rel="tag">Android14<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android16/" rel="tag">Android16<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AndroidStudio/" rel="tag">AndroidStudio<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AutoDraw/" rel="tag">AutoDraw<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Build/" rel="tag">Build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Crash/" rel="tag">Crash<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Foxmail/" rel="tag">Foxmail<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Framework/" rel="tag">Framework<span class="mdui-ripple sidebar_archives-count">20</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GPS%E8%BD%A8%E8%BF%B9%E5%9B%BE/" rel="tag">GPS轨迹图<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Git/" rel="tag">Git<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GitHub/" rel="tag">GitHub<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Google/" rel="tag">Google<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Java/" rel="tag">Java<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Kernel/" rel="tag">Kernel<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Launcher/" rel="tag">Launcher<span class="mdui-ripple sidebar_archives-count">17</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Lib/" rel="tag">Lib<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Linux/" rel="tag">Linux<span class="mdui-ripple sidebar_archives-count">18</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Markdown/" rel="tag">Markdown<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Material-Design/" rel="tag">Material Design<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OS-X/" rel="tag">OS X<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OTA/" rel="tag">OTA<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/QuickTime/" rel="tag">QuickTime<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SSH/" rel="tag">SSH<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Settings/" rel="tag">Settings<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SystemUI/" rel="tag">SystemUI<span class="mdui-ripple sidebar_archives-count">19</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/UAC/" rel="tag">UAC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Ubuntu/" rel="tag">Ubuntu<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WPS/" rel="tag">WPS<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Wifi/" rel="tag">Wifi<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WindTerm/" rel="tag">WindTerm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows/" rel="tag">Windows<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows-11/" rel="tag">Windows 11<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/androidmk/" rel="tag">androidmk<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/blog/" rel="tag">blog<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/build/" rel="tag">build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/feel/" rel="tag">feel<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/framework/" rel="tag">framework<span class="mdui-ripple sidebar_archives-count">58</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/inotify/" rel="tag">inotify<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/life/" rel="tag">life<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/ninja/" rel="tag">ninja<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/rsync/" rel="tag">rsync<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/standard/" rel="tag">standard<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/test/" rel="tag">test<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1/" rel="tag">企业微信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E7%94%9F%E6%B4%BB%E6%84%9F%E6%82%9F/" rel="tag">生活感悟<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+      <a href="/timeline" class="mdui-list-item mdui-ripple">时间轴</a>
+    
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-3");if(a){document.getElementsByClassName("mdui-collapse-item")[3].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+          <a href="http://www.niemingzhao.top" target="_blank" class="mdui-list-item mdui-p-l-2 mdui-text-color-theme-accent mdui-ripple" style="justify-content: center;">聂明照的博客</a>
+        
+        
+      </div>
+    </div>
+  </div>
+</aside>
+
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <style>#main article .mdui-card-content .text-center{text-align:center!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-1.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">Android 事件分发机制详解（下）</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2023-12-23 / <i class="iconfont">&#xe601;</i> 龙之叶 &nbsp;&nbsp; <span id="busuanzi_container_page_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_page_pv"></span></span></div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#qrcode', align: 'right'}"><i class="mdui-icon material-icons">devices</i></button>
+          <ul class="mdui-menu" id="qrcode">
+            
+              <li class="mdui-menu-item"><a class="mdui-text-center mdui-ripple">发送到手机</a></li>
+            
+            <li class="mdui-menu-item" disabled>
+              
+                <img src="//qr.liantu.com/api.php?w=246&m=10&text=http://longzhiye.top/2023/12/23/2023-12-23/">
+              
+            </li>
+          </ul>
+        
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="mdui-icon material-icons">share</i></button>
+          <ul class="mdui-menu" id="share_menu">
+            <li class="mdui-menu-item">
+              <a href="https://service.weibo.com/share/share.php?appkey=&title=Android 事件分发机制详解（下）&url=http://longzhiye.top/2023/12/23/2023-12-23/&pic=http://longzhiye.top/images/favicon.png&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://twitter.com/intent/tweet?text=Android 事件分发机制详解（下）&url=http://longzhiye.top/2023/12/23/2023-12-23/&via=龙之叶" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=http://longzhiye.top/2023/12/23/2023-12-23/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://plus.google.com/share?url=http://longzhiye.top/2023/12/23/2023-12-23/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://longzhiye.top/2023/12/23/2023-12-23/&title=Android 事件分发机制详解（下）" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://connect.qq.com/widget/shareqq/index.html?site=龙之叶的博客&title=Android 事件分发机制详解（下）&pics=http://longzhiye.top/images/favicon.png&url=http://longzhiye.top/2023/12/23/2023-12-23/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://telegram.me/share/url?url=http://longzhiye.top/2023/12/23/2023-12-23/&text=Android 事件分发机制详解（下）" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+            </li>
+          </ul>
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h4 id="2-3-View事件分发机制"><a href="#2-3-View事件分发机制" class="headerlink" title="2.3 View事件分发机制"></a>2.3 View事件分发机制</h4><p>从上面 <strong>ViewGroup</strong> 事件分发机制知道，View事件分发机制从 <strong>dispatchTouchEvent()</strong> 开始</p>
+<h4 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 源码分析：View.dispatchTouchEvent（）</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">dispatchTouchEvent</span><span class="params">(MotionEvent event)</span> &#123;  </span><br><span class="line">        <span class="keyword">if</span> ( (mViewFlags &amp; ENABLED_MASK) == ENABLED &amp;&amp; </span><br><span class="line">              mOnTouchListener != <span class="literal">null</span> &amp;&amp;  </span><br><span class="line">              mOnTouchListener.onTouch(<span class="built_in">this</span>, event)) &#123;  </span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;  </span><br><span class="line">        &#125; </span><br><span class="line">        <span class="keyword">return</span> onTouchEvent(event);  </span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 说明：只有以下3个条件都为真，dispatchTouchEvent()才返回true；否则执行onTouchEvent()</span></span><br><span class="line">  <span class="comment">//   1. (mViewFlags &amp; ENABLED_MASK) == ENABLED</span></span><br><span class="line">  <span class="comment">//   2. mOnTouchListener != null</span></span><br><span class="line">  <span class="comment">//   3. mOnTouchListener.onTouch(this, event)</span></span><br><span class="line">  <span class="comment">// 下面对这3个条件逐个分析</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 条件1：(mViewFlags &amp; ENABLED_MASK) == ENABLED</span></span><br><span class="line"><span class="comment">  * 说明：</span></span><br><span class="line"><span class="comment">  *    1. 该条件是判断当前点击的控件是否enable</span></span><br><span class="line"><span class="comment">  *    2. 由于很多View默认enable，故该条件恒定为true（除非手动设置为false）</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 条件2：mOnTouchListener != null</span></span><br><span class="line"><span class="comment">  * 说明：</span></span><br><span class="line"><span class="comment">  *   1. mOnTouchListener变量在View.setOnTouchListener()里赋值</span></span><br><span class="line"><span class="comment">  *   2. 即只要给控件注册了Touch事件，mOnTouchListener就一定被赋值（即不为空）</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setOnTouchListener</span><span class="params">(OnTouchListener l)</span> &#123; </span><br><span class="line">    mOnTouchListener = l;  </span><br><span class="line">&#125; </span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 条件3：mOnTouchListener.onTouch(this, event)</span></span><br><span class="line"><span class="comment">  * 说明：</span></span><br><span class="line"><span class="comment">  *   1. 即回调控件注册Touch事件时的onTouch()；</span></span><br><span class="line"><span class="comment">  *   2. 需手动复写设置，具体如下（以按钮Button为例）</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  button.setOnTouchListener(<span class="keyword">new</span> <span class="title class_">OnTouchListener</span>() &#123;  </span><br><span class="line">      <span class="meta">@Override</span>  </span><br><span class="line">      <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onTouch</span><span class="params">(View v, MotionEvent event)</span> &#123;  </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;  </span><br><span class="line">        <span class="comment">// 若在onTouch()返回true，就会让上述三个条件全部成立，从而使得View.dispatchTouchEvent（）直接返回true，事件分发结束</span></span><br><span class="line">        <span class="comment">// 若在onTouch()返回false，就会使得上述三个条件不全部成立，从而使得View.dispatchTouchEvent（）中跳出If，执行onTouchEvent(event)</span></span><br><span class="line">        <span class="comment">// onTouchEvent()源码分析 -&gt; 分析1</span></span><br><span class="line">      &#125;  </span><br><span class="line">  &#125;);</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 分析1：onTouchEvent()</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onTouchEvent</span><span class="params">(MotionEvent event)</span> &#123;  </span><br><span class="line">    ... <span class="comment">// 仅展示关键代码</span></span><br><span class="line">    <span class="comment">// 若该控件可点击，则进入switch判断中</span></span><br><span class="line">    <span class="keyword">if</span> (((viewFlags &amp; CLICKABLE) == CLICKABLE || (viewFlags &amp; LONG_CLICKABLE) == LONG_CLICKABLE)) &#123;  </span><br><span class="line">        <span class="comment">// 根据当前事件类型进行判断处理</span></span><br><span class="line">        <span class="keyword">switch</span> (event.getAction()) &#123; </span><br><span class="line">            <span class="comment">// a. 事件类型=抬起View（主要分析）</span></span><br><span class="line">            <span class="keyword">case</span> MotionEvent.ACTION_UP:  </span><br><span class="line">                    performClick(); </span><br><span class="line">                    <span class="comment">// -&gt;&gt;分析2</span></span><br><span class="line">                    <span class="keyword">break</span>;  </span><br><span class="line">            <span class="comment">// b. 事件类型=按下View</span></span><br><span class="line">            <span class="keyword">case</span> MotionEvent.ACTION_DOWN:  </span><br><span class="line">                postDelayed(mPendingCheckForTap, ViewConfiguration.getTapTimeout());  </span><br><span class="line">                <span class="keyword">break</span>;  </span><br><span class="line">            <span class="comment">// c. 事件类型=结束事件</span></span><br><span class="line">            <span class="keyword">case</span> MotionEvent.ACTION_CANCEL:  </span><br><span class="line">                refreshDrawableState();  </span><br><span class="line">                removeTapCallback();  </span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="comment">// d. 事件类型=滑动View</span></span><br><span class="line">            <span class="keyword">case</span> MotionEvent.ACTION_MOVE:  </span><br><span class="line">                <span class="keyword">final</span> <span class="type">int</span> <span class="variable">x</span> <span class="operator">=</span> (<span class="type">int</span>) event.getX();  </span><br><span class="line">                <span class="keyword">final</span> <span class="type">int</span> <span class="variable">y</span> <span class="operator">=</span> (<span class="type">int</span>) event.getY();  </span><br><span class="line">                <span class="type">int</span> <span class="variable">slop</span> <span class="operator">=</span> mTouchSlop;  </span><br><span class="line">                <span class="keyword">if</span> ((x &lt; <span class="number">0</span> - slop) || (x &gt;= getWidth() + slop) ||  </span><br><span class="line">                        (y &lt; <span class="number">0</span> - slop) || (y &gt;= getHeight() + slop)) &#123;  </span><br><span class="line">                    removeTapCallback();  </span><br><span class="line">                    <span class="keyword">if</span> ((mPrivateFlags &amp; PRESSED) != <span class="number">0</span>) &#123;  </span><br><span class="line">                        removeLongPressCallback();  </span><br><span class="line">                        mPrivateFlags &amp;= ~PRESSED;  </span><br><span class="line">                        refreshDrawableState();  </span><br><span class="line">                    &#125;  </span><br><span class="line">                &#125;  </span><br><span class="line">                <span class="keyword">break</span>;  </span><br><span class="line">        &#125;  </span><br><span class="line">        <span class="comment">// 若该控件可点击，就一定返回true</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;  </span><br><span class="line">    &#125;  </span><br><span class="line">  <span class="comment">// 若该控件不可点击，就一定返回false</span></span><br><span class="line">  <span class="keyword">return</span> <span class="literal">false</span>;  </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 分析2：performClick（）</span></span><br><span class="line"><span class="comment">  */</span>  </span><br><span class="line">  <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">performClick</span><span class="params">()</span> &#123;  </span><br><span class="line">      <span class="keyword">if</span> (mOnClickListener != <span class="literal">null</span>) &#123;</span><br><span class="line">          <span class="comment">// 只要通过setOnClickListener()为控件View注册1个点击事件</span></span><br><span class="line">          <span class="comment">// 那么就会给mOnClickListener变量赋值（即不为空）</span></span><br><span class="line">          <span class="comment">// 则会往下回调onClick() &amp; performClick()返回true</span></span><br><span class="line">          playSoundEffect(SoundEffectConstants.CLICK);  </span><br><span class="line">          mOnClickListener.onClick(<span class="built_in">this</span>);  </span><br><span class="line">          <span class="keyword">return</span> <span class="literal">true</span>;  </span><br><span class="line">      &#125;  </span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;  </span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="源码总结"><a href="#源码总结" class="headerlink" title="源码总结"></a>源码总结</h4><p><img src="/images/20231223/20231223001.png"><br>这里需要特别注意的是， <strong>onTouch（）</strong> 的执行 先于 <strong>onClick（）</strong> </p>
+<h4 id="核心方法总结"><a href="#核心方法总结" class="headerlink" title="核心方法总结"></a>核心方法总结</h4><p>主要包括:  <strong>dispatchTouchEvent()</strong> 、 <strong>onTouchEvent()</strong><br><img src="/images/20231223/20231223002.png"></p>
+<h4 id="实例分析"><a href="#实例分析" class="headerlink" title="实例分析"></a>实例分析</h4><p>在本示例中，将分析2种情况：</p>
+<blockquote>
+<ol>
+<li>注册Touch事件监听 且 在 <strong>onTouch()</strong> 返回false</li>
+<li>注册Touch事件监听 且 在 <strong>onTouch()</strong> 返回true</li>
+</ol>
+<p><strong>分析1：注册Touch事件监听 且 在onTouch()返回false</strong></p>
+</blockquote>
+<h4 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 注册Touch事件监听setOnTouchListener 且 在onTouch()返回false</span></span><br><span class="line">button.setOnTouchListener(<span class="keyword">new</span> <span class="title class_">View</span>.OnTouchListener() &#123;</span><br><span class="line">      <span class="meta">@Override</span></span><br><span class="line">      <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onTouch</span><span class="params">(View v, MotionEvent event)</span> &#123;</span><br><span class="line">          System.out.println(<span class="string">&quot;执行了onTouch(), 动作是:&quot;</span> + event.getAction());</span><br><span class="line">          <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">      &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 2. 注册点击事件OnClickListener()</span></span><br><span class="line">button.setOnClickListener(<span class="keyword">new</span> <span class="title class_">View</span>.OnClickListener() &#123;</span><br><span class="line">      <span class="meta">@Override</span></span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onClick</span><span class="params">(View v)</span> &#123;</span><br><span class="line">          System.out.println(<span class="string">&quot;执行了onClick()&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h4 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">执行了onTouch(), 动作是:0</span><br><span class="line">执行了onTouch(), 动作是:1</span><br><span class="line">执行了onClick()</span><br></pre></td></tr></table></figure>
+<h4 id="测试结果说明"><a href="#测试结果说明" class="headerlink" title="测试结果说明"></a>测试结果说明</h4><ul>
+<li>点击按钮会产生两个类型的事件-按下View与抬起View，所以会回调两次 <strong>onTouch()</strong> ；</li>
+<li>因为 <strong>onTouch()</strong> 返回了false，所以事件无被消费，会继续往下传递，即调用 <strong>View.onTouchEvent()</strong> ；</li>
+<li>调用 <strong>View.onTouchEvent()</strong> 时，对于抬起View事件，在调用 <strong>performClick()</strong> 时，因为设置了点击事件，所以会回调 <strong>onClick()</strong> 。</li>
+</ul>
+<p><strong>分析2：注册Touch事件监听 且 在onTouch()返回true</strong></p>
+<h4 id="代码示例-1"><a href="#代码示例-1" class="headerlink" title="代码示例"></a>代码示例</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 注册Touch事件监听setOnTouchListener 且 在onTouch()返回false</span></span><br><span class="line">button.setOnTouchListener(<span class="keyword">new</span> <span class="title class_">View</span>.OnTouchListener() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onTouch</span><span class="params">(View v, MotionEvent event)</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;执行了onTouch(), 动作是:&quot;</span> + event.getAction());</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"><span class="comment">// 2. 注册点击事件OnClickListener()</span></span><br><span class="line">button.setOnClickListener(<span class="keyword">new</span> <span class="title class_">View</span>.OnClickListener() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onClick</span><span class="params">(View v)</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;执行了onClick()&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
+<h4 id="测试结果-1"><a href="#测试结果-1" class="headerlink" title="测试结果"></a>测试结果</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">执行了onTouch(), 动作是:0</span><br><span class="line">执行了onTouch(), 动作是:1</span><br></pre></td></tr></table></figure>
+<h4 id="测试结果说明-1"><a href="#测试结果说明-1" class="headerlink" title="测试结果说明"></a>测试结果说明</h4><ul>
+<li>点击按钮会产生两个类型的事件-按下View与抬起View，所以会回调两次 <strong>onTouch()</strong> ；</li>
+<li>因为 <strong>onTouch()</strong> 返回true，所以事件被消费，不会继续往下传递， <strong>View.dispatchTouchEvent()</strong> 直接返回true；</li>
+<li>所以最终不会调用 <strong>View.onTouchEvent()</strong> ，也不会调用 <strong>onClick()</strong> 。</li>
+</ul>
+<h2 id="三-事件分发机制流程总结"><a href="#三-事件分发机制流程总结" class="headerlink" title="三. 事件分发机制流程总结"></a>三. 事件分发机制流程总结</h2><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>相关方法</th>
+<th>Activity</th>
+<th>ViewGroup</th>
+<th>View</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>事件分发</td>
+<td>dispatchTouchEvent</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>事件拦截</td>
+<td>oninterceptTouchEvent</td>
+<td>×</td>
+<td>√</td>
+<td>×</td>
+</tr>
+<tr>
+<td>事件消费</td>
+<td>onTouchEvent</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+</tr>
+</tbody></table>
+<p>这个三个方法均有一个 boolean(布尔) 类型的返回值，通过返回 true 和 false 来控制事件传递的流程。<br>PS: 从上表可以看到 <strong>Activity</strong>和 <strong>View</strong>都是没有事件拦截的，这是因为：</p>
+<ul>
+<li>Activity 作为原始的事件分发者，如果 Activity 拦截了事件会导致整个屏幕都无法响应事件，这肯定不是我们想要的效果。</li>
+<li>View最为事件传递的最末端，要么消费掉事件，要么不处理进行回传，根本没必要进行事件拦截。</li>
+</ul>
+<h4 id="View相关"><a href="#View相关" class="headerlink" title="View相关"></a>View相关</h4><blockquote>
+<p>Question: 为什么 View 会有 dispatchTouchEvent ?</p>
+</blockquote>
+<p>A：<strong>View</strong> 可以注册很多事件监听器，例如：单击事件(<strong>onClick</strong>)、长按事件(<strong>onLongClick</strong>)、触摸事件(<strong>onTouch</strong>)，并且View自身也有<strong>onTouchEvent</strong>方法，那么问题来了，这么多与事件相关的方法应该由谁管理？毋庸置疑就是 <strong>dispatchTouchEvent</strong>，所以 View 也会有事件分发。</p>
+<blockquote>
+<p>Question: 与 View 事件相关的各个方法调用顺序是怎样的？</p>
+</blockquote>
+<p>A：如果不去看源码，想一下让自己设计会怎样？</p>
+<ul>
+<li>单击事件(<strong>onClickListener</strong>) 需要两个事件(<strong>ACTION_DOWN</strong> 和 <strong>ACTION_UP</strong>)才能触发，如果先分配给<strong>onClick</strong>判断，等它判断完，用户手指已经离开屏幕，黄花菜都凉了，定然造成 View 无法响应其他事件，应该最后调用。(最后)</li>
+<li>长按事件(<strong>onLongClickListener</strong>) 同理，也是需要长时间等待才能出结果，肯定不能排到前面，但因为不需要ACTION_UP，应该排在<strong>onClick</strong>前面。(<strong>onLongClickListener</strong>&gt; <strong>onClickListener</strong>)</li>
+<li>触摸事件(<strong>onTouchListener</strong>) ， 如果用户注册了触摸事件，说明用户要自己处理触摸事件，这个应该排在最前面。（最前）、</li>
+<li>View自身处理(<strong>onTouchEvent</strong>) 提供了一种默认的处理方式，如果用户已经处理好了，也就不需要了，所以应该排在onTouchListener后面。(<strong>onTouchListener</strong> &gt; <strong>onTouchEvent</strong>)</li>
+</ul>
+<p><strong>所以事件的调度顺序应该是 onTouchListener&gt; onTouchEvent &gt; onLongClickListener&gt; onClickListener。</strong></p>
+<h4 id="ViewGroup相关"><a href="#ViewGroup相关" class="headerlink" title="ViewGroup相关"></a>ViewGroup相关</h4><p>ViewGroup(通常是各种Layout) 的事件分发相对来说就要麻烦一些，因为 ViewGroup 不仅要考虑自身，还要考虑各种ChildView，一旦处理不好就容易引起各种事件冲突，正所谓养儿方知父母难啊。<br>VIewGroup的事件分发流程又是如何的呢？<br>我们了解到事件是通过ViewGroup一层一层传递的，最终传递给View，ViewGroup要比它的 ChildView 先拿到事件，并且有权决定是否告诉要告诉ChildView。在默认的情况下 ViewGroup事件分发流程是这样的。</p>
+<ol>
+<li>判断自身是否需要(询问 onInterceptTouchEvent 是否拦截)，如果需要，调用自己的 onTouchEvent。</li>
+<li>自身不需要或者不确定，则询问ChildView，一般来说是调用手指触摸位置的 ChildView。</li>
+<li>如果子 ChildView不需要则调用自身的onTouchEvent。</li>
+</ol>
+<p>用伪代码应该是这样子的:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 点击事件产生后</span></span><br><span class="line"><span class="comment">// 步骤1：调用dispatchTouchEvent()</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">dispatchTouchEvent</span><span class="params">(MotionEvent ev)</span> &#123;</span><br><span class="line">    <span class="type">boolean</span> <span class="variable">consume</span> <span class="operator">=</span> <span class="literal">false</span>; <span class="comment">//代表 是否会消费事件</span></span><br><span class="line">    <span class="comment">// 步骤2：判断是否拦截事件</span></span><br><span class="line">    <span class="keyword">if</span> (onInterceptTouchEvent(ev)) &#123;</span><br><span class="line">      <span class="comment">// a. 若拦截，则将该事件交给当前View进行处理</span></span><br><span class="line">      <span class="comment">// 即调用onTouchEvent()去处理点击事件</span></span><br><span class="line">      consume = onTouchEvent (ev) ;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// b. 若不拦截，则将该事件传递到下层</span></span><br><span class="line">      <span class="comment">// 即 下层元素的dispatchTouchEvent()就会被调用，重复上述过程</span></span><br><span class="line">      <span class="comment">// 直到点击事件被最终处理为止</span></span><br><span class="line">      consume = child.dispatchTouchEvent (ev) ;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 步骤3：最终返回通知 该事件是否被消费（接收 &amp; 处理）</span></span><br><span class="line">    <span class="keyword">return</span> consume;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>安卓为了保证所有的事件都是被一个 View 消费的，对第一次的事件( ACTION_DOWN )进行了特殊判断，View 只有消费了 ACTION_DOWN 事件，才能接收到后续的事件(可点击控件会默认消费所有事件)，并且会将后续所有事件传递过来，不会再传递给其他 View，除非上层 View 进行了拦截。如果上层 View 拦截了当前正在处理的事件，会收到一个 ACTION_CANCEL，表示当前事件已经结束，后续事件不会再传递过来。</strong></p>
+<h4 id="核心要点"><a href="#核心要点" class="headerlink" title="核心要点"></a>核心要点</h4><ol>
+<li>事件分发原理: 责任链模式，事件层层传递，直到被消费。</li>
+<li>View 的 dispatchTouchEvent主要用于调度自身的监听器和 onTouchEvent。</li>
+<li>View的事件的调度顺序是 onTouchListener &gt; onTouchEvent &gt; onLongClickListener &gt; onClickListener。</li>
+<li>不论View自身是否注册点击事件，只要 View 是可点击的就会消费事件。</li>
+<li>事件是否被消费由返回值决定，true 表示消费，false 表示不消费，与是否使用了事件无关。</li>
+<li>ViewGroup 中可能有多个 ChildView 时，将事件分配给包含点击位置的 ChildView。</li>
+<li>ViewGroup 和 ChildView 同时注册了事件监听器(onClick等)，由 ChildView 消费。</li>
+<li>一次触摸流程中产生事件应被同一 View 消费，全部接收或者全部拒绝。</li>
+<li>只要接受 ACTION_DOWN 就意味着接受所有的事件，拒绝 ACTION_DOWN 则不会收到后续内容。</li>
+<li>如果当前正在处理的事件被上层 View 拦截，会收到一个 ACTION_CANCEL，后续事件不会再传递过来。</li>
+</ol>
+
+      
+      <blockquote>
+        
+        <strong>本文链接：</strong><br><a href="http://longzhiye.top/2023/12/23/2023-12-23/">http://longzhiye.top/2023/12/23/2023-12-23/</a>
+      </blockquote>
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Android/" rel="tag">Android</a><a class="mdui-ripple article_tags-link" href="/tags/Launcher/" rel="tag">Launcher</a><a class="mdui-ripple article_tags-link" href="/tags/SystemUI/" rel="tag">SystemUI</a><a class="mdui-ripple article_tags-link" href="/tags/framework/" rel="tag">framework</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2023/12/24/2023-12-24/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'onInterceptTouchEvent() 与 onTouch() 事件分析'}">上一篇</span>
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2023/12/17/2023-12-17/">
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android 事件分发机制详解（上）'}">下一篇</span>
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+
+
+
+</main>
+  <footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="http://github.com/longzhiye" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe7ab;</i></a>
+    
+    
+    
+      <a href="https://www.zhihu.com/people/long-zhi-xie-61" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe6c0;</i></a>
+    
+    
+    
+      <a href="tencent://tencent:////message/?uin=951898105&Menu=yes" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2022 - 2025 龙之叶<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>
+    <br>
+      <span id="busuanzi_container_site_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_site_pv"></span></span> &nbsp;&nbsp;
+      <span id="busuanzi_container_site_uv" style="display: none;"><i class="iconfont">&#xe601;</i> <span id="busuanzi_value_site_uv"></span></span>
+    
+  </div>
+</footer>
+
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+  
+<script src="/custom.js"></script>
+
+</body>
+</html>

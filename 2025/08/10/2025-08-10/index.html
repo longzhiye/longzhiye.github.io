@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>Android 15 的GRF平台开发说明 | 龙之叶的博客</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="alternate" href="/atom.xml" title="龙之叶的博客" type="application/atom+xml">
+  <meta name="description" content="Android 15 的GRF平台开发说明">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 15 的GRF平台开发说明">
+<meta property="og:url" content="http://longzhiye.top/2025/08/10/2025-08-10/index.html">
+<meta property="og:site_name" content="龙之叶的博客">
+<meta property="og:description" content="Android 15 的GRF平台开发说明">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://longzhiye.top/images/20250810/20250810001.png">
+<meta property="og:image" content="http://longzhiye.top/images/20250810/20250810002.png">
+<meta property="article:published_time" content="2025-08-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-04T08:39:58.976Z">
+<meta property="article:author" content="龙之叶">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="framework">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://longzhiye.top/images/20250810/20250810001.png">
+
+  <meta name="keywords" content=",Android,framework">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="龙之叶的博客">
+  <meta name="msapplication-starturl" content="http://longzhiye.top/2025/08/10/2025-08-10/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="龙之叶的博客">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <link rel="canonical" href="http://longzhiye.top/2025/08/10/2025-08-10/">
+  
+
+  
+  
+
+  
+  
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/custom.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(!a){document.getElementsByTagName("body")[0].className+=" mdui-drawer-body-left"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">龙之叶的博客</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+	<!--
+    <a href="/atom.xml" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'RSS'}"><i class="mdui-icon material-icons">rss_feed</i></a>
+	-->
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(a){document.getElementById("sidebar").className+=" mdui-drawer-close"};</script>
+  <div class="mdui-grid-tile">
+    <img src="/images/banner.png" style="height: 160px;">
+    <img src="/images/avatar.png" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;background-color:#fff;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">龙之叶</div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>生命不息，折腾不止</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:longzhiye163@163.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'longzhiye163@163.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-0");if(a){document.getElementsByClassName("mdui-collapse-item")[0].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">archive</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2025/10/">十月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/09/">九月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/08/">八月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/07/">七月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/06/">六月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/03/">三月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/02/">二月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/01/">一月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/10/">十月 2024<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/09/">九月 2024<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/08/">八月 2024<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/03/">三月 2024<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/02/">二月 2024<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/01/">一月 2024<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/12/">十二月 2023<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/11/">十一月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/10/">十月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/09/">九月 2023<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/08/">八月 2023<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/06/">六月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/05/">五月 2023<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/04/">四月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/03/">三月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/02/">二月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/09/">九月 2022<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/04/">四月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/03/">三月 2017<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/02/">二月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/01/">一月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/12/">十二月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/11/">十一月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/10/">十月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/08/">八月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-1");if(a){document.getElementsByClassName("mdui-collapse-item")[1].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">class</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">108</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E8%B5%84%E8%AE%AF/">资讯<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E9%80%9A%E7%9F%A5/">通知<span class="mdui-ripple sidebar_archives-count">4</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-2");if(a){document.getElementsByClassName("mdui-collapse-item")[2].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/ANR/" rel="tag">ANR<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/APP/" rel="tag">APP<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android/" rel="tag">Android<span class="mdui-ripple sidebar_archives-count">98</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android12/" rel="tag">Android12<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android13/" rel="tag">Android13<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android14/" rel="tag">Android14<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android16/" rel="tag">Android16<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AndroidStudio/" rel="tag">AndroidStudio<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AutoDraw/" rel="tag">AutoDraw<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Build/" rel="tag">Build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Crash/" rel="tag">Crash<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Foxmail/" rel="tag">Foxmail<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Framework/" rel="tag">Framework<span class="mdui-ripple sidebar_archives-count">20</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GPS%E8%BD%A8%E8%BF%B9%E5%9B%BE/" rel="tag">GPS轨迹图<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Git/" rel="tag">Git<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GitHub/" rel="tag">GitHub<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Google/" rel="tag">Google<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Java/" rel="tag">Java<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Kernel/" rel="tag">Kernel<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Launcher/" rel="tag">Launcher<span class="mdui-ripple sidebar_archives-count">17</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Lib/" rel="tag">Lib<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Linux/" rel="tag">Linux<span class="mdui-ripple sidebar_archives-count">18</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Markdown/" rel="tag">Markdown<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Material-Design/" rel="tag">Material Design<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OS-X/" rel="tag">OS X<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OTA/" rel="tag">OTA<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/QuickTime/" rel="tag">QuickTime<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SSH/" rel="tag">SSH<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Settings/" rel="tag">Settings<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SystemUI/" rel="tag">SystemUI<span class="mdui-ripple sidebar_archives-count">19</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/UAC/" rel="tag">UAC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Ubuntu/" rel="tag">Ubuntu<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WPS/" rel="tag">WPS<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Wifi/" rel="tag">Wifi<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WindTerm/" rel="tag">WindTerm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows/" rel="tag">Windows<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows-11/" rel="tag">Windows 11<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/androidmk/" rel="tag">androidmk<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/blog/" rel="tag">blog<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/build/" rel="tag">build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/feel/" rel="tag">feel<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/framework/" rel="tag">framework<span class="mdui-ripple sidebar_archives-count">58</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/inotify/" rel="tag">inotify<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/life/" rel="tag">life<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/ninja/" rel="tag">ninja<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/rsync/" rel="tag">rsync<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/standard/" rel="tag">standard<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/test/" rel="tag">test<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1/" rel="tag">企业微信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E7%94%9F%E6%B4%BB%E6%84%9F%E6%82%9F/" rel="tag">生活感悟<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+      <a href="/timeline" class="mdui-list-item mdui-ripple">时间轴</a>
+    
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-3");if(a){document.getElementsByClassName("mdui-collapse-item")[3].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+          <a href="http://www.niemingzhao.top" target="_blank" class="mdui-list-item mdui-p-l-2 mdui-text-color-theme-accent mdui-ripple" style="justify-content: center;">聂明照的博客</a>
+        
+        
+      </div>
+    </div>
+  </div>
+</aside>
+
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <style>#main article .mdui-card-content .text-center{text-align:center!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-3.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">Android 15 的GRF平台开发说明</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2025-08-10 / <i class="iconfont">&#xe601;</i> 龙之叶 &nbsp;&nbsp; <span id="busuanzi_container_page_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_page_pv"></span></span></div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#qrcode', align: 'right'}"><i class="mdui-icon material-icons">devices</i></button>
+          <ul class="mdui-menu" id="qrcode">
+            
+              <li class="mdui-menu-item"><a class="mdui-text-center mdui-ripple">发送到手机</a></li>
+            
+            <li class="mdui-menu-item" disabled>
+              
+                <img src="//qr.liantu.com/api.php?w=246&m=10&text=http://longzhiye.top/2025/08/10/2025-08-10/">
+              
+            </li>
+          </ul>
+        
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="mdui-icon material-icons">share</i></button>
+          <ul class="mdui-menu" id="share_menu">
+            <li class="mdui-menu-item">
+              <a href="https://service.weibo.com/share/share.php?appkey=&title=Android 15 的GRF平台开发说明&url=http://longzhiye.top/2025/08/10/2025-08-10/&pic=http://longzhiye.top/images/favicon.png&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://twitter.com/intent/tweet?text=Android 15 的GRF平台开发说明&url=http://longzhiye.top/2025/08/10/2025-08-10/&via=龙之叶" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=http://longzhiye.top/2025/08/10/2025-08-10/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://plus.google.com/share?url=http://longzhiye.top/2025/08/10/2025-08-10/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://longzhiye.top/2025/08/10/2025-08-10/&title=Android 15 的GRF平台开发说明" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://connect.qq.com/widget/shareqq/index.html?site=龙之叶的博客&title=Android 15 的GRF平台开发说明&pics=http://longzhiye.top/images/favicon.png&url=http://longzhiye.top/2025/08/10/2025-08-10/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://telegram.me/share/url?url=http://longzhiye.top/2025/08/10/2025-08-10/&text=Android 15 的GRF平台开发说明" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+            </li>
+          </ul>
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><p>Android GRF 估计很多人不清楚是啥，这个我也是开发Android15源码才知道的。</p>
+<p>简单的说就是Android15的系统可以用Android14的开发板进行适配开发。</p>
+<p>系统开发人员后面估计都会遇到，有兴趣的可以了解看看。</p>
+<p>不同系统编译的脚本和命令，在不同SOC厂商可能是不同的，<br>这里不展开说明，大概有个了解就好了。</p>
+<h3 id="1、GRF-Google-Requirements-Freeze（谷歌需求冻结）"><a href="#1、GRF-Google-Requirements-Freeze（谷歌需求冻结）" class="headerlink" title="1、GRF: Google Requirements Freeze（谷歌需求冻结）,"></a>1、GRF: Google Requirements Freeze（谷歌需求冻结）,</h3><ol>
+<li>是Google（操作系统）与SoC（System on Chip系统芯片）厂商的一种合作方式，</li>
+<li>SoC在某个Android版本进行Freeze（冻结）之后，</li>
+<li>连续4个Android版本不需要再升级vendor组件，以加快系统版本的适配和升级。</li>
+<li>加入GRF的SoC，必须保证4个大版本Android的升级。</li>
+<li>这种合作模式，对于IDH和ODM/OEM厂商也有很大的益处，</li>
+<li>对于硬件改动小的板形，配合使用A14的SDK，即可快速完成对Android 15/16/17的适配。</li>
+</ol>
+<h3 id="2、Merge（系统固件合并）"><a href="#2、Merge（系统固件合并）" class="headerlink" title="2、Merge（系统固件合并）:"></a>2、Merge（系统固件合并）:</h3><ol>
+<li>对于GRF的芯片，必须按照要求，使用GRF的SDK，编译出BSP以及Vendor相关的组件；</li>
+<li>而需要过认证的版本（例如A15），则需要编译出Frameworks、App相关的组件。</li>
+<li>两部分编译完成，进行合并操作，</li>
+<li>生成完整的固件（<strong>这里的固件并非临时固件，就是最终测试、量产的固件</strong>），测试功能以及GMS等。</li>
+</ol>
+<h3 id="3、Android14-GRF-支持的版本平台"><a href="#3、Android14-GRF-支持的版本平台" class="headerlink" title="3、Android14 GRF 支持的版本平台"></a>3、Android14 GRF 支持的版本平台</h3><table>
+<thead>
+<tr>
+<th>平台/认证版本</th>
+<th>GRF版本</th>
+<th>Android 15</th>
+<th>Android 16</th>
+<th>Android 17</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RK33XX</td>
+<td>14</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>RK3588</td>
+<td>14</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>RK35XX</td>
+<td>14</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+</tbody></table>
+<h3 id="4、先不涉及代码修改，这里简单总结一下GRF："><a href="#4、先不涉及代码修改，这里简单总结一下GRF：" class="headerlink" title="4、先不涉及代码修改，这里简单总结一下GRF："></a>4、先不涉及代码修改，这里简单总结一下GRF：</h3><ol>
+<li>GRF ，Google Requirements Freeze 表示谷歌需求冻结<blockquote>
+<p>某一个部分的需求冻结，后期改动会较小不影响正常使用；<br>比如Android14-17底层内核和vendor逻辑基本不变；<br>只需要适配Frameworks、APP、System 等固件即可使用最新版本的Android系统。</p>
+</blockquote>
+</li>
+<li>下载一个GRF的源码，后续四个系统版本都可以用这个开发板进行升级</li>
+</ol>
+<p>简单的说就是<strong>Google后面会减少内核或硬件上的适配修改</strong>，主要适配上层逻辑，可以不用换新的硬件升级新的系统了。</p>
+<h1 id="二、Android15-GRF-代码适配"><a href="#二、Android15-GRF-代码适配" class="headerlink" title="二、Android15 GRF 代码适配"></a>二、Android15 GRF 代码适配</h1><h3 id="1、重新下载一份Android15-的GRF-系统代码"><a href="#1、重新下载一份Android15-的GRF-系统代码" class="headerlink" title="1、重新下载一份Android15 的GRF 系统代码"></a>1、重新下载一份Android15 的GRF 系统代码</h3><p>注意Android15 GRF的源码会下载两套代码，一套是Android14 U的，一套是Android15 V的；</p>
+<h3 id="2、GMS代码配置"><a href="#2、GMS代码配置" class="headerlink" title="2、GMS代码配置"></a>2、GMS代码配置</h3><p>GMS相关配置，请参考GMS配置文档(Android_GMS_Developer_Guide)进行配置。</p>
+<ol>
+<li>除了GMS的基本配置外，需要额外做一些配置以使GMS固件适配GRF。</li>
+<li>GMS 即谷歌移动服务（Google Mobile Service） ，是谷歌旗下的一项服务，</li>
+<li>让用户能通过移动设备使用谷歌搜索、谷歌地图、Gmail、YouTube 等产品。</li>
+</ol>
+<p>GMS 一般比较少适配，大部分情况都是厂商适配完成后我们使用就行。</p>
+<h3 id="3、对于GRF-SDK"><a href="#3、对于GRF-SDK" class="headerlink" title="3、对于GRF SDK"></a>3、对于GRF SDK</h3><p>编译固件前，需要确认你要做的认证版本，配置api，<br>以Android 15 + GRF 14为例，在GRF SDK (Android 14)中，增加以下修改：</p>
+<p>不同平台的修改会不一样，这里举例3588的修改：</p>
+<p>在Android14 u的源码目录：rk3588_u.mk</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># First lunching is U, api_level is 34</span><br><span class="line">-PRODUCT_SHIPPING_API_LEVEL := 34</span><br><span class="line">+PRODUCT_SHIPPING_API_LEVEL := 35</span><br></pre></td></tr></table></figure>
+
+<h3 id="4、对于认证SDK"><a href="#4、对于认证SDK" class="headerlink" title="4、对于认证SDK"></a>4、对于认证SDK</h3><p>编译固件前，需要确认GRF的版本是否需要VNDK，如果需要VNDK，则要求增加vndk适配包。<br>从AOSP 15开始，VNDK移除。<br>因此，只要GRF在15以前的版本，都需要增加vndk适配包，<br><strong>注意这里不要修改PRODUCT_SHIPPING_API_LEVEL</strong>，在认证SDK（此处以Android 15为例）中，补丁如下：</p>
+<p>在Android15 v的源码目录：rk3588_u.mk：rk3588_u.mk</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-# First lunching is U, api_level is 34</span><br><span class="line">+# Add VNDK support for GRF Vendor API Freeze A14</span><br><span class="line">+PRODUCT_EXTRA_VNDK_VERSIONS := 34</span><br><span class="line">+</span><br><span class="line">+# First lunching is A14, api_level is 34</span><br><span class="line"> PRODUCT_SHIPPING_API_LEVEL := 34</span><br><span class="line"> PRODUCT_DTBO_TEMPLATE := $(LOCAL_PATH)/dt-overlay.in</span><br></pre></td></tr></table></figure>
+
+<p>对于 PRODUCT_SHIPPING_API_LEVEL 标签，Android13之前的方案也是有的，<br>但是可能作用并未定义使用，而且不是对标Android系统版本。<br>也有可以是rk芯片厂商的做法，其他厂商还未开发Android15，不确定具体情况。</p>
+<p>从上面SDK和认证版本大概可以得知：</p>
+<ol>
+<li>GRF SDK 是需要修改的 Android14 U源码的目录；</li>
+<li>认证 SDK 是需要修改的 Android15 V源码的目录；</li>
+</ol>
+<p>Android13 以后销售国外产品是必须走认证的，否则可能会被封杀。</p>
+<h3 id="5、编译说明"><a href="#5、编译说明" class="headerlink" title="5、编译说明"></a>5、编译说明</h3><p>厂商提供了一个用于管理GRF SDK的管理工具，使用脚本工具时，<br>通过简单配置，可以最大程度的简化编译、合并等步骤。<br>推荐使用管理工具进行编译、合并、打包等。</p>
+<h4 id="（1）编译前准备"><a href="#（1）编译前准备" class="headerlink" title="（1）编译前准备"></a>（1）编译前准备</h4><p>需要分别下载GRF SDK和SYSTEM SDK，以当前A15 (GRF 14版本) 过认证为例，<br>需要下载GRF SDK (Android 14) 以及SYSTEM SDK (Android 15)。</p>
+<p>代码结构如下：<br><img src="/images/20250810/20250810001.png"></p>
+<p>最终理想情况如下：</p>
+<p><img src="/images/20250810/20250810002.png"></p>
+<p>不管怎么样，最终就是要两个SKD合并成一个升级固件。</p>
+<h4 id="（2）使用SDK管理脚本工具"><a href="#（2）使用SDK管理脚本工具" class="headerlink" title="（2）使用SDK管理脚本工具"></a>（2）使用SDK管理脚本工具</h4><ul>
+<li><p>配置SDK</p>
+</li>
+<li><p>lunch产品</p>
+</li>
+<li><p>配置json文件</p>
+</li>
+<li><p>check配置</p>
+<blockquote>
+<p>此功能为GMS专用，初步检查GMS认证相关的配置，是否符合CDD/VSR/GMS Requirements。</p>
+</blockquote>
+</li>
+<li><p>build编译固件</p>
+<blockquote>
+<p>编译SDK组件，选择system时，编译frameworks及app组件，GMS包也属于此部分。</p>
+</blockquote>
+</li>
+<li><p>install，只拷贝、合并、打包。</p>
+<blockquote>
+<p>执行此命令，会将前面编译好的vendor素材包及frameworks素材包拷贝到Rockdev中，同时进行merge、pack。</p>
+</blockquote>
+</li>
+<li><p>merge合并vendor和frameworks</p>
+<blockquote>
+<p>执行此命令，会将前面编译好的vendor素材包及frameworks素材包进行合并，生成新的素材包及fastboot可烧写的固件包以及super.img。但不会生成update.img大固件。</p>
+</blockquote>
+</li>
+<li><p>pack</p>
+<blockquote>
+<p>执行此命令，会将前面编译好的固件包打包成update.img大固件。如果环境变量中存在USE_OVERLAY=1，则会在打包update.img前，从overlay目录拷贝覆盖image。</p>
+</blockquote>
+</li>
+<li><p>distclean</p>
+<blockquote>
+<p>执行此命令，会删除Rockdev以及SYSTEM_SDK和VENDOR_SDK的out/dist目录。</p>
+</blockquote>
+</li>
+<li><p>reset</p>
+<blockquote>
+<p>清除SYSTEM_SDK和VENDOR_SDK的软链接以及配置文件config.json</p>
+</blockquote>
+</li>
+</ul>
+<h4 id="（3）不使用SDK管理脚本工具"><a href="#（3）不使用SDK管理脚本工具" class="headerlink" title="（3）不使用SDK管理脚本工具"></a>（3）不使用SDK管理脚本工具</h4><ul>
+<li><p>在GRF版本SDK中编译固件</p>
+<blockquote>
+<p>确保此GRF版本SDK（例如Android 14）固件的基本功能正常，稳定性没有问题。确认OK后，编译素材包：</p>
+</blockquote>
+</li>
+<li><p>在认证版本SDK中编译固件</p>
+<blockquote>
+<p>确保此认证版本SDK（例如Android 15）固件的基本功能正常，稳定性没有问题，注意分区表要和GRF版本一致，硬件相关功能配置也要完全一致。确认OK后，编译素材包：</p>
+</blockquote>
+</li>
+<li><p>合并素材包，生成新固件</p>
+<blockquote>
+<p>合并步骤，需要在当前过认证的版本SDK中进行。例如A15 + GRF 14，我们需要在A15中编译出需要用到的工具，并使用此工具合并两个素材包。<br>合并素材包时，需要指定组合方式，分别传入frameworks（这里指当前过认证的版本，如Android 15）和vendor（这里指GRF初始版本，如Android 14）的素材包，执行命令，即可生成新的素材包及fastboot可烧写的镜像。</p>
+</blockquote>
+</li>
+</ul>
+<p>执行结束后，产生fastboot可烧写的zip固件，以及合并后的素材包。包含<code>--output-super out_merged1/super.img</code>参数时会同时生成super.img，方便做大固件烧写。例如上述命令执行后，得到：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">205@^_^@ | out_merged1 ls</span><br><span class="line">rk3588_u-img.zip  rk3588_u-target_files-0001.zip  super.img</span><br></pre></td></tr></table></figure>
+
+<h3 id="三、烧写升级"><a href="#三、烧写升级" class="headerlink" title="三、烧写升级"></a>三、烧写升级</h3><p>使用RK烧写工具</p>
+<p>客户可以按照需求自行选择烧写大固件或散包：</p>
+<ul>
+<li><p>如果使用SDK管理工具，执行打包命令后，</p>
+<blockquote>
+<p>会生成update.img大固件，直接加载大固件烧写即可。</p>
+</blockquote>
+</li>
+<li><p>如果不使用SDK管理工具，请自己烧写散包。</p>
+<blockquote>
+<p>解压fastboot包即可得到各个分区的镜像，需要自己导入分区表。<br>动态分区(odm/odm_dlkm/product/system/system_dlkm/system_ext/vendor/vendor_dlkm)的镜像不需要导入分区表，<br>对应的super.img在执行命令后会同步生成。</p>
+</blockquote>
+</li>
+<li><p>或拷贝散包镜像自己打包update.img大固件，再进行烧写。</p>
+</li>
+</ul>
+<p>无论是编译还是烧写，不同的SOC厂商都是有差异的，这里是参考RK的。</p>
+<h3 id="四、附录"><a href="#四、附录" class="headerlink" title="四、附录"></a>四、附录</h3><p>1、生成镜像以及对应关系</p>
+<table>
+<thead>
+<tr>
+<th>镜像</th>
+<th>从哪个素材包生成</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>boot.img</td>
+<td>vendor</td>
+</tr>
+<tr>
+<td>dtbo.img</td>
+<td>vendor</td>
+</tr>
+<tr>
+<td>init_boot.img</td>
+<td>vendor</td>
+</tr>
+<tr>
+<td>odm.img</td>
+<td>vendor</td>
+</tr>
+<tr>
+<td>odm_dlkm.img</td>
+<td>vendor</td>
+</tr>
+<tr>
+<td>product.img</td>
+<td>frameworks</td>
+</tr>
+<tr>
+<td>resource.img</td>
+<td>vendor</td>
+</tr>
+<tr>
+<td>system.img</td>
+<td>frameworks</td>
+</tr>
+<tr>
+<td>system_dlkm.img</td>
+<td>vendor</td>
+</tr>
+<tr>
+<td>system_ext.img</td>
+<td>frameworks</td>
+</tr>
+<tr>
+<td>uboot.img</td>
+<td>vendor</td>
+</tr>
+<tr>
+<td>vbmeta.img</td>
+<td>由新镜像重新签名生成</td>
+</tr>
+<tr>
+<td>vendor.img</td>
+<td>vendor</td>
+</tr>
+<tr>
+<td>vendor_boot.img</td>
+<td>vendor</td>
+</tr>
+<tr>
+<td>vendor_dlkm.img</td>
+<td>vendor</td>
+</tr>
+</tbody></table>
+<h3 id="2、源码位置-——-VENDOR-SDK部分"><a href="#2、源码位置-——-VENDOR-SDK部分" class="headerlink" title="2、源码位置 —— VENDOR_SDK部分"></a>2、源码位置 —— VENDOR_SDK部分</h3><p>VENDOR部分代码都位于VENDOR_SDK目录中，主要包含所有BSP相关的内容。例如loader、uboot、Android HAL、驱动等。</p>
+<p>编译时可使用 <strong>./merge_unity.sh build vendor</strong> 编译，如需调试、单独编译某个so或bin，则需要像之前一样，在VENDOR_SDK中 <strong>source build/envsetup.sh ; lunch</strong> ，选择你的product后，使用m 模块名进行编译。</p>
+<table>
+<thead>
+<tr>
+<th>源码仓库</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>u-boot/rkbin</td>
+<td>到VENDOR_SDK中编译</td>
+</tr>
+<tr>
+<td>kernel</td>
+<td>到VENDOR_SDK中编译</td>
+</tr>
+<tr>
+<td>mkcombinedroot</td>
+<td>编译kernel时自动更新ko</td>
+</tr>
+<tr>
+<td>hardware/*</td>
+<td>可在VENDOR_SDK中单独编译某个组件</td>
+</tr>
+<tr>
+<td>vendor/rockchip/*</td>
+<td>可在VENDOR_SDK中单独编译某个组件</td>
+</tr>
+<tr>
+<td>vendor/widevine</td>
+<td>可在VENDOR_SDK中单独编译某个组件</td>
+</tr>
+<tr>
+<td>bootable/*</td>
+<td>可在VENDOR_SDK中单独编译某个组件</td>
+</tr>
+<tr>
+<td>device/*</td>
+<td>配置需要和SYSTEM_SDK一致</td>
+</tr>
+<tr>
+<td>external/camera_engine_rkaiq</td>
+<td>可在VENDOR_SDK中单独编译某个组件</td>
+</tr>
+<tr>
+<td>external/uvc-gadget</td>
+<td>可在VENDOR_SDK中单独编译某个组件</td>
+</tr>
+</tbody></table>
+<h3 id="3、源码位置-——-SYSTEM-SDK部分"><a href="#3、源码位置-——-SYSTEM-SDK部分" class="headerlink" title="3、源码位置 —— SYSTEM_SDK部分"></a>3、源码位置 —— SYSTEM_SDK部分</h3><p>SYSTEM部分代码都位于SYSTEM_SDK目录中，编译时可使用 <strong>./merge_unity.sh build system</strong> 编译，如需调试、单独编译某个so或bin，则需要像之前一样，在SYSTEM_SDK中 <strong>source build/envsetup.sh</strong> ; lunch，选择你的product后，使用m 模块名进行编译。</p>
+<table>
+<thead>
+<tr>
+<th>源码仓库</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>frameworks</td>
+<td>到SYSTEM_SDK中编译</td>
+</tr>
+<tr>
+<td>packages</td>
+<td>到SYSTEM_SDK中编译</td>
+</tr>
+<tr>
+<td>system</td>
+<td>到SYSTEM_SDK中编译</td>
+</tr>
+<tr>
+<td>vendor/gms_express</td>
+<td>RK提供的，符合GMS Express Plus要求</td>
+</tr>
+<tr>
+<td>vendor/partner_gms</td>
+<td>原生Google GMS包</td>
+</tr>
+<tr>
+<td>vendor/partner_modules</td>
+<td>原生Google GMS包</td>
+</tr>
+<tr>
+<td>vendor/rockchip/platform</td>
+<td>可在VENDOR_SDK中单独编译某个组件</td>
+</tr>
+</tbody></table>
+<h1 id="五、其他"><a href="#五、其他" class="headerlink" title="五、其他"></a>五、其他</h1><h3 id="1、GRF小结"><a href="#1、GRF小结" class="headerlink" title="1、GRF小结"></a>1、GRF小结</h3><p>Android 14 后，可以下载一个GRF版本，<br>理论上支持后续四个版本的系统升级在同一个开发板上。</p>
+<p>比如下载 Android14 版本的GRF代码，加上Android15 的代码，编译后就是Android15 的系统代码。<br>简单理解就是用Android14 的底层+Android15 SDK的上层。</p>
+<p>当然也可以下载Android15 的GRF版本，<br>下载Android16、17 的源码，也是可以用同一个开发板。</p>
+<p>其实也是类似手机的升级，,在线升级后，<br>发现从Android11 升级到了 Android12，也有可能有的是有硬件限制无法升级的情况。</p>
+<h3 id="2、Android-GRF-起源"><a href="#2、Android-GRF-起源" class="headerlink" title="2、Android GRF 起源"></a>2、Android GRF 起源</h3><p>搜索看了下，GRF并不是Android14才有的，之前就有了。</p>
+<p>Android GRF（Google Requirements Freeze）即谷歌需求冻结，是谷歌于 2020 年推出的一项策略。</p>
+<h4 id="1-过程"><a href="#1-过程" class="headerlink" title="(1) 过程:"></a>(1) 过程:</h4><blockquote>
+<p>Project Treble 的不足：谷歌在 2017 年的 Android 8 时代推出了 Project Treble，<br>其将 Android 的供应商支持框架（Vendor）与 Android 本体解耦，<br>解除了驱动与系统版本的 “挂钩” 机制，但没有从根本上解决 Android 生态的碎片化问题，<br>还增加了芯片厂商维护多种 Vendor 版本的工作量。</p>
+</blockquote>
+<blockquote>
+<p>Android 11 起实施该策略后，Vendor 版本被冻结，<br>谷歌承诺为各 Vendor 版本提供 N+3 的特性向后兼容。<br>比如骁龙 888 的 Vendor 版本适配 Android 11，<br>谷歌会保证在 Android 14 时，该 Vendor 版本仍能启动并通过兼容性测试。</p>
+</blockquote>
+<p>虽然Android8有这个思路，但是真正实行是Android11；<br>但是也未大范围推广，估计Android14之后的版本会更多推广。</p>
+<h4 id="2-减少开发复杂性"><a href="#2-减少开发复杂性" class="headerlink" title="(2) 减少开发复杂性"></a>(2) 减少开发复杂性</h4><p>通过需求冻结提供更稳定和可预测的软件开发环境，帮助设备制造商提前规划并优化他们的资源，<br>减少开发复杂性，加快产品上市速度，并提高最终产品的质量和用户体验。</p>
+<h4 id="3-影响"><a href="#3-影响" class="headerlink" title="(3) 影响"></a>(3) 影响</h4><p>积极方面：对于芯片厂商来说，显著降低了其工程成本。<br>消极方面：谷歌必须保证 Android 新版本与先前 Vendor 版本的兼容性，<br>难以做到涉及硬件支持的特性在相同版本 Android 上体验一致。</p>
+<p>此文转载自<a target="_blank" rel="noopener" href="https://blog.csdn.net/wenzhi20102321/article/details/145965282">CSDN博客</a></p>
+
+      
+      <blockquote>
+        
+        <strong>本文链接：</strong><br><a href="http://longzhiye.top/2025/08/10/2025-08-10/">http://longzhiye.top/2025/08/10/2025-08-10/</a>
+      </blockquote>
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Android/" rel="tag">Android</a><a class="mdui-ripple article_tags-link" href="/tags/framework/" rel="tag">framework</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2025/08/17/2025-08-17/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android 15 实现修改锁屏界面默认壁纸功能'}">上一篇</span>
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2025/07/06/2025-07-06/">
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Git Commit 生成与合入 Patch 指南'}">下一篇</span>
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+
+
+
+</main>
+  <footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="http://github.com/longzhiye" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe7ab;</i></a>
+    
+    
+    
+      <a href="https://www.zhihu.com/people/long-zhi-xie-61" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe6c0;</i></a>
+    
+    
+    
+      <a href="tencent://tencent:////message/?uin=951898105&Menu=yes" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2022 - 2025 龙之叶<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>
+    <br>
+      <span id="busuanzi_container_site_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_site_pv"></span></span> &nbsp;&nbsp;
+      <span id="busuanzi_container_site_uv" style="display: none;"><i class="iconfont">&#xe601;</i> <span id="busuanzi_value_site_uv"></span></span>
+    
+  </div>
+</footer>
+
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+  
+<script src="/custom.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>高通 Android 12 framework添加自定义按键上报应用层 | 龙之叶的博客</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="alternate" href="/atom.xml" title="龙之叶的博客" type="application/atom+xml">
+  <meta name="description" content="高通 Android 12 framework添加自定义按键上报应用层">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高通 Android 12 framework添加自定义按键上报应用层">
+<meta property="og:url" content="http://longzhiye.top/2025/08/24/2025-08-24/index.html">
+<meta property="og:site_name" content="龙之叶的博客">
+<meta property="og:description" content="高通 Android 12 framework添加自定义按键上报应用层">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://longzhiye.top/images/20250824/20250824001.png">
+<meta property="og:image" content="http://longzhiye.top/images/20250824/20250824002.png">
+<meta property="og:image" content="http://longzhiye.top/images/20250824/20250824003.png">
+<meta property="og:image" content="http://longzhiye.top/images/20250824/20250824004.png">
+<meta property="og:image" content="http://longzhiye.top/images/20250824/20250824005.png">
+<meta property="article:published_time" content="2025-08-23T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-04T08:39:58.977Z">
+<meta property="article:author" content="龙之叶">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="framework">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://longzhiye.top/images/20250824/20250824001.png">
+
+  <meta name="keywords" content=",Android,framework">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="龙之叶的博客">
+  <meta name="msapplication-starturl" content="http://longzhiye.top/2025/08/24/2025-08-24/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="龙之叶的博客">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <link rel="canonical" href="http://longzhiye.top/2025/08/24/2025-08-24/">
+  
+
+  
+  
+
+  
+  
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/custom.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(!a){document.getElementsByTagName("body")[0].className+=" mdui-drawer-body-left"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">龙之叶的博客</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+	<!--
+    <a href="/atom.xml" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'RSS'}"><i class="mdui-icon material-icons">rss_feed</i></a>
+	-->
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(a){document.getElementById("sidebar").className+=" mdui-drawer-close"};</script>
+  <div class="mdui-grid-tile">
+    <img src="/images/banner.png" style="height: 160px;">
+    <img src="/images/avatar.png" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;background-color:#fff;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">龙之叶</div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>生命不息，折腾不止</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:longzhiye163@163.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'longzhiye163@163.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-0");if(a){document.getElementsByClassName("mdui-collapse-item")[0].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">archive</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2025/10/">十月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/09/">九月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/08/">八月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/07/">七月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/06/">六月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/03/">三月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/02/">二月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/01/">一月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/10/">十月 2024<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/09/">九月 2024<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/08/">八月 2024<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/03/">三月 2024<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/02/">二月 2024<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/01/">一月 2024<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/12/">十二月 2023<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/11/">十一月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/10/">十月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/09/">九月 2023<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/08/">八月 2023<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/06/">六月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/05/">五月 2023<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/04/">四月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/03/">三月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/02/">二月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/09/">九月 2022<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/04/">四月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/03/">三月 2017<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/02/">二月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/01/">一月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/12/">十二月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/11/">十一月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/10/">十月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/08/">八月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-1");if(a){document.getElementsByClassName("mdui-collapse-item")[1].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">class</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">108</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E8%B5%84%E8%AE%AF/">资讯<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E9%80%9A%E7%9F%A5/">通知<span class="mdui-ripple sidebar_archives-count">4</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-2");if(a){document.getElementsByClassName("mdui-collapse-item")[2].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/ANR/" rel="tag">ANR<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/APP/" rel="tag">APP<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android/" rel="tag">Android<span class="mdui-ripple sidebar_archives-count">98</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android12/" rel="tag">Android12<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android13/" rel="tag">Android13<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android14/" rel="tag">Android14<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android16/" rel="tag">Android16<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AndroidStudio/" rel="tag">AndroidStudio<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AutoDraw/" rel="tag">AutoDraw<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Build/" rel="tag">Build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Crash/" rel="tag">Crash<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Foxmail/" rel="tag">Foxmail<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Framework/" rel="tag">Framework<span class="mdui-ripple sidebar_archives-count">20</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GPS%E8%BD%A8%E8%BF%B9%E5%9B%BE/" rel="tag">GPS轨迹图<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Git/" rel="tag">Git<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GitHub/" rel="tag">GitHub<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Google/" rel="tag">Google<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Java/" rel="tag">Java<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Kernel/" rel="tag">Kernel<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Launcher/" rel="tag">Launcher<span class="mdui-ripple sidebar_archives-count">17</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Lib/" rel="tag">Lib<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Linux/" rel="tag">Linux<span class="mdui-ripple sidebar_archives-count">18</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Markdown/" rel="tag">Markdown<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Material-Design/" rel="tag">Material Design<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OS-X/" rel="tag">OS X<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OTA/" rel="tag">OTA<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/QuickTime/" rel="tag">QuickTime<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SSH/" rel="tag">SSH<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Settings/" rel="tag">Settings<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SystemUI/" rel="tag">SystemUI<span class="mdui-ripple sidebar_archives-count">19</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/UAC/" rel="tag">UAC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Ubuntu/" rel="tag">Ubuntu<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WPS/" rel="tag">WPS<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Wifi/" rel="tag">Wifi<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WindTerm/" rel="tag">WindTerm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows/" rel="tag">Windows<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows-11/" rel="tag">Windows 11<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/androidmk/" rel="tag">androidmk<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/blog/" rel="tag">blog<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/build/" rel="tag">build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/feel/" rel="tag">feel<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/framework/" rel="tag">framework<span class="mdui-ripple sidebar_archives-count">58</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/inotify/" rel="tag">inotify<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/life/" rel="tag">life<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/ninja/" rel="tag">ninja<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/rsync/" rel="tag">rsync<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/standard/" rel="tag">standard<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/test/" rel="tag">test<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1/" rel="tag">企业微信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E7%94%9F%E6%B4%BB%E6%84%9F%E6%82%9F/" rel="tag">生活感悟<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+      <a href="/timeline" class="mdui-list-item mdui-ripple">时间轴</a>
+    
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-3");if(a){document.getElementsByClassName("mdui-collapse-item")[3].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+          <a href="http://www.niemingzhao.top" target="_blank" class="mdui-list-item mdui-p-l-2 mdui-text-color-theme-accent mdui-ripple" style="justify-content: center;">聂明照的博客</a>
+        
+        
+      </div>
+    </div>
+  </div>
+</aside>
+
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <style>#main article .mdui-card-content .text-center{text-align:center!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-4.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">高通 Android 12 framework添加自定义按键上报应用层</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2025-08-24 / <i class="iconfont">&#xe601;</i> 龙之叶 &nbsp;&nbsp; <span id="busuanzi_container_page_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_page_pv"></span></span></div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#qrcode', align: 'right'}"><i class="mdui-icon material-icons">devices</i></button>
+          <ul class="mdui-menu" id="qrcode">
+            
+              <li class="mdui-menu-item"><a class="mdui-text-center mdui-ripple">发送到手机</a></li>
+            
+            <li class="mdui-menu-item" disabled>
+              
+                <img src="//qr.liantu.com/api.php?w=246&m=10&text=http://longzhiye.top/2025/08/24/2025-08-24/">
+              
+            </li>
+          </ul>
+        
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="mdui-icon material-icons">share</i></button>
+          <ul class="mdui-menu" id="share_menu">
+            <li class="mdui-menu-item">
+              <a href="https://service.weibo.com/share/share.php?appkey=&title=高通 Android 12 framework添加自定义按键上报应用层&url=http://longzhiye.top/2025/08/24/2025-08-24/&pic=http://longzhiye.top/images/favicon.png&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://twitter.com/intent/tweet?text=高通 Android 12 framework添加自定义按键上报应用层&url=http://longzhiye.top/2025/08/24/2025-08-24/&via=龙之叶" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=http://longzhiye.top/2025/08/24/2025-08-24/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://plus.google.com/share?url=http://longzhiye.top/2025/08/24/2025-08-24/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://longzhiye.top/2025/08/24/2025-08-24/&title=高通 Android 12 framework添加自定义按键上报应用层" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://connect.qq.com/widget/shareqq/index.html?site=龙之叶的博客&title=高通 Android 12 framework添加自定义按键上报应用层&pics=http://longzhiye.top/images/favicon.png&url=http://longzhiye.top/2025/08/24/2025-08-24/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://telegram.me/share/url?url=http://longzhiye.top/2025/08/24/2025-08-24/&text=高通 Android 12 framework添加自定义按键上报应用层" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+            </li>
+          </ul>
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h1 id="Android下添加新的自定义键值和按键处理流程"><a href="#Android下添加新的自定义键值和按键处理流程" class="headerlink" title="Android下添加新的自定义键值和按键处理流程"></a>Android下添加新的自定义键值和按键处理流程</h1><p>首先分析下Android下怎么添加新的自定义键值。在Android的原生系统中键值默认情况下是92个，从0-91；一般情况下，这些键值是够用的，但是如果想扩充的话，还是需要添加新的键值的，那么如何将一个新的键值从驱动的设置映射到上层，使应用可以对我们自定义的键值进行相应的处理呢？</p>
+<p>在介绍Android怎么添加新的键值以前先介绍下Android下INPUT子系统FLOW的流程，下面就是精简的流程图示意图：</p>
+<p><img src="/images/20250824/20250824001.png"></p>
+<h2 id="1-添加按键及其映射"><a href="#1-添加按键及其映射" class="headerlink" title="1.添加按键及其映射"></a>1.添加按键及其映射</h2><p>1 如果系统有新的按键需要添加，是怎么添加并上报到系统上层去的呢(这里的上层主要指的是Android应用层)，首先要确定的是我们的遥控设备是通过/dev/input目录下那个event调用那个kl文件，这里可以通过如下命令查看 <strong>cat /proc/bus/input/devices</strong> ,下面是在Window终端下的打印信息</p>
+<p><img src="/images/20250824/20250824002.png"></p>
+<p>2 getevent -p得到以下数据信息</p>
+<p><img src="/images/20250824/20250824003.png"></p>
+<p>3 命令查看如下 通过getevent查看驱动调节的按键值是否上传ok。 <strong>adb shell getevent</strong> 驱动上报O按键键值 如下图所示 0259是16进制数 对应10进制601  1，0: 是指按下和弹起的动作。</p>
+<p><img src="/images/20250824/20250824004.png"></p>
+<h2 id="Kernel修改"><a href="#Kernel修改" class="headerlink" title="Kernel修改"></a>Kernel修改</h2><p>2 在qssi11/LINUX/android/vendor/qcom/proprietary/devicetree-4.19/qcom/kona-pinctrl.dtsi 中增加相关内容[key]: 添加方向键（上、下、左、右）、X/O 键、确认键、主页键、菜单键</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">diff --git a/LINUX/android/vendor/qcom/proprietary/devicetree-4.19/qcom/kona-pinctrl.dtsi b/LINUX/android/vendor/qcom/proprietary/devicetree-4.19/qcom/kona-pinctrl.dtsi</span></span><br><span class="line"><span class="comment">index a6398b6..9de20ea 100755</span></span><br><span class="line"><span class="comment">--- a/LINUX/android/vendor/qcom/proprietary/devicetree-4.19/qcom/kona-pinctrl.dtsi</span></span><br><span class="line"><span class="comment">+++ b/LINUX/android/vendor/qcom/proprietary/devicetree-4.19/qcom/kona-pinctrl.dtsi</span></span><br><span class="line"><span class="meta">@@ -148,6 +148,31 @@</span></span><br><span class="line">                        &#125;;</span><br><span class="line">                &#125;;</span><br><span class="line"> */</span><br><span class="line"><span class="addition">+               tlmm_gpio_key &#123;</span></span><br><span class="line"><span class="addition">+                       gpio_key_em_active: gpio_key_em_active &#123;</span></span><br><span class="line"><span class="addition">+                    mux &#123;</span></span><br><span class="line"><span class="addition">+                            pins = &quot;gpio160&quot;, &quot;gpio161&quot;, &quot;gpio164&quot;, &quot;gpio165&quot;, &quot;gpio166&quot;, &quot;gpio167&quot;, &quot;gpio168&quot;, &quot;gpio169&quot;;</span></span><br><span class="line"><span class="addition">+                            function = &quot;gpio&quot;;</span></span><br><span class="line"><span class="addition">+                    &#125;;</span></span><br><span class="line"><span class="addition">+                    config &#123;</span></span><br><span class="line"><span class="addition">+                            pins = &quot;gpio160&quot;, &quot;gpio161&quot;, &quot;gpio164&quot;, &quot;gpio165&quot;, &quot;gpio166&quot;, &quot;gpio167&quot;, &quot;gpio168&quot;, &quot;gpio169&quot;;</span></span><br><span class="line"><span class="addition">+                            drive-strength = &lt;4&gt;;</span></span><br><span class="line"><span class="addition">+                            bias-pull-up;</span></span><br><span class="line"><span class="addition">+                    &#125;;</span></span><br><span class="line"><span class="addition">+            &#125;;</span></span><br><span class="line"><span class="addition">+            gpio_key_em_suspend: gpio_key_em_suspend &#123;</span></span><br><span class="line"><span class="addition">+                    mux &#123;</span></span><br><span class="line"><span class="addition">+                            pins = &quot;gpio160&quot;, &quot;gpio161&quot;, &quot;gpio164&quot;, &quot;gpio165&quot;, &quot;gpio166&quot;, &quot;gpio167&quot;, &quot;gpio168&quot;, &quot;gpio169&quot;;</span></span><br><span class="line"><span class="addition">+                            function = &quot;gpio&quot;;</span></span><br><span class="line"><span class="addition">+                    &#125;;</span></span><br><span class="line"><span class="addition">+                    config &#123;</span></span><br><span class="line"><span class="addition">+                            pins = &quot;gpio160&quot;, &quot;gpio161&quot;, &quot;gpio164&quot;, &quot;gpio165&quot;, &quot;gpio166&quot;, &quot;gpio167&quot;, &quot;gpio168&quot;, &quot;gpio169&quot;;</span></span><br><span class="line"><span class="addition">+                            drive-strength = &lt;2&gt;;</span></span><br><span class="line"><span class="addition">+                            bias-pull-up;</span></span><br><span class="line"><span class="addition">+                    &#125;;</span></span><br><span class="line"><span class="addition">+            &#125;;</span></span><br><span class="line"><span class="addition">+               &#125;;</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line">                trigout_a: trigout_a &#123;</span><br><span class="line">                        mux &#123;</span><br><span class="line">:</span><br></pre></td></tr></table></figure>
+
+<h2 id="framework修改"><a href="#framework修改" class="headerlink" title="framework修改"></a>framework修改</h2><p>注意：需要注意 gpio 在其他地方的引用，这个会引起冲突。</p>
+<p>3 QSSI12/device/qcom/qssi/gpio-keys.kl中增加键盘扫描码对应的键盘码key值X/O,600/601</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">key 114     VOLUME_DOWN</span><br><span class="line">key 115     VOLUME_UP</span><br><span class="line">key 116     POWER           WAKE</span><br><span class="line">key 212     CAMERA          WAKE</span><br><span class="line">key 0x210   FOCUS           WAKE</span><br><span class="line">key 59   F1           WAKE</span><br><span class="line">key 172   HOME   # X键目前替换HOME键</span><br><span class="line">key 601   KEY_EM_O   # 新增O键</span><br></pre></td></tr></table></figure>
+
+<p>4 在QSSI12/frameworks/base/data/keyboards/Generic.kl中增加X/O按键 如下所示</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> </span><br><span class="line"> git diff frameworks/base/data/keyboards/Generic.kl</span><br><span class="line"><span class="comment">diff --git a/QSSI12/frameworks/base/data/keyboards/Generic.kl b/QSSI12/frameworks/base/data/keyboards/Generic.kl</span></span><br><span class="line"><span class="comment">index bd0e56a..e4eb2ae 100644</span></span><br><span class="line"><span class="comment">--- a/QSSI12/frameworks/base/data/keyboards/Generic.kl</span></span><br><span class="line"><span class="comment">+++ b/QSSI12/frameworks/base/data/keyboards/Generic.kl</span></span><br><span class="line"><span class="meta">@@ -410,6 +410,9 @@</span> key 580   APP_SWITCH</span><br><span class="line"> key 582   VOICE_ASSIST</span><br><span class="line"> # Linux KEY_ASSISTANT</span><br><span class="line"> key 583   ASSIST</span><br><span class="line"><span class="addition">+# ZM ADD KEY X O</span></span><br><span class="line"><span class="addition">+key 158   KEY_BACK(X键目前BACK键替换）</span></span><br><span class="line"><span class="addition">+key 601   KEY_EM_O</span></span><br></pre></td></tr></table></figure>
+
+<p>5 在 QSSI12/frameworks/native/include/android/keycodes.h路径中增加内容如下</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">--- a/QSSI12/frameworks/native/include/android/keycodes.h</span><br><span class="line">+++ b/QSSI12/frameworks/native/include/android/keycodes.h</span><br><span class="line">@@ <span class="number">-776</span>,<span class="number">7</span> +<span class="number">776</span>,<span class="number">11</span> @@ <span class="class"><span class="keyword">enum</span> &#123;</span></span><br><span class="line">     AKEYCODE_THUMBS_DOWN = <span class="number">287</span>,</span><br><span class="line">     <span class="comment">/** Used to switch current account that is consuming content.</span></span><br><span class="line"><span class="comment">      * May be consumed by system to switch current viewer profile. */</span></span><br><span class="line">-    AKEYCODE_PROFILE_SWITCH = <span class="number">288</span></span><br><span class="line">+    AKEYCODE_PROFILE_SWITCH = <span class="number">288</span>,</span><br><span class="line">+         <span class="comment">/** add custom key X */</span></span><br><span class="line">+    AKEYCODE_KEY_EM_O = <span class="number">289</span>, </span><br><span class="line">     <span class="comment">// <span class="doctag">NOTE:</span> If you add a new keycode here you must also add it to several other files.</span></span><br><span class="line">     <span class="comment">//       Refer to frameworks/base/core/java/android/view/KeyEvent.java for the full list.</span></span><br></pre></td></tr></table></figure>
+
+<p>6 在Android 12目录下 <strong>QSSI12/frameworks/native/libs/input/InputEventLabels.cpp</strong> 将上面的宏展开就是 {KEY_EM_O， AKEYCODE_KEY_EM_O }</p>
+<p>其中KEY_EM_O对应上面定制的字符串</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@@ <span class="number">-314</span>,<span class="number">7</span> +<span class="number">314</span>,<span class="number">10</span> @@ namespace android &#123;</span><br><span class="line">     DEFINE_KEYCODE(REFRESH), \</span><br><span class="line">     DEFINE_KEYCODE(THUMBS_UP), \</span><br><span class="line">     DEFINE_KEYCODE(THUMBS_DOWN), \</span><br><span class="line">-    DEFINE_KEYCODE(PROFILE_SWITCH)</span><br><span class="line">+    DEFINE_KEYCODE(PROFILE_SWITCH), \</span><br><span class="line">+    DEFINE_KEYCODE(KEY_EM_O)</span><br><span class="line"> </span><br><span class="line"> <span class="comment">// <span class="doctag">NOTE:</span> If you add a new axis here you must also add it to several other files.</span></span><br><span class="line"> <span class="comment">//       Refer to frameworks/base/core/java/android/view/MotionEvent.java for the full list.</span></span><br></pre></td></tr></table></figure>
+
+<p>7 高通Android 10/11目录 <strong>LINUX/android/frameworks/native/include/input/InputEventLabels.h</strong> 添加DEFINE_KEYCODE 增加X/O按键映射</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">const</span> InputEventLabel KEYCODES[] = &#123;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// <span class="doctag">NOTE:</span> If you add a new keycode here you must also add it to several other files.</span></span><br><span class="line"> </span><br><span class="line">    <span class="comment">//       Refer to frameworks/base/core/java/android/view/KeyEvent.java for the full list.</span></span><br><span class="line"> </span><br><span class="line">    DEFINE_KEYCODE(UNKNOWN),</span><br><span class="line"> </span><br><span class="line">    DEFINE_KEYCODE(SOFT_LEFT),</span><br><span class="line"> </span><br><span class="line">    ......</span><br><span class="line"> </span><br><span class="line">    DEFINE_KEYCODE(PROFILE_SWITCH),</span><br><span class="line"> </span><br><span class="line">    DEFINE_KEYCODE(KEY_EM_O),</span><br><span class="line"> </span><br><span class="line">    &#123; nullptr, <span class="number">0</span> &#125;</span><br><span class="line"> </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>8 在 <strong>QSSI12/frameworks/base/core/java/android/view/KeyEvent.java</strong> 增加X/O按键 经过如上的步骤就将”123”按键和Android系统中的KEYCODE_KEY_EM_X就对应起来，注意这里的”600键值并不是真正意义上的600键值，他只是linux驱动向上层抛出的键值。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">--- a/QSSI12/frameworks/base/core/java/android/view/KeyEvent.java</span><br><span class="line">+++ b/QSSI12/frameworks/base/core/java/android/view/KeyEvent.java</span><br><span class="line">@@ <span class="number">-831</span>,<span class="number">6</span> +<span class="number">831</span>,<span class="number">9</span> @@ public <span class="class"><span class="keyword">class</span> <span class="title">KeyEvent</span> <span class="title">extends</span> <span class="title">InputEvent</span> <span class="title">implements</span> <span class="title">Parcelable</span> &#123;</span></span><br><span class="line">      */</span><br><span class="line">     public <span class="type">static</span> final <span class="type">int</span> KEYCODE_PROFILE_SWITCH = <span class="number">288</span>;</span><br><span class="line"> </span><br><span class="line">+       <span class="comment">/** add by zm 2023/04/11*/</span></span><br><span class="line">+    public <span class="type">static</span> final <span class="type">int</span> KEYCODE_KEY_EM_O = <span class="number">289</span>;     <span class="comment">/**</span></span><br><span class="line"><span class="comment">      * Integer value of the last KEYCODE. Increases as new keycodes are added to KeyEvent.</span></span><br><span class="line"><span class="comment">      * @hide</span></span><br><span class="line"><span class="comment">@@ -1977,6 +1980,9 @@ public class KeyEvent extends InputEvent implements Parcelable &#123;</span></span><br><span class="line"><span class="comment">             case KeyEvent.KEYCODE_SYSTEM_NAVIGATION_DOWN:</span></span><br><span class="line"><span class="comment">             case KeyEvent.KEYCODE_SYSTEM_NAVIGATION_LEFT:</span></span><br><span class="line"><span class="comment">             case KeyEvent.KEYCODE_SYSTEM_NAVIGATION_RIGHT:</span></span><br><span class="line"><span class="comment">+            case KeyEvent.KEYCODE_KEY_EM_O:</span></span><br><span class="line"><span class="comment">+</span></span><br><span class="line"><span class="comment">                 return true;</span></span><br><span class="line"><span class="comment">         &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>9 对应上层 <strong>KeyEvent.java</strong> 里面映射KEYCODE值</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">--- a/QSSI12/frameworks/base/core/res/res/values/attrs.xml</span><br><span class="line">+++ b/QSSI12/frameworks/base/core/res/res/values/attrs.xml</span><br><span class="line">@@ -<span class="number">1984</span>,<span class="number">6</span> +<span class="number">1984</span>,<span class="number">9</span> @@</span><br><span class="line">         &lt;<span class="keyword">enum</span> <span class="title class_">name</span>=<span class="string">&quot;KEYCODE_THUMBS_UP&quot;</span> value=<span class="string">&quot;286&quot;</span> /&gt;</span><br><span class="line">         &lt;<span class="keyword">enum</span> <span class="title class_">name</span>=<span class="string">&quot;KEYCODE_THUMBS_DOWN&quot;</span> value=<span class="string">&quot;287&quot;</span> /&gt;</span><br><span class="line">         &lt;<span class="keyword">enum</span> <span class="title class_">name</span>=<span class="string">&quot;KEYCODE_PROFILE_SWITCH&quot;</span> value=<span class="string">&quot;288&quot;</span> /&gt;</span><br><span class="line">+        &lt;<span class="keyword">enum</span> <span class="title class_">name</span>=<span class="string">&quot;KEYCODE_KEY_EM_O&quot;</span> value=<span class="string">&quot;289&quot;</span> /&gt;</span><br><span class="line">     &lt;/attr&gt;</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<p>10 最后在PhoneWindowManager增打开DEBUG_INPUT日志开关 如下代码所示</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">--- a/QSSI12/frameworks/base/services/core/java/com/android/server/policy/PhoneWindowManager.java</span><br><span class="line">+++ b/QSSI12/frameworks/base/services/core/java/com/android/server/policy/PhoneWindowManager.java</span><br><span class="line">@@ -<span class="number">240</span>,<span class="number">7</span> +<span class="number">240</span>,<span class="number">7</span> @@ <span class="keyword">import</span> java.util.HashSet;</span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PhoneWindowManager</span> <span class="keyword">implements</span> <span class="title class_">WindowManagerPolicy</span> &#123;</span><br><span class="line">     <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">TAG</span> <span class="operator">=</span> <span class="string">&quot;WindowManager&quot;</span>;</span><br><span class="line">     <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="variable">localLOGV</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">-    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="variable">DEBUG_INPUT</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">+    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="variable">DEBUG_INPUT</span> <span class="operator">=</span> <span class="literal">true</span>;</span><br><span class="line">     <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="variable">DEBUG_KEYGUARD</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">     <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="variable">DEBUG_SPLASH_SCREEN</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">     <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="variable">DEBUG_WAKEUP</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">@@ -<span class="number">2604</span>,<span class="number">6</span> +<span class="number">2604</span>,<span class="number">8</span> @@ <span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PhoneWindowManager</span> <span class="keyword">implements</span> <span class="title class_">WindowManagerPolicy</span> &#123;</span><br><span class="line">         <span class="keyword">if</span> (DEBUG_INPUT) &#123;</span><br><span class="line">             Log.d(TAG, <span class="string">&quot;interceptKeyTi keyCode=&quot;</span> + keyCode + <span class="string">&quot; down=&quot;</span> + down + <span class="string">&quot; repeatCount=&quot;</span></span><br><span class="line">                     + repeatCount + <span class="string">&quot; keyguardOn=&quot;</span> + keyguardOn + <span class="string">&quot; canceled=&quot;</span> + canceled);</span><br><span class="line">+                        Log.d(<span class="string">&quot;yeruilai&quot;</span>, <span class="string">&quot;interceptKeyBeforeDispatching KeyEvent=&quot;</span>+event.toString());</span><br><span class="line">+</span><br><span class="line">         &#125;</span><br><span class="line"> </span><br><span class="line">         <span class="keyword">if</span> (mKeyCombinationManager.isKeyConsumed(event)) &#123;</span><br><span class="line">@@ -<span class="number">3448</span>,<span class="number">6</span> +<span class="number">3450</span>,<span class="number">7</span> @@ <span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PhoneWindowManager</span> <span class="keyword">implements</span> <span class="title class_">WindowManagerPolicy</span> &#123;</span><br><span class="line">             Log.d(TAG, <span class="string">&quot;interceptKeyTq keycode=&quot;</span> + keyCode</span><br><span class="line">                     + <span class="string">&quot; interactive=&quot;</span> + interactive + <span class="string">&quot; keyguardActive=&quot;</span> + keyguardActive</span><br><span class="line">                     + <span class="string">&quot; policyFlags=&quot;</span> + Integer.toHexString(policyFlags));</span><br><span class="line">+                                       Log.d(<span class="string">&quot;yeruilai&quot;</span>, <span class="string">&quot;interceptKeyBeforeQueueing KeyEvent=&quot;</span>+event.toString());</span><br><span class="line">         &#125;</span><br></pre></td></tr></table></figure>
+
+<p>11、编译之前执行 最后执行指令更新下api，再触发编译</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">make update-api</span><br><span class="line"> </span><br><span class="line">/frameworks/base/api/current.txt（qssi11路径）QSSI12 frameworks/base/core/api/current.txt</span><br><span class="line"> </span><br><span class="line">git diff frameworks/base/core/api/current.txt</span><br><span class="line">diff --git a/QSSI12/frameworks/base/core/api/current.txt b/QSSI12/frameworks/base/core/api/current.txt</span><br><span class="line">index 1dd401d..c8ad206 100644</span><br><span class="line">--- a/QSSI12/frameworks/base/core/api/current.txt</span><br><span class="line">+++ b/QSSI12/frameworks/base/core/api/current.txt</span><br><span class="line">@@ -47609,6 +47609,8 @@ package android.view &#123;</span><br><span class="line">     field public static final int KEYCODE_K = 39; // 0x27</span><br><span class="line">     field public static final int KEYCODE_KANA = 218; // 0xda</span><br><span class="line">     field public static final int KEYCODE_KATAKANA_HIRAGANA = 215; // 0xd7</span><br><span class="line">+    field public static final int KEYCODE_KEY_EM_O = 289; // 0x121</span><br><span class="line">     field public static final int KEYCODE_L = 40; // 0x28</span><br><span class="line">     field public static final int KEYCODE_LANGUAGE_SWITCH = 204; // 0xcc</span><br><span class="line">     field public static final int KEYCODE_LAST_CHANNEL = 229; // 0xe5</span><br></pre></td></tr></table></figure>
+
+<h4 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项:"></a>注意事项:</h4><p>防止冲突或者遗漏最好在QSSI12目录下搜索所有Generic.kl文件find -name ‘Generic.kl’ </p>
+<ul>
+<li>QSSI12/device/google/atv/Generic.kl</li>
+<li>QSSI12/device/amlogic/yukawa/input/Generic.kl</li>
+<li>QSSI12/frameworks/base/data/keyboards/Generic.kl</li>
+<li>QSSI12/cts/tests/tests/view/res/raw/Generic.kl</li>
+</ul>
+<p>最后编译产物out/target/product/qssi/system/usr/keylayout/Generic.kl</p>
+<ol>
+<li>编译之前执行 最后执行指令更新下api，再触发编译</li>
+<li>make update-api</li>
+<li>/frameworks/base/api/current.txt</li>
+<li>(qssi11路径）QSSI12 frameworks/base/core/api/current.txt</li>
+</ol>
+<p>3、调试可打开以下库文件的开关</p>
+<p>3.1 \frameworks\native\libs\input</p>
+<p>3.2 \frameworks\native\services\inputflinger</p>
+<p>3.3 .  adb shell dumpsys input 查看现有输入系统</p>
+<ol start="3">
+<li>4 adb shell getevent 可查看现有的输入事件</li>
+</ol>
+<p>3.5 在/system/usr/keylayout中还有很多Vendor_xxxx_Product_xxxx.kl 之类的配置文件，但是我们没有配置对应的vend id等，所以一直使用默认的Generic.kl。</p>
+<p>异常处理</p>
+<p>1、 <strong>QSSI12/frameworks/native/libs/input/InputEventLabels.cpp</strong> 出现空格其他字</p>
+<p>解决方案:去掉空格其他斜杠字符转义重新编译即可 用编译器修改最好不要用内部编辑器出现编码不一致问题（VSCode/NodePad++)</p>
+<p>2、出现KeyCode Unknown 检查QSSI12/device/qcom/qssi/gpio-keys.kl中增加键盘扫描码对应的键盘码 是否添加，如果没有新增示例如下</p>
+<p>3、十六进制转换成十进制的方法如下:</p>
+<p><img src="/images/20250824/20250824005.png"></p>
+
+      
+      <blockquote>
+        
+        <strong>本文链接：</strong><br><a href="http://longzhiye.top/2025/08/24/2025-08-24/">http://longzhiye.top/2025/08/24/2025-08-24/</a>
+      </blockquote>
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Android/" rel="tag">Android</a><a class="mdui-ripple article_tags-link" href="/tags/framework/" rel="tag">framework</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2025/08/31/2025-08-31/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android 15.0 ROM定制：无源码App图标替换指南'}">上一篇</span>
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2025/08/17/2025-08-17/">
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android 15 实现修改锁屏界面默认壁纸功能'}">下一篇</span>
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+
+
+
+</main>
+  <footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="http://github.com/longzhiye" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe7ab;</i></a>
+    
+    
+    
+      <a href="https://www.zhihu.com/people/long-zhi-xie-61" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe6c0;</i></a>
+    
+    
+    
+      <a href="tencent://tencent:////message/?uin=951898105&Menu=yes" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2022 - 2025 龙之叶<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>
+    <br>
+      <span id="busuanzi_container_site_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_site_pv"></span></span> &nbsp;&nbsp;
+      <span id="busuanzi_container_site_uv" style="display: none;"><i class="iconfont">&#xe601;</i> <span id="busuanzi_value_site_uv"></span></span>
+    
+  </div>
+</footer>
+
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+  
+<script src="/custom.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>Android ART编译模式解析 | 龙之叶的博客</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="alternate" href="/atom.xml" title="龙之叶的博客" type="application/atom+xml">
+  <meta name="description" content="Android ART编译模式解析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android ART编译模式解析">
+<meta property="og:url" content="http://longzhiye.top/2024/01/14/2024-01-14/index.html">
+<meta property="og:site_name" content="龙之叶的博客">
+<meta property="og:description" content="Android ART编译模式解析">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-01-13T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-04T08:39:58.963Z">
+<meta property="article:author" content="龙之叶">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="framework">
+<meta name="twitter:card" content="summary">
+
+  <meta name="keywords" content=",Android,framework">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="龙之叶的博客">
+  <meta name="msapplication-starturl" content="http://longzhiye.top/2024/01/14/2024-01-14/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="龙之叶的博客">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <link rel="canonical" href="http://longzhiye.top/2024/01/14/2024-01-14/">
+  
+
+  
+  
+
+  
+  
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/custom.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(!a){document.getElementsByTagName("body")[0].className+=" mdui-drawer-body-left"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">龙之叶的博客</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+	<!--
+    <a href="/atom.xml" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'RSS'}"><i class="mdui-icon material-icons">rss_feed</i></a>
+	-->
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(a){document.getElementById("sidebar").className+=" mdui-drawer-close"};</script>
+  <div class="mdui-grid-tile">
+    <img src="/images/banner.png" style="height: 160px;">
+    <img src="/images/avatar.png" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;background-color:#fff;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">龙之叶</div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>生命不息，折腾不止</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:longzhiye163@163.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'longzhiye163@163.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-0");if(a){document.getElementsByClassName("mdui-collapse-item")[0].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">archive</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2025/10/">十月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/09/">九月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/08/">八月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/07/">七月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/06/">六月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/03/">三月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/02/">二月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/01/">一月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/10/">十月 2024<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/09/">九月 2024<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/08/">八月 2024<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/03/">三月 2024<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/02/">二月 2024<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/01/">一月 2024<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/12/">十二月 2023<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/11/">十一月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/10/">十月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/09/">九月 2023<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/08/">八月 2023<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/06/">六月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/05/">五月 2023<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/04/">四月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/03/">三月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/02/">二月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/09/">九月 2022<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/04/">四月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/03/">三月 2017<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/02/">二月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/01/">一月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/12/">十二月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/11/">十一月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/10/">十月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/08/">八月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-1");if(a){document.getElementsByClassName("mdui-collapse-item")[1].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">class</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">108</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E8%B5%84%E8%AE%AF/">资讯<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E9%80%9A%E7%9F%A5/">通知<span class="mdui-ripple sidebar_archives-count">4</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-2");if(a){document.getElementsByClassName("mdui-collapse-item")[2].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/ANR/" rel="tag">ANR<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/APP/" rel="tag">APP<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android/" rel="tag">Android<span class="mdui-ripple sidebar_archives-count">98</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android12/" rel="tag">Android12<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android13/" rel="tag">Android13<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android14/" rel="tag">Android14<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android16/" rel="tag">Android16<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AndroidStudio/" rel="tag">AndroidStudio<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AutoDraw/" rel="tag">AutoDraw<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Build/" rel="tag">Build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Crash/" rel="tag">Crash<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Foxmail/" rel="tag">Foxmail<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Framework/" rel="tag">Framework<span class="mdui-ripple sidebar_archives-count">20</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GPS%E8%BD%A8%E8%BF%B9%E5%9B%BE/" rel="tag">GPS轨迹图<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Git/" rel="tag">Git<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GitHub/" rel="tag">GitHub<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Google/" rel="tag">Google<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Java/" rel="tag">Java<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Kernel/" rel="tag">Kernel<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Launcher/" rel="tag">Launcher<span class="mdui-ripple sidebar_archives-count">17</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Lib/" rel="tag">Lib<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Linux/" rel="tag">Linux<span class="mdui-ripple sidebar_archives-count">18</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Markdown/" rel="tag">Markdown<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Material-Design/" rel="tag">Material Design<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OS-X/" rel="tag">OS X<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OTA/" rel="tag">OTA<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/QuickTime/" rel="tag">QuickTime<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SSH/" rel="tag">SSH<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Settings/" rel="tag">Settings<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SystemUI/" rel="tag">SystemUI<span class="mdui-ripple sidebar_archives-count">19</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/UAC/" rel="tag">UAC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Ubuntu/" rel="tag">Ubuntu<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WPS/" rel="tag">WPS<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Wifi/" rel="tag">Wifi<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WindTerm/" rel="tag">WindTerm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows/" rel="tag">Windows<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows-11/" rel="tag">Windows 11<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/androidmk/" rel="tag">androidmk<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/blog/" rel="tag">blog<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/build/" rel="tag">build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/feel/" rel="tag">feel<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/framework/" rel="tag">framework<span class="mdui-ripple sidebar_archives-count">58</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/inotify/" rel="tag">inotify<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/life/" rel="tag">life<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/ninja/" rel="tag">ninja<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/rsync/" rel="tag">rsync<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/standard/" rel="tag">standard<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/test/" rel="tag">test<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1/" rel="tag">企业微信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E7%94%9F%E6%B4%BB%E6%84%9F%E6%82%9F/" rel="tag">生活感悟<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+      <a href="/timeline" class="mdui-list-item mdui-ripple">时间轴</a>
+    
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-3");if(a){document.getElementsByClassName("mdui-collapse-item")[3].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+          <a href="http://www.niemingzhao.top" target="_blank" class="mdui-list-item mdui-p-l-2 mdui-text-color-theme-accent mdui-ripple" style="justify-content: center;">聂明照的博客</a>
+        
+        
+      </div>
+    </div>
+  </div>
+</aside>
+
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <style>#main article .mdui-card-content .text-center{text-align:center!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-16.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">Android ART编译模式解析</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2024-01-14 / <i class="iconfont">&#xe601;</i> 龙之叶 &nbsp;&nbsp; <span id="busuanzi_container_page_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_page_pv"></span></span></div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#qrcode', align: 'right'}"><i class="mdui-icon material-icons">devices</i></button>
+          <ul class="mdui-menu" id="qrcode">
+            
+              <li class="mdui-menu-item"><a class="mdui-text-center mdui-ripple">发送到手机</a></li>
+            
+            <li class="mdui-menu-item" disabled>
+              
+                <img src="//qr.liantu.com/api.php?w=246&m=10&text=http://longzhiye.top/2024/01/14/2024-01-14/">
+              
+            </li>
+          </ul>
+        
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="mdui-icon material-icons">share</i></button>
+          <ul class="mdui-menu" id="share_menu">
+            <li class="mdui-menu-item">
+              <a href="https://service.weibo.com/share/share.php?appkey=&title=Android ART编译模式解析&url=http://longzhiye.top/2024/01/14/2024-01-14/&pic=http://longzhiye.top/images/favicon.png&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://twitter.com/intent/tweet?text=Android ART编译模式解析&url=http://longzhiye.top/2024/01/14/2024-01-14/&via=龙之叶" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=http://longzhiye.top/2024/01/14/2024-01-14/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://plus.google.com/share?url=http://longzhiye.top/2024/01/14/2024-01-14/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://longzhiye.top/2024/01/14/2024-01-14/&title=Android ART编译模式解析" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://connect.qq.com/widget/shareqq/index.html?site=龙之叶的博客&title=Android ART编译模式解析&pics=http://longzhiye.top/images/favicon.png&url=http://longzhiye.top/2024/01/14/2024-01-14/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://telegram.me/share/url?url=http://longzhiye.top/2024/01/14/2024-01-14/&text=Android ART编译模式解析" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+            </li>
+          </ul>
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>cmd<br>ART实际就是Android runtime的缩写，他是Android版本新的虚拟机</p>
+<h3 id="诞生"><a href="#诞生" class="headerlink" title="诞生"></a>诞生</h3><p>ART 使用预先 (AOT) 编译，并且从 Android 7.0（代号 Nougat，简称 N）开始结合使用 AOT、即时 (JIT) 编译和配置文件引导型编译。</p>
+<h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3><h4 id="1-预先编译"><a href="#1-预先编译" class="headerlink" title="1.预先编译"></a>1.预先编译</h4><p>ART模式与Dalvik模式最大的不同在于，在启用ART模式后，系统在安装应用的时候会进行一次预编译，在安装应用程序时会先将代码转换为机器语言存储在本地，这样在运行程序时就不会每次都进行一次编译了，执行效率也大大提升。并且对比dalvik，ART具有更严格的安装时验证。在安装时，ART 使用设备自带的 dex2oat 工具来编译应用。此实用工具接受 DEX 文件作为输入，并为目标设备生成经过编译的应用可执行文件。该工具应能够顺利编译所有有效的 DEX 文件。但是，一些后处理工具会生成无效文件，Dalvik 可以接受这些文件，但 ART 无法编译这些文件。</p>
+<h4 id="2-垃圾回收（GC）时优化"><a href="#2-垃圾回收（GC）时优化" class="headerlink" title="2.垃圾回收（GC）时优化"></a>2.垃圾回收（GC）时优化</h4><p>垃圾回收 (GC) 会耗费大量资源，这可能有损于应用性能，导致显示不稳定、界面响应速度缓慢以及其他问题。ART 通过以下几种方式对垃圾回收做了优化：</p>
+<ol>
+<li>大多采用并发设计，具有一次 GC 暂停</li>
+<li>并发复制，可减少后台内存使用和碎片</li>
+<li>GC 暂停的时间不受堆大小影响</li>
+<li>在清理最近分配的短时对象这种特殊情况中，回收器的总 GC 时间更短</li>
+<li>优化了垃圾回收的工效，能够更加及时地进行并行垃圾回收，这使得 GC_FOR_ALLOC 事件在典型用例中极为罕见</li>
+</ol>
+<h4 id="3-开发和调试方面的优化"><a href="#3-开发和调试方面的优化" class="headerlink" title="3.开发和调试方面的优化"></a>3.开发和调试方面的优化</h4><p>ART 提供了大量功能来优化应用开发和调试。</p>
+<p><strong>支持采样分析器</strong><br>一直以来，开发者都使用 Traceview 工具（用于跟踪应用执行情况）作为分析器。虽然 Traceview 可提供有用的信息，但每次方法调用产生的开销会导致 Dalvik 分析结果出现偏差，而且使用该工具明显会影响运行时性能。<br>ART 添加了对没有这些限制的专用采样分析器的支持，因而可更准确地了解应用执行情况，而不会明显减慢速度。KitKat 版本为 Dalvik 的 Traceview 添加了采样支持。</p>
+<p><strong>支持更多调试功能</strong><br>ART 支持许多新的调试选项，特别是与监控和垃圾回收相关的功能。例如可以：</p>
+<ol>
+<li>查看堆栈跟踪中保留了哪些锁，然后跳转到持有锁的线程。</li>
+<li>询问指定类的当前活动的实例数、请求查看实例，以及查看使对象保持有效状态的参考。</li>
+<li>过滤特定实例的事件（如断点）。</li>
+<li>查看方法退出（使用“method-exit”事件）时返回的值。</li>
+<li>设置字段观察点，以在访问和/或修改特定字段时暂停程序执行。</li>
+</ol>
+<p><strong>优化了异常和崩溃报告中的诊断详细信息</strong><br>当发生运行时异常时，ART 会为您提供尽可能多的上下文和详细信息。ART 会提供 java.lang.ClassCastException、java.lang.ClassNotFoundException 和 java.lang.NullPointerException 的更多异常详细信息。（较高版本的 Dalvik 会提供 java.lang.ArrayIndexOutOfBoundsException 和 java.lang.ArrayStoreException 的更多异常详细信息，这些信息现在包括数组大小和越界偏移量；ART 也提供这类信息。）</p>
+<h3 id="一些基本名词"><a href="#一些基本名词" class="headerlink" title="一些基本名词"></a>一些基本名词</h3><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>详情</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>dex文件</td>
+<td>App所有java源代码编译后生成众多class文件，由DX/D8，编译为一个/多个（multiDex）dex文件，由Android虚拟机编译执行</td>
+</tr>
+<tr>
+<td>odex文件</td>
+<td>dex文件经过验证和优化后的产物，art下的odex文件包含经过AOT编译后的代码以及dex的完整内容，但Android8.0之后odex中的dex内容移动到了.vdex文件</td>
+</tr>
+<tr>
+<td>art文件</td>
+<td>art下根据配置文件生成odex文件时同时生成.art文件，主要是为了提升运行时加载odex中热点代码的速度，包含了类信息和odex中热点方法的索引，运行App时会首先根据这个文件来加载odex中已经编译过的代码；执行过speed-profile命令的app才会生成.art文件</td>
+</tr>
+<tr>
+<td>JIT编译（Just In Time）</td>
+<td>由于解释器方式运行太慢引入，对于频繁运行的热点代码（判定标准一般是在某个时间段内执行次数达到某个阈值）进行实时编译（在ART下以方法为粒度）执行，并且缓存JIT编译后的代码在内存中用于下次执行。由于以方法为粒度（ArtMethod）进行编译，JIT编译较于解释器可以生成效率更高的代码，运行更快</td>
+</tr>
+<tr>
+<td>AOT编译（Ahead-Of-Time）</td>
+<td>应用安装时全量编译所有代码为本地机器码，运行时直接执行机器码。</td>
+</tr>
+</tbody></table>
+<p><strong>JIT编译与AOT编译对比</strong><br><strong>JIT编译</strong><br>优势:<br>1.能够根据当前硬件状况实时编译生成最优机器指令（ps. AOT 也能够作到，在用户使用是使用字节码根据机器状况在作一次编译）<br>2.能够根据当前程序的运行状况生成最优的机器指令序列<br>3.当程序须要支持动态连接时，只能使用 JIT<br>4.能够根据进程中内存的实际状况调整代码，使内存可以更充分的利用<br>劣势:<br>1.编译必须要占用线程资源，导致卡顿<br>2.因为编译时间须要占用运行时间，对于某些代码的编译优化不能彻底支持，须要在程序流畅和编译时间之间作权衡<br>3.在编译准备和识别频繁使用的方法须要占用时间，使得初始编译不能达到最高性能<br>4.由于 JIT Code Cache 是内存缓存，因此每次运行都需要重新编译</p>
+<p><strong>AOT编译</strong><br>优势:<br>1.在程序运行前编译，能够避免在运行时的编译性能消耗和内存消耗<br>2.能够在程序运行初期就达到最高性能<br>3.能够显著的加快程序的启动<br>劣势:<br>1.应用安装和系统升级之后的应用优化比较耗时（重新编译，把程序代码转换成机器语言）<br>2.优化后的文件会占用额外的存储空间（缓存转换结果）</p>
+<h3 id="运作方式"><a href="#运作方式" class="headerlink" title="运作方式"></a>运作方式</h3><h4 id="Android-4-4-7-0"><a href="#Android-4-4-7-0" class="headerlink" title="Android 4.4~7.0"></a>Android 4.4~7.0</h4><p>最开始ART只采用AOT编译，在App安装时就编译所有代码存储在本地，打开App直接运行，这样做的优点是应用运行速度变快，缺点也很明显，App安装时间明显变长，而且占用存储空间较大。</p>
+<h4 id="Android-7-0"><a href="#Android-7-0" class="headerlink" title="Android 7.0"></a>Android 7.0</h4><p>Android N之后对于ART进行改动，重新引入了JIT编译，结合使用AOT/JIT混合编译，主要机制如下：<br>安装时不进行任何编译，前几次运行仅通过解释器解释运行，同时对热点代码进行JIT编译，并将这些代码的相关信息记录在一个配置文件里（data/misc/profile/cur/0/…）<br>设备处于空闲和充电状态时，编译守护进程读取配置文件对热点代码进行AOT编译并写入到app对应的odex文件中<br>再次启动应用后优先使用AOT编译过的代码，否则使用解释器+JIT编译，重复这个过程<br>对于一些庞大的APP，比如淘宝，有些功能可能你一辈子都不会用到，根据上述策略这部分代码就不会被编译保存，从而减少了存储空间的占用。另外，在系统升级时也避免了全量编译所有现存应用造成的时间空间消耗。</p>
+<h4 id="Android-8-0"><a href="#Android-8-0" class="headerlink" title="Android 8.0"></a>Android 8.0</h4><p>Android 8.0引入了.vdex文件，它里面包含 APK 的未压缩 DEX 代码，以及一些用于加快验证速度的元数据。怎么理解呢？这里我们需要补充一下对dex文件的编译配置和系统ROM中各类应用的默认编译方式：<br>编译选项（compiler filters）：</p>
+<ol>
+<li>verify：只对 DEX 文件进行代码验证，校验各部分合法性。</li>
+<li>quicken：在verify的基础上优化一些 DEX 指令，提升解释器性能。</li>
+<li>speed：在verify的基础对所有方法进行 AOT 编译。</li>
+<li>speed-profile：在verify的基础对配置文件中列出的方法（热点方法）进行 AOT 编译。</li>
+</ol>
+<p>系统ROM中各类应用默认编译方式：</p>
+<ol>
+<li>启动类路径代码（用于启动系统的部分代码）：默认使用 speed 编译过滤器进行编译</li>
+<li>系统服务器代码（比如电量、多媒体服务代码）：默认使用 speed 编译过滤器进行编译</li>
+<li>产品专属的核心应用（比如goole服务框架）：默认使用 speed 编译过滤器进行编译</li>
+<li>所有第三方应用：默认使用 quicken 编译过滤器进行编译</li>
+</ol>
+<p>所有第三方应用最开始都是通过quiken模式只进行了dex校验和一些指令优化，.vdex文件存放的就是经过校验后的dex代码，以便在对热点代码进行AOT编译时避免重复验证，加快速度。</p>
+<h3 id="混合编译的优势"><a href="#混合编译的优势" class="headerlink" title="混合编译的优势"></a>混合编译的优势</h3><ol>
+<li>应用安装时间过长；在 N 之前，应用在安装时需要对所有 ClassN.dex 做 AOT 机器码编译，类似微信这种比较大型的 APP 可能会耗时数分钟。但是往往我们只会使用一个应用 20% 的功能，剩下的 80% 我们付出了时间成本，却没带来太大的收益。</li>
+<li>降低占 ROM 空间；同样全量编译 AOT 机器码，12M 的 dex 编译结果往往可以达到 50M 之多。只编译用户用到或常用的 20% 功能，这对于存储空间不足的设备尤其重要。</li>
+<li>提升系统与应用性能；减少了全量编译，降低了系统的耗电。在 boot.art 的基础上，每个应用增加了 base.art (这块后面会详细解析), 通过预加载与缓存提升应用性能。</li>
+<li>快速的系统升级；以往厂商 ota 时，需要对安装的所有应用做全量的 AOT 编译，这耗时非常久。事实上，同样只有 20% 的应用是我们经常使用的，给不常用的应用，不常用的功能付出的这些成本是不值得的。</li>
+</ol>
+<p>综合下来，混合编译的模式因为在安装的时候不需要进行编译，安装速度会很快。在以后运行app时，会抓取热点数据进行存储并执行AOT编译优化体验。所以在前几次打开应用时速度会相对较慢，在操作次数多了后性能将会跟上。<br><strong>过滤器</strong><br>ART 如何编译 DEX 代码还有个compile filter以参数的形式来决定：从 Android O 开始，有四个官方支持的过滤器：</p>
+<blockquote>
+<p>verify：只运行 DEX 代码验证。<br>quicken：运行 DEX 代码验证，并优化一些 DEX 指令，以获得更好的解释器性能。<br>speed-profile：运行 DEX 代码验证，并对配置文件中列出的方法进行 AOT 编译。<br>speed：运行 DEX 代码验证，并对所有方法进行 AOT 编译。</p>
+</blockquote>
+<p>verify 和quicken 他俩都没执行编译，之后代码执行需要跑解释器。而speed-profile 和 speed 都执行了编译，区别是speed-profile根据profile记录的热点函数来编译，属于部分编译，而speed属于全编。<br>所以<br>执行效率上：<br>verify &lt; quicken &lt; speed-profile &lt; speed<br>编译速度上：<br>verify &gt; quicken &gt; speed-profile &gt; speed</p>
+<h3 id="查看编译模式"><a href="#查看编译模式" class="headerlink" title="查看编译模式"></a>查看编译模式</h3><p>在命令行中输入adb getprop | grep pm.dex，可以查看当前手机在不同场景下的默认编译模式<br>一般用到的主要是这几个:</p>
+<ul>
+<li>ab-ota：系统升级，这里是使用A/B系统升级方式，也叫做无缝更新，A/B系统升级，顾名思义是有两个系统，在磁盘上开辟两个存储空间A/B存储空间，在升级过程中保证有一个可以正常运行的系统</li>
+<li>bg-dexopt：后台编译</li>
+<li>boot-after-ota：启动后升级</li>
+<li>cmdline：命令行</li>
+<li>first-boot：首次开机安装，google建议设置这个，避免开机的时间过长</li>
+<li>inactive：不活跃的。这个不活跃状态也就是idle，判定是在frameworks/base/core/res/res/config.xml中有一个节点config_jobSchedulerInactivityIdleThreshold，默认值是1860000毫秒，也就是31分钟。31分钟处于非活动状态就会被认为是idle。</li>
+<li>install：安装，设置为speed-profile可以在后续使用中提高应用启动时间，但是如果没有提供配置文件或者配置文件为空，那么启动时间会与verify没有区别<br>那么这个设置是在哪里进行配置的呢？</li>
+</ul>
+<p><strong>build/make/target/product/runtime_libart.mk</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"># The install filter is speed-profile in order to enable the use of</span><br><span class="line"># profiles from the dex metadata files. Note that if a profile is not provided</span><br><span class="line"># or if it is empty speed-profile is equivalent to (quicken + empty app image).</span><br><span class="line"># Note that `cmdline` is not strictly needed but it simplifies the management</span><br><span class="line"># of compilation reason in the platform (as we have a unified, single path,</span><br><span class="line"># without exceptions).</span><br><span class="line">PRODUCT_SYSTEM_PROPERTIES += \</span><br><span class="line">    pm.dexopt.post-boot?=extract \</span><br><span class="line">    pm.dexopt.install?=speed-profile \</span><br><span class="line">    pm.dexopt.install-fast?=skip \</span><br><span class="line">    pm.dexopt.install-bulk?=speed-profile \</span><br><span class="line">    pm.dexopt.install-bulk-secondary?=verify \</span><br><span class="line">    pm.dexopt.install-bulk-downgraded?=verify \</span><br><span class="line">    pm.dexopt.install-bulk-secondary-downgraded?=extract \</span><br><span class="line">   pm.dexopt.bg-dexopt?=speed-profile \</span><br><span class="line">    pm.dexopt.ab-ota?=speed-profile \</span><br><span class="line">    pm.dexopt.inactive?=verify \</span><br><span class="line">    pm.dexopt.cmdline?=verify \</span><br><span class="line">    pm.dexopt.shared?=speed</span><br></pre></td></tr></table></figure>
+<p>在这个文件里会提供一个没有frameworks的安装环境<br>User 版本会预先提取有source code的APK的odex文件，因为有source code的APK在 Android.mk中都会通过include $(BUILD_PACKAGE)来编译，会调用到package.mk来提取odex<br>但User版本不会预先提取通过prebuilt方式预置的APK的odex文件，因为采用prebuilt方式预置 APK是只有APK文件而没有source code时在Android.mk中通过 include $(BUILD_PREBUILT) 预置APK，代码中原本的prebuilt.mk中不会提取odex<br>user版本默认实现了apk预编译优化.如何实现不生成odex? 以下两种方式皆可</p>
+<ol>
+<li>通过修改build/make/core/board_config.mk中WITH_DEXPREOPT := false</li>
+<li>在APK的Android.mk文件中添加 LOCAL_DEX_PREOPT := false 来关闭预优化</li>
+</ol>
+<h4 id="Dex2oat-选项"><a href="#Dex2oat-选项" class="headerlink" title="Dex2oat 选项"></a>Dex2oat 选项</h4><p>请注意，这些选项在设备编译期间以及预先优化期间都会影响 dex2oat，但是前面讨论的大多数选项都只会影响预先优化。<br>在 dex2oat 编译启动映像时对其进行控制：</p>
+<ul>
+<li>dalvik.vm.image-dex2oat-Xms：初始堆大小</li>
+<li>dalvik.vm.image-dex2oat-Xmx：最大堆大小</li>
+<li>dalvik.vm.image-dex2oat-filter：编译过滤器选项</li>
+<li>dalvik.vm.image-dex2oat-threads：要使用的线程数</li>
+</ul>
+<p>在 dex2oat 编译除启动映像之外的所有内容时对其进行控制：</p>
+<ul>
+<li>dalvik.vm.dex2oat-Xms：初始堆大小</li>
+<li>dalvik.vm.dex2oat-Xmx：最大堆大小</li>
+<li>dalvik.vm.dex2oat-filter：编译过滤器选项</li>
+</ul>
+<p>Android 6.0 之前的版本提供了一个适用于编译除启动映像之外的所有内容的附加选项：</p>
+<ul>
+<li>dalvik.vm.dex2oat-threads：要使用的线程数</li>
+</ul>
+<p>从 Android 6.1 开始，该选项变成了两个适用于编译除启动映像之外的所有内容的附加选项：</p>
+<ul>
+<li>dalvik.vm.boot-dex2oat-threads：启动时要使用的线程数</li>
+<li>dalvik.vm.dex2oat-threads：启动后要使用的线程数</li>
+</ul>
+<p>Android 7.1 及之后的版本提供了两个选项来控制编译除启动映像之外的所有内容时的内存使用方式：</p>
+<ul>
+<li>dalvik.vm.dex2oat-very-large：停用 AOT 编译的最小总 dex 文件大小（以字节为单位）</li>
+<li>dalvik.vm.dex2oat-swap：使用 dex2oat 交换文件（用于低内存设备）</li>
+</ul>
+<p>不应减小用于控制 dex2oat 初始堆大小和最大堆大小的选项数值，因为它们可能会限制可对哪些应用进行编译。<br>从 Android 11 开始，我们提供了 3 个 CPU 亲和性选项，通过这些选项，编译器线程可以限定在特定的一组 CPU 上：</p>
+<ul>
+<li>dalvik.vm.boot-dex2oat-cpu-set：在启动时运行 dex2oat 线程的 CPU</li>
+<li>dalvik.vm.image-dex2oat-cpu-set：在编译启动映像时运行 dex2oat 的 CPU</li>
+<li>dalvik.vm.dex2oat-cpu-set：在启动后运行 dex2oat 线程的 CPU</li>
+</ul>
+<h4 id="单独APP安装模式"><a href="#单独APP安装模式" class="headerlink" title="单独APP安装模式"></a>单独APP安装模式</h4><p>搜索app包下device.mk文件查找PRODUCT_DEXPREOPT_SPEED_APPS属性<br>例如device/google/coral/device.mk文件下就有这样一个属性</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Preopt SystemUI</span><br><span class="line">PRODUCT_DEXPREOPT_SPEED_APPS += SystemUIGoogle  # For internal</span><br><span class="line">PRODUCT_DEXPREOPT_SPEED_APPS += SystemUI  # For AOSP</span><br></pre></td></tr></table></figure>
+<p>单独为systemUI设置了speed编译模式</p>
+
+      
+      <blockquote>
+        
+        <strong>本文链接：</strong><br><a href="http://longzhiye.top/2024/01/14/2024-01-14/">http://longzhiye.top/2024/01/14/2024-01-14/</a>
+      </blockquote>
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Android/" rel="tag">Android</a><a class="mdui-ripple article_tags-link" href="/tags/framework/" rel="tag">framework</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2024/01/20/2024-01-20/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'ANR问题分析总结'}">上一篇</span>
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2024/01/13/2024-01-13/">
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android APP启动流程解析'}">下一篇</span>
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+
+
+
+</main>
+  <footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="http://github.com/longzhiye" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe7ab;</i></a>
+    
+    
+    
+      <a href="https://www.zhihu.com/people/long-zhi-xie-61" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe6c0;</i></a>
+    
+    
+    
+      <a href="tencent://tencent:////message/?uin=951898105&Menu=yes" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2022 - 2025 龙之叶<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>
+    <br>
+      <span id="busuanzi_container_site_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_site_pv"></span></span> &nbsp;&nbsp;
+      <span id="busuanzi_container_site_uv" style="display: none;"><i class="iconfont">&#xe601;</i> <span id="busuanzi_value_site_uv"></span></span>
+    
+  </div>
+</footer>
+
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+  
+<script src="/custom.js"></script>
+
+</body>
+</html>

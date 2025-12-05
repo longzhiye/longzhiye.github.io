@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>Android13 动态控制状态栏和导航栏 | 龙之叶的博客</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="alternate" href="/atom.xml" title="龙之叶的博客" type="application/atom+xml">
+  <meta name="description" content="Android13 动态控制状态栏和导航栏">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android13 动态控制状态栏和导航栏">
+<meta property="og:url" content="http://longzhiye.top/2024/08/24/2024-08-24/index.html">
+<meta property="og:site_name" content="龙之叶的博客">
+<meta property="og:description" content="Android13 动态控制状态栏和导航栏">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-08-23T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-04T08:39:58.971Z">
+<meta property="article:author" content="龙之叶">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="SystemUI">
+<meta property="article:tag" content="framework">
+<meta name="twitter:card" content="summary">
+
+  <meta name="keywords" content=",Android,SystemUI,framework">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="龙之叶的博客">
+  <meta name="msapplication-starturl" content="http://longzhiye.top/2024/08/24/2024-08-24/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="龙之叶的博客">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <link rel="canonical" href="http://longzhiye.top/2024/08/24/2024-08-24/">
+  
+
+  
+  
+
+  
+  
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/custom.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(!a){document.getElementsByTagName("body")[0].className+=" mdui-drawer-body-left"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">龙之叶的博客</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+	<!--
+    <a href="/atom.xml" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'RSS'}"><i class="mdui-icon material-icons">rss_feed</i></a>
+	-->
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(a){document.getElementById("sidebar").className+=" mdui-drawer-close"};</script>
+  <div class="mdui-grid-tile">
+    <img src="/images/banner.png" style="height: 160px;">
+    <img src="/images/avatar.png" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;background-color:#fff;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">龙之叶</div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>生命不息，折腾不止</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:longzhiye163@163.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'longzhiye163@163.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-0");if(a){document.getElementsByClassName("mdui-collapse-item")[0].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">archive</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2025/10/">十月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/09/">九月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/08/">八月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/07/">七月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/06/">六月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/03/">三月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/02/">二月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/01/">一月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/10/">十月 2024<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/09/">九月 2024<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/08/">八月 2024<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/03/">三月 2024<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/02/">二月 2024<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/01/">一月 2024<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/12/">十二月 2023<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/11/">十一月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/10/">十月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/09/">九月 2023<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/08/">八月 2023<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/06/">六月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/05/">五月 2023<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/04/">四月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/03/">三月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/02/">二月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/09/">九月 2022<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/04/">四月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/03/">三月 2017<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/02/">二月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/01/">一月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/12/">十二月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/11/">十一月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/10/">十月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/08/">八月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-1");if(a){document.getElementsByClassName("mdui-collapse-item")[1].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">class</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">108</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E8%B5%84%E8%AE%AF/">资讯<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E9%80%9A%E7%9F%A5/">通知<span class="mdui-ripple sidebar_archives-count">4</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-2");if(a){document.getElementsByClassName("mdui-collapse-item")[2].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/ANR/" rel="tag">ANR<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/APP/" rel="tag">APP<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android/" rel="tag">Android<span class="mdui-ripple sidebar_archives-count">98</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android12/" rel="tag">Android12<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android13/" rel="tag">Android13<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android14/" rel="tag">Android14<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android16/" rel="tag">Android16<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AndroidStudio/" rel="tag">AndroidStudio<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AutoDraw/" rel="tag">AutoDraw<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Build/" rel="tag">Build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Crash/" rel="tag">Crash<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Foxmail/" rel="tag">Foxmail<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Framework/" rel="tag">Framework<span class="mdui-ripple sidebar_archives-count">20</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GPS%E8%BD%A8%E8%BF%B9%E5%9B%BE/" rel="tag">GPS轨迹图<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Git/" rel="tag">Git<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GitHub/" rel="tag">GitHub<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Google/" rel="tag">Google<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Java/" rel="tag">Java<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Kernel/" rel="tag">Kernel<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Launcher/" rel="tag">Launcher<span class="mdui-ripple sidebar_archives-count">17</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Lib/" rel="tag">Lib<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Linux/" rel="tag">Linux<span class="mdui-ripple sidebar_archives-count">18</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Markdown/" rel="tag">Markdown<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Material-Design/" rel="tag">Material Design<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OS-X/" rel="tag">OS X<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OTA/" rel="tag">OTA<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/QuickTime/" rel="tag">QuickTime<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SSH/" rel="tag">SSH<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Settings/" rel="tag">Settings<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SystemUI/" rel="tag">SystemUI<span class="mdui-ripple sidebar_archives-count">19</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/UAC/" rel="tag">UAC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Ubuntu/" rel="tag">Ubuntu<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WPS/" rel="tag">WPS<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Wifi/" rel="tag">Wifi<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WindTerm/" rel="tag">WindTerm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows/" rel="tag">Windows<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows-11/" rel="tag">Windows 11<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/androidmk/" rel="tag">androidmk<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/blog/" rel="tag">blog<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/build/" rel="tag">build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/feel/" rel="tag">feel<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/framework/" rel="tag">framework<span class="mdui-ripple sidebar_archives-count">58</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/inotify/" rel="tag">inotify<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/life/" rel="tag">life<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/ninja/" rel="tag">ninja<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/rsync/" rel="tag">rsync<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/standard/" rel="tag">standard<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/test/" rel="tag">test<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1/" rel="tag">企业微信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E7%94%9F%E6%B4%BB%E6%84%9F%E6%82%9F/" rel="tag">生活感悟<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+      <a href="/timeline" class="mdui-list-item mdui-ripple">时间轴</a>
+    
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-3");if(a){document.getElementsByClassName("mdui-collapse-item")[3].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+          <a href="http://www.niemingzhao.top" target="_blank" class="mdui-list-item mdui-p-l-2 mdui-text-color-theme-accent mdui-ripple" style="justify-content: center;">聂明照的博客</a>
+        
+        
+      </div>
+    </div>
+  </div>
+</aside>
+
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <style>#main article .mdui-card-content .text-center{text-align:center!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-3.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">Android13 动态控制状态栏和导航栏</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2024-08-24 / <i class="iconfont">&#xe601;</i> 龙之叶 &nbsp;&nbsp; <span id="busuanzi_container_page_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_page_pv"></span></span></div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#qrcode', align: 'right'}"><i class="mdui-icon material-icons">devices</i></button>
+          <ul class="mdui-menu" id="qrcode">
+            
+              <li class="mdui-menu-item"><a class="mdui-text-center mdui-ripple">发送到手机</a></li>
+            
+            <li class="mdui-menu-item" disabled>
+              
+                <img src="//qr.liantu.com/api.php?w=246&m=10&text=http://longzhiye.top/2024/08/24/2024-08-24/">
+              
+            </li>
+          </ul>
+        
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="mdui-icon material-icons">share</i></button>
+          <ul class="mdui-menu" id="share_menu">
+            <li class="mdui-menu-item">
+              <a href="https://service.weibo.com/share/share.php?appkey=&title=Android13 动态控制状态栏和导航栏&url=http://longzhiye.top/2024/08/24/2024-08-24/&pic=http://longzhiye.top/images/favicon.png&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://twitter.com/intent/tweet?text=Android13 动态控制状态栏和导航栏&url=http://longzhiye.top/2024/08/24/2024-08-24/&via=龙之叶" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=http://longzhiye.top/2024/08/24/2024-08-24/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://plus.google.com/share?url=http://longzhiye.top/2024/08/24/2024-08-24/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://longzhiye.top/2024/08/24/2024-08-24/&title=Android13 动态控制状态栏和导航栏" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://connect.qq.com/widget/shareqq/index.html?site=龙之叶的博客&title=Android13 动态控制状态栏和导航栏&pics=http://longzhiye.top/images/favicon.png&url=http://longzhiye.top/2024/08/24/2024-08-24/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://telegram.me/share/url?url=http://longzhiye.top/2024/08/24/2024-08-24/&text=Android13 动态控制状态栏和导航栏" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+            </li>
+          </ul>
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在Android系统中，状态栏（StatusBar）、导航栏（NavigationBar）以及下拉菜单（通常称为Notification Shade或Quick Settings Panel）构成了用户界面不可或缺的三个元素，它们共同为用户提供了丰富的信息显示与便捷的交互体验。具体而言，状态栏实时展示着时间、电池电量、信号强度等关键信息；导航栏则集成了如返回、主页及多任务管理等基础操作按钮；而下拉菜单则让用户能够迅速访问快速设置项及通知详情。</p>
+<p>值得注意的是，尽管这些元素在多数Android设备上普遍存在且至关重要，但并非所有用户或应用场景都需要它们持续显示。因此，Android系统提供了灵活的配置选项，允许用户或开发者根据实际需求控制这些元素的显示与隐藏状态。</p>
+<p>在Android 13中，对于导航栏的动态显示与隐藏控制相较于之前版本有了更为简化的处理方式。通过利用广播机制或其他系统接口，开发者可以更加便捷地实现这些高级定制功能，为用户带来更加个性化和流畅的使用体验。同时，这也意味着Android平台在持续优化其灵活性和可定制性，以更好地满足不同用户群体的多样化需求了。</p>
+<h1 id="修改示例"><a href="#修改示例" class="headerlink" title="修改示例"></a>修改示例</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br></pre></td><td class="code"><pre><span class="line">diff --git a/frameworks/base/packages/SystemUI/src/com/android/systemui/navigationbar/NavigationBarController.java b/frameworks/base/packages/SystemUI/src/com/android/systemui/navigationbar/NavigationBarController.java</span><br><span class="line">old mode <span class="number">100644</span></span><br><span class="line"><span class="keyword">new</span> <span class="title class_">mode</span> <span class="number">100755</span></span><br><span class="line">index 5c8d2212cef..ffd22dc73b1</span><br><span class="line">--- a/frameworks/base/packages/SystemUI/src/com/android/systemui/navigationbar/NavigationBarController.java</span><br><span class="line">+++ b/frameworks/base/packages/SystemUI/src/com/android/systemui/navigationbar/NavigationBarController.java</span><br><span class="line">@@ -<span class="number">496</span>,<span class="number">4</span> +<span class="number">496</span>,<span class="number">15</span> @@ <span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">NavigationBarController</span> <span class="keyword">implements</span></span><br><span class="line">             <span class="title class_">mNavigationBars</span>.valueAt(i).dump(pw);</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line">+</span><br><span class="line">+    <span class="comment">/**</span></span><br><span class="line"><span class="comment">+     * Create by yeruilai 2024-8-22 10:23:59 </span></span><br><span class="line"><span class="comment">+     */</span></span><br><span class="line">+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">removeNavigationBars</span><span class="params">()</span> &#123;</span><br><span class="line">+        Display[] displays = mDisplayManager.getDisplays();</span><br><span class="line">+        <span class="keyword">for</span> (Display display : displays) &#123;</span><br><span class="line">+            removeNavigationBar(display.getDisplayId());</span><br><span class="line">+        &#125;</span><br><span class="line">+    &#125;</span><br><span class="line">+</span><br><span class="line"> &#125;</span><br><span class="line">diff --git a/frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/phone/CentralSurfacesImpl.java b/frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/phone/CentralSurfacesImpl.java</span><br><span class="line">index f76470badf1..94cca11834b <span class="number">100755</span></span><br><span class="line">--- a/frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/phone/CentralSurfacesImpl.java</span><br><span class="line">+++ b/frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/phone/CentralSurfacesImpl.java</span><br><span class="line">@@ -<span class="number">286</span>,<span class="number">6</span> +<span class="number">286</span>,<span class="number">15</span> @@ <span class="keyword">import</span> dagger.Lazy;</span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CentralSurfacesImpl</span> <span class="keyword">extends</span> <span class="title class_">CoreStartable</span> <span class="keyword">implements</span></span><br><span class="line">         <span class="title class_">CentralSurfaces</span> &#123;</span><br><span class="line"> </span><br><span class="line">+    <span class="comment">// Create by yeruilai 2024-8-22 10:19:38 Dynamically display hidden navigation bar and status bar</span></span><br><span class="line">+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">ACTION_HIDE_STATUS_BAR</span> <span class="operator">=</span> <span class="string">&quot;com.systemui.statusbar.hide&quot;</span>;</span><br><span class="line">+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">ACTION_SHOW_STATUS_BAR</span> <span class="operator">=</span> <span class="string">&quot;com.systemui.statusbar.show&quot;</span>;</span><br><span class="line">+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">SYS_PROPERTY_STATUS_BAR</span> <span class="operator">=</span> <span class="string">&quot;persist.sys.statusbar.enable&quot;</span>;</span><br><span class="line">+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">ACTION_HIDE_NAVIGATION_BAR</span> <span class="operator">=</span> <span class="string">&quot;com.systemui.navigationbar.hide&quot;</span>;</span><br><span class="line">+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">ACTION_SHOW_NAVIGATION_BAR</span> <span class="operator">=</span> <span class="string">&quot;com.systemui.navigationbar.show&quot;</span>;</span><br><span class="line">+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">SYS_PROPERTY_NAVIGATION_BAR</span> <span class="operator">=</span> <span class="string">&quot;persist.sys.navigationbar.enable&quot;</span>;</span><br><span class="line">+    </span><br><span class="line">     <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">BANNER_ACTION_CANCEL</span> <span class="operator">=</span></span><br><span class="line">             <span class="string">&quot;com.android.systemui.statusbar.banner_action_cancel&quot;</span>;</span><br><span class="line">     <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">BANNER_ACTION_SETUP</span> <span class="operator">=</span></span><br><span class="line">@@ -<span class="number">1522</span>,<span class="number">6</span> +<span class="number">1531</span>,<span class="number">12</span> @@ <span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CentralSurfacesImpl</span> <span class="keyword">extends</span> <span class="title class_">CoreStartable</span> <span class="keyword">implements</span></span><br><span class="line">             <span class="title class_">filter</span>.addAction(UnisocPowerManagerUtil.ACTION_POWEREX_SAVE_MODE_CHANGED);</span><br><span class="line">         &#125;</span><br><span class="line">         <span class="comment">/* @&#125; */</span></span><br><span class="line">+        <span class="comment">// Create by yeruilai 2024-8-22 10:19:38 Dynamically display hidden navigation bar and status bar</span></span><br><span class="line">+        filter.addAction(ACTION_HIDE_STATUS_BAR);</span><br><span class="line">+        filter.addAction(ACTION_SHOW_STATUS_BAR);</span><br><span class="line">+        filter.addAction(ACTION_HIDE_NAVIGATION_BAR);</span><br><span class="line">+        filter.addAction(ACTION_SHOW_NAVIGATION_BAR);</span><br><span class="line">+</span><br><span class="line">         mBroadcastDispatcher.registerReceiver(mBroadcastReceiver, filter, <span class="literal">null</span>, UserHandle.ALL);</span><br><span class="line">     &#125;</span><br><span class="line"> </span><br><span class="line">@@ -<span class="number">2543</span>,<span class="number">8</span> +<span class="number">2558</span>,<span class="number">8</span> @@ <span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CentralSurfacesImpl</span> <span class="keyword">extends</span> <span class="title class_">CoreStartable</span> implements</span><br><span class="line">     <span class="meta">@Override</span></span><br><span class="line">     <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">createAndAddWindows</span><span class="params">(<span class="meta">@Nullable</span> RegisterStatusBarResult result)</span> &#123;</span><br><span class="line">         makeStatusBarView(result);</span><br><span class="line">-        mNotificationShadeWindowController.attach();</span><br><span class="line">         mStatusBarWindowController.attach();</span><br><span class="line">+        mNotificationShadeWindowController.attach();</span><br><span class="line">     &#125;</span><br><span class="line"> </span><br><span class="line">     <span class="comment">// called by makeStatusbar and also by PhoneStatusBarView</span></span><br><span class="line">@@ -<span class="number">2870</span>,<span class="number">6</span> +<span class="number">2885</span>,<span class="number">29</span> @@ <span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CentralSurfacesImpl</span> <span class="keyword">extends</span> <span class="title class_">CoreStartable</span> implements</span><br><span class="line">                     &amp;&amp; mDataSaverController.isDataSaverEnabled()) &#123;</span><br><span class="line">                 mDataSaverController.setDataSaverEnabled(<span class="literal">false</span>);</span><br><span class="line">             &#125;</span><br><span class="line">+            <span class="comment">// Create by yeruilai 2024-8-22 10:19:38 Dynamically display hidden navigation bar and status bar</span></span><br><span class="line">+             <span class="keyword">else</span> <span class="keyword">if</span>(ACTION_HIDE_STATUS_BAR.equals(action))&#123;</span><br><span class="line">+                android.util.Log.d(<span class="string">&quot;yeruilai&quot;</span>,<span class="string">&quot;yeruilai:action=&quot;</span> + ACTION_HIDE_STATUS_BAR);</span><br><span class="line">+</span><br><span class="line">+                mStatusBarWindowController.hideStatusBar();</span><br><span class="line">+                SystemProperties.set(SYS_PROPERTY_STATUS_BAR, <span class="string">&quot;false&quot;</span>);</span><br><span class="line">+            &#125; <span class="keyword">else</span> <span class="keyword">if</span>(ACTION_SHOW_STATUS_BAR.equals(action))&#123;</span><br><span class="line">+                android.util.Log.d(<span class="string">&quot;yeruilai&quot;</span>,<span class="string">&quot;yeruilai:action=&quot;</span> + ACTION_SHOW_STATUS_BAR);</span><br><span class="line">+</span><br><span class="line">+                mStatusBarWindowController.showStatusBar();</span><br><span class="line">+                SystemProperties.set(SYS_PROPERTY_STATUS_BAR, <span class="string">&quot;true&quot;</span>);</span><br><span class="line">+            &#125; <span class="keyword">else</span> <span class="keyword">if</span>(ACTION_HIDE_NAVIGATION_BAR.equals(action))&#123;</span><br><span class="line">+                android.util.Log.d(<span class="string">&quot;yeruilai&quot;</span>,<span class="string">&quot;yeruilai:action=&quot;</span> + ACTION_HIDE_NAVIGATION_BAR);</span><br><span class="line">+</span><br><span class="line">+                mNavigationBarController.removeNavigationBars();</span><br><span class="line">+                SystemProperties.set(SYS_PROPERTY_NAVIGATION_BAR, <span class="string">&quot;false&quot;</span>);</span><br><span class="line">+            &#125; <span class="keyword">else</span> <span class="keyword">if</span>(ACTION_SHOW_NAVIGATION_BAR.equals(action))&#123;</span><br><span class="line">+                android.util.Log.d(<span class="string">&quot;yeruilai&quot;</span>,<span class="string">&quot;yeruilai:action=&quot;</span> + ACTION_SHOW_NAVIGATION_BAR);</span><br><span class="line">+</span><br><span class="line">+                createNavigationBar(<span class="literal">null</span>);</span><br><span class="line">+                SystemProperties.set(SYS_PROPERTY_NAVIGATION_BAR, <span class="string">&quot;true&quot;</span>);</span><br><span class="line">+            &#125;</span><br><span class="line">+</span><br><span class="line">             <span class="comment">/* @&#125; */</span></span><br><span class="line">             Trace.endSection();</span><br><span class="line">         &#125;</span><br><span class="line">diff --git a/frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/window/StatusBarWindowController.java b/frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/window/StatusBarWindowController.java</span><br><span class="line">old mode <span class="number">100644</span></span><br><span class="line"><span class="keyword">new</span> <span class="title class_">mode</span> <span class="number">100755</span></span><br><span class="line">index e0d780a5fcd..08b4628f4c5</span><br><span class="line">--- a/frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/window/StatusBarWindowController.java</span><br><span class="line">+++ b/frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/window/StatusBarWindowController.java</span><br><span class="line">@@ -<span class="number">316</span>,<span class="number">4</span> +<span class="number">316</span>,<span class="number">42</span> @@ <span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StatusBarWindowController</span> &#123;</span><br><span class="line">             mLpChanged.privateFlags &amp;= ~PRIVATE_FLAG_FORCE_SHOW_STATUS_BAR;</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line">+</span><br><span class="line">+    <span class="comment">/**</span></span><br><span class="line"><span class="comment">+     * Create by yeruilai 2024-8-22 10:23:59 </span></span><br><span class="line"><span class="comment">+     */</span></span><br><span class="line">+    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">apply</span><span class="params">(State state,<span class="type">boolean</span> isHideStatus)</span> &#123;</span><br><span class="line">+        <span class="keyword">if</span> (!mIsAttached) &#123;</span><br><span class="line">+            <span class="keyword">return</span>;</span><br><span class="line">+        &#125;</span><br><span class="line">+        applyForceStatusBarVisibleFlag(state);</span><br><span class="line">+        <span class="keyword">if</span> (!isHideStatus)&#123;</span><br><span class="line">+            applyHeight(state);</span><br><span class="line">+        &#125;</span><br><span class="line">+        <span class="keyword">if</span> (mLp != <span class="literal">null</span> &amp;&amp; mLp.copyFrom(mLpChanged) != <span class="number">0</span>) &#123;</span><br><span class="line">+            mWindowManager.updateViewLayout(mStatusBarWindowView, mLp);</span><br><span class="line">+        &#125;</span><br><span class="line">+    &#125;</span><br><span class="line">+</span><br><span class="line">+    <span class="comment">/**</span></span><br><span class="line"><span class="comment">+     * Create by yeruilai 2024-8-22 10:23:59 </span></span><br><span class="line"><span class="comment">+     */</span></span><br><span class="line">+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">showStatusBar</span><span class="params">()</span>&#123;</span><br><span class="line">+        apply(mCurrentState);</span><br><span class="line">+        mStatusBarWindowView.setVisibility(View.VISIBLE);</span><br><span class="line">+    &#125;</span><br><span class="line">+</span><br><span class="line">+    <span class="comment">/**</span></span><br><span class="line"><span class="comment">+     * Create by yeruilai 2024-8-22 10:23:59 </span></span><br><span class="line"><span class="comment">+     */</span></span><br><span class="line">+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">hideStatusBar</span><span class="params">()</span>&#123;</span><br><span class="line">+        mStatusBarWindowView.setVisibility(View.GONE);</span><br><span class="line">+        mLpChanged.height = <span class="number">0</span>;</span><br><span class="line">+        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">rot</span> <span class="operator">=</span> Surface.ROTATION_0; rot &lt;= Surface.ROTATION_270; rot++) &#123;</span><br><span class="line">+            mLpChanged.paramsForRotation[rot].height = <span class="number">0</span>;</span><br><span class="line">+        &#125;</span><br><span class="line">+        apply(mCurrentState,<span class="literal">true</span>);</span><br><span class="line">+    &#125;</span><br><span class="line">+</span><br><span class="line"> &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>添加相应的<strong>SELinux权限</strong>，代码示例如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">diff --git a/system/sepolicy/<span class="keyword">public</span>/platform_app.te b/system/sepolicy/<span class="keyword">public</span>/platform_app.te</span><br><span class="line">index 3f689d82481..21a1f30d29f <span class="number">100755</span></span><br><span class="line">--- a/system/sepolicy/<span class="keyword">public</span>/platform_app.te</span><br><span class="line">+++ b/system/sepolicy/<span class="keyword">public</span>/platform_app.te</span><br><span class="line">@@ -<span class="number">7</span>,<span class="number">3</span> +<span class="number">7</span>,<span class="number">5</span> @@ allow platform_app system_app_data_file:dir r_dir_perms;</span><br><span class="line"> allow platform_app system_app_data_file:file r_file_perms;</span><br><span class="line"> #redstone</span><br><span class="line"> type platform_app, domain;</span><br><span class="line">+</span><br><span class="line">+allow platform_app system_prop:property_service set;</span><br><span class="line">+</span><br><span class="line">diff --git a/system/sepolicy/prebuilts/api/<span class="number">33.0</span>/<span class="keyword">public</span>/platform_app.te b/system/sepolicy/prebuilts/api/<span class="number">33.0</span>/<span class="keyword">public</span>/platform_app.te</span><br><span class="line">index 3f689d82481..21a1f30d29f <span class="number">100755</span></span><br><span class="line">--- a/system/sepolicy/prebuilts/api/<span class="number">33.0</span>/<span class="keyword">public</span>/platform_app.te</span><br><span class="line">+++ b/system/sepolicy/prebuilts/api/<span class="number">33.0</span>/<span class="keyword">public</span>/platform_app.te</span><br><span class="line">@@ -<span class="number">7</span>,<span class="number">3</span> +<span class="number">7</span>,<span class="number">5</span> @@ allow platform_app system_app_data_file:dir r_dir_perms;</span><br><span class="line"> allow platform_app system_app_data_file:file r_file_perms;</span><br><span class="line"> #redstone</span><br><span class="line"> type platform_app, domain;</span><br><span class="line">+</span><br><span class="line">+allow platform_app system_prop:property_service set;</span><br><span class="line">+</span><br></pre></td></tr></table></figure>
+
+
+      
+      <blockquote>
+        
+        <strong>本文链接：</strong><br><a href="http://longzhiye.top/2024/08/24/2024-08-24/">http://longzhiye.top/2024/08/24/2024-08-24/</a>
+      </blockquote>
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Android/" rel="tag">Android</a><a class="mdui-ripple article_tags-link" href="/tags/SystemUI/" rel="tag">SystemUI</a><a class="mdui-ripple article_tags-link" href="/tags/framework/" rel="tag">framework</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2024/09/01/2024-09-01/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android13 屏蔽ANR和Crash弹窗'}">上一篇</span>
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2024/03/16/2024-03-16/">
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android13 开机时间优化'}">下一篇</span>
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+
+
+
+</main>
+  <footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="http://github.com/longzhiye" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe7ab;</i></a>
+    
+    
+    
+      <a href="https://www.zhihu.com/people/long-zhi-xie-61" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe6c0;</i></a>
+    
+    
+    
+      <a href="tencent://tencent:////message/?uin=951898105&Menu=yes" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2022 - 2025 龙之叶<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>
+    <br>
+      <span id="busuanzi_container_site_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_site_pv"></span></span> &nbsp;&nbsp;
+      <span id="busuanzi_container_site_uv" style="display: none;"><i class="iconfont">&#xe601;</i> <span id="busuanzi_value_site_uv"></span></span>
+    
+  </div>
+</footer>
+
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+  
+<script src="/custom.js"></script>
+
+</body>
+</html>

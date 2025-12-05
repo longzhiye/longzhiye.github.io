@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>android10.0(Q) root MTK 6765 user版本打开root权限 | 龙之叶的博客</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="alternate" href="/atom.xml" title="龙之叶的博客" type="application/atom+xml">
+  <meta name="description" content="android10.0(Q) root MTK 6765 user版本打开root权限">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android10.0(Q) root MTK 6765 user版本打开root权限">
+<meta property="og:url" content="http://longzhiye.top/2023/10/15/2023-10-15/index.html">
+<meta property="og:site_name" content="龙之叶的博客">
+<meta property="og:description" content="android10.0(Q) root MTK 6765 user版本打开root权限">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://longzhiye.top/images/20231015/20231015001.png">
+<meta property="article:published_time" content="2023-10-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-04T08:39:58.953Z">
+<meta property="article:author" content="龙之叶">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="AndroidStudio">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://longzhiye.top/images/20231015/20231015001.png">
+
+  <meta name="keywords" content=",Android,AndroidStudio">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="龙之叶的博客">
+  <meta name="msapplication-starturl" content="http://longzhiye.top/2023/10/15/2023-10-15/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="龙之叶的博客">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <link rel="canonical" href="http://longzhiye.top/2023/10/15/2023-10-15/">
+  
+
+  
+  
+
+  
+  
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/custom.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(!a){document.getElementsByTagName("body")[0].className+=" mdui-drawer-body-left"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">龙之叶的博客</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+	<!--
+    <a href="/atom.xml" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'RSS'}"><i class="mdui-icon material-icons">rss_feed</i></a>
+	-->
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(a){document.getElementById("sidebar").className+=" mdui-drawer-close"};</script>
+  <div class="mdui-grid-tile">
+    <img src="/images/banner.png" style="height: 160px;">
+    <img src="/images/avatar.png" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;background-color:#fff;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">龙之叶</div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>生命不息，折腾不止</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:longzhiye163@163.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'longzhiye163@163.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-0");if(a){document.getElementsByClassName("mdui-collapse-item")[0].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">archive</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2025/10/">十月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/09/">九月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/08/">八月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/07/">七月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/06/">六月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/03/">三月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/02/">二月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/01/">一月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/10/">十月 2024<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/09/">九月 2024<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/08/">八月 2024<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/03/">三月 2024<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/02/">二月 2024<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/01/">一月 2024<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/12/">十二月 2023<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/11/">十一月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/10/">十月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/09/">九月 2023<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/08/">八月 2023<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/06/">六月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/05/">五月 2023<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/04/">四月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/03/">三月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/02/">二月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/09/">九月 2022<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/04/">四月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/03/">三月 2017<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/02/">二月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/01/">一月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/12/">十二月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/11/">十一月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/10/">十月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/08/">八月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-1");if(a){document.getElementsByClassName("mdui-collapse-item")[1].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">class</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">108</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E8%B5%84%E8%AE%AF/">资讯<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E9%80%9A%E7%9F%A5/">通知<span class="mdui-ripple sidebar_archives-count">4</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-2");if(a){document.getElementsByClassName("mdui-collapse-item")[2].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/ANR/" rel="tag">ANR<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/APP/" rel="tag">APP<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android/" rel="tag">Android<span class="mdui-ripple sidebar_archives-count">98</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android12/" rel="tag">Android12<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android13/" rel="tag">Android13<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android14/" rel="tag">Android14<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android16/" rel="tag">Android16<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AndroidStudio/" rel="tag">AndroidStudio<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AutoDraw/" rel="tag">AutoDraw<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Build/" rel="tag">Build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Crash/" rel="tag">Crash<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Foxmail/" rel="tag">Foxmail<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Framework/" rel="tag">Framework<span class="mdui-ripple sidebar_archives-count">20</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GPS%E8%BD%A8%E8%BF%B9%E5%9B%BE/" rel="tag">GPS轨迹图<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Git/" rel="tag">Git<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GitHub/" rel="tag">GitHub<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Google/" rel="tag">Google<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Java/" rel="tag">Java<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Kernel/" rel="tag">Kernel<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Launcher/" rel="tag">Launcher<span class="mdui-ripple sidebar_archives-count">17</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Lib/" rel="tag">Lib<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Linux/" rel="tag">Linux<span class="mdui-ripple sidebar_archives-count">18</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Markdown/" rel="tag">Markdown<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Material-Design/" rel="tag">Material Design<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OS-X/" rel="tag">OS X<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OTA/" rel="tag">OTA<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/QuickTime/" rel="tag">QuickTime<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SSH/" rel="tag">SSH<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Settings/" rel="tag">Settings<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SystemUI/" rel="tag">SystemUI<span class="mdui-ripple sidebar_archives-count">19</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/UAC/" rel="tag">UAC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Ubuntu/" rel="tag">Ubuntu<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WPS/" rel="tag">WPS<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Wifi/" rel="tag">Wifi<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WindTerm/" rel="tag">WindTerm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows/" rel="tag">Windows<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows-11/" rel="tag">Windows 11<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/androidmk/" rel="tag">androidmk<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/blog/" rel="tag">blog<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/build/" rel="tag">build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/feel/" rel="tag">feel<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/framework/" rel="tag">framework<span class="mdui-ripple sidebar_archives-count">58</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/inotify/" rel="tag">inotify<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/life/" rel="tag">life<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/ninja/" rel="tag">ninja<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/rsync/" rel="tag">rsync<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/standard/" rel="tag">standard<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/test/" rel="tag">test<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1/" rel="tag">企业微信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E7%94%9F%E6%B4%BB%E6%84%9F%E6%82%9F/" rel="tag">生活感悟<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+      <a href="/timeline" class="mdui-list-item mdui-ripple">时间轴</a>
+    
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-3");if(a){document.getElementsByClassName("mdui-collapse-item")[3].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+          <a href="http://www.niemingzhao.top" target="_blank" class="mdui-list-item mdui-p-l-2 mdui-text-color-theme-accent mdui-ripple" style="justify-content: center;">聂明照的博客</a>
+        
+        
+      </div>
+    </div>
+  </div>
+</aside>
+
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <style>#main article .mdui-card-content .text-center{text-align:center!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-17.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">android10.0(Q) root MTK 6765 user版本打开root权限</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2023-10-15 / <i class="iconfont">&#xe601;</i> 龙之叶 &nbsp;&nbsp; <span id="busuanzi_container_page_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_page_pv"></span></span></div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#qrcode', align: 'right'}"><i class="mdui-icon material-icons">devices</i></button>
+          <ul class="mdui-menu" id="qrcode">
+            
+              <li class="mdui-menu-item"><a class="mdui-text-center mdui-ripple">发送到手机</a></li>
+            
+            <li class="mdui-menu-item" disabled>
+              
+                <img src="//qr.liantu.com/api.php?w=246&m=10&text=http://longzhiye.top/2023/10/15/2023-10-15/">
+              
+            </li>
+          </ul>
+        
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="mdui-icon material-icons">share</i></button>
+          <ul class="mdui-menu" id="share_menu">
+            <li class="mdui-menu-item">
+              <a href="https://service.weibo.com/share/share.php?appkey=&title=android10.0(Q) root MTK 6765 user版本打开root权限&url=http://longzhiye.top/2023/10/15/2023-10-15/&pic=http://longzhiye.top/images/favicon.png&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://twitter.com/intent/tweet?text=android10.0(Q) root MTK 6765 user版本打开root权限&url=http://longzhiye.top/2023/10/15/2023-10-15/&via=龙之叶" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=http://longzhiye.top/2023/10/15/2023-10-15/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://plus.google.com/share?url=http://longzhiye.top/2023/10/15/2023-10-15/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://longzhiye.top/2023/10/15/2023-10-15/&title=android10.0(Q) root MTK 6765 user版本打开root权限" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://connect.qq.com/widget/shareqq/index.html?site=龙之叶的博客&title=android10.0(Q) root MTK 6765 user版本打开root权限&pics=http://longzhiye.top/images/favicon.png&url=http://longzhiye.top/2023/10/15/2023-10-15/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://telegram.me/share/url?url=http://longzhiye.top/2023/10/15/2023-10-15/&text=android10.0(Q) root MTK 6765 user版本打开root权限" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+            </li>
+          </ul>
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>相比较 Android8.1、9.0 而言，Android10.0 版本 的 root变得相当麻烦，10.0 中引入了动态分区机制，同样的要想完全 adb root，需要 fastboot 解锁，然后关闭 verity 才能 adb remount 成功。我尝试和之前一样修改 fstab.in.mt6765 中的 ro 和 rw 初始值，容易导致无法正常开机，在这耗费了很长时间，就暂时先跳过吧，apk root 是 ok的。</p>
+<h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Android版本</td>
+<td>10.0</td>
+</tr>
+<tr>
+<td>平台</td>
+<td>MTK6766</td>
+</tr>
+</tbody></table>
+<h3 id="先放一张图"><a href="#先放一张图" class="headerlink" title="先放一张图"></a>先放一张图</h3><p><img src="/images/20231015/20231015001.png"></p>
+<h3 id="修改方案"><a href="#修改方案" class="headerlink" title="修改方案"></a>修改方案</h3><p>上面的图就不用我多说了吧，分别用了 ROOT检测工具、RE文件管理器测试，只要 root 成功都有明显的提示，总共修改 12 个文件，新增 3 个文件，一共 15 个</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">modified:   build/make/core/main.mk</span><br><span class="line">modified:   device/mediatek/sepolicy/basic/non_plat/file_contexts</span><br><span class="line">modified:   device/mediateksample/k62v1_64_bsp/device.mk</span><br><span class="line">modified:   vendor/mediatek/proprietary/bootable/bootloader/preloader/custom/k62v1_64_bsp/k62v1_64_bsp.mk</span><br><span class="line">modified:   system/core/adb/Android.bp</span><br><span class="line">modified:   system/core/adb/daemon/main.cpp</span><br><span class="line">modified:   system/core/init/selinux.cpp</span><br><span class="line">modified:   system/core/libcutils/fs_config.cpp</span><br><span class="line">modified:   system/core/rootdir/init.rc</span><br><span class="line">modified:   system/sepolicy/Android.mk</span><br><span class="line">modified:   system/sepolicy/prebuilts/api/29.0/public/domain.te</span><br><span class="line">modified:   system/sepolicy/public/domain.te</span><br><span class="line"></span><br><span class="line">add device/mediatek/sepolicy/basic/non_plat/suproce.te</span><br><span class="line">add system/extras/su/su</span><br><span class="line">add system/extras/su/suproce.sh</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-让进程名称在-AS-Logcat-中可见，通过修改-ro-adb-secure-和-ro-secure"><a href="#1-让进程名称在-AS-Logcat-中可见，通过修改-ro-adb-secure-和-ro-secure" class="headerlink" title="1.让进程名称在 AS Logcat 中可见，通过修改 ro.adb.secure 和 ro.secure"></a>1.让进程名称在 AS Logcat 中可见，通过修改 ro.adb.secure 和 ro.secure</h4><p>ps：这步不是必须的，目的只是在 logcat 中可见进程 pid 和包名，而且打开 USB 调试时默认授权，不再弹授权框</p>
+<p><strong>build/make/core/main.mk</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"> tags_to_install :=</span><br><span class="line"> ifneq (,$(user_variant))</span><br><span class="line">   <span class="comment"># Target is secure in user builds.</span></span><br><span class="line">-  ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=1</span><br><span class="line">+  <span class="comment"># ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=1</span></span><br><span class="line">+  ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=0</span><br><span class="line">   ADDITIONAL_DEFAULT_PROPERTIES += security.perf_harden=1</span><br><span class="line"> </span><br><span class="line">   ifeq ($(user_variant),user)</span><br><span class="line">-    ADDITIONAL_DEFAULT_PROPERTIES += ro.adb.secure=1</span><br><span class="line">+    <span class="comment"># ADDITIONAL_DEFAULT_PROPERTIES += ro.adb.secure=1</span></span><br><span class="line">+    ADDITIONAL_DEFAULT_PROPERTIES += ro.adb.secure=0</span><br><span class="line">   endif</span><br><span class="line"> </span><br><span class="line">   ifeq ($(user_variant),userdebug)</span><br><span class="line">@@ -251,7 +253,7 @@ ifneq (,$(user_variant))</span><br><span class="line">     tags_to_install += debug</span><br><span class="line">   <span class="keyword">else</span></span><br><span class="line">     <span class="comment"># Disable debugging in plain user builds.</span></span><br><span class="line">-    enable_target_debugging :=</span><br><span class="line">+    <span class="comment"># enable_target_debugging :=</span></span><br><span class="line">   endif</span><br><span class="line"> </span><br><span class="line">   <span class="comment"># Disallow mock locations by default for user builds</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-修改-SELinux权限为-Permissive"><a href="#2-修改-SELinux权限为-Permissive" class="headerlink" title="2.修改 SELinux权限为 Permissive"></a>2.修改 SELinux权限为 Permissive</h4><p>SELinux 常用状态有两个 Permissive 和 Enforcing，通过 adb shell getenforce 可查看当前所处模式<br>10.0 改到了 selinux.cpp 中</p>
+<p><strong>system/core/init/selinux.cpp</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> bool <span class="function"><span class="title">IsEnforcing</span></span>() &#123;</span><br><span class="line">+    <span class="built_in">return</span> <span class="literal">false</span>;</span><br><span class="line">     <span class="keyword">if</span> (ALLOW_PERMISSIVE_SELINUX) &#123;</span><br><span class="line">         <span class="built_in">return</span> StatusFromCmdline() == SELINUX_ENFORCING;</span><br><span class="line">     &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-关闭-DM-verity"><a href="#3-关闭-DM-verity" class="headerlink" title="3.关闭 DM-verity"></a>3.关闭 DM-verity</h4><p><strong>vendor/mediatek/proprietary/bootable/bootloader/preloader/custom/k62v1_64_bsp/k62v1_64_bsp.mk</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> TARGET=k62v1_64_bsp</span><br><span class="line"> MTK_PLATFORM=MT6765</span><br><span class="line"> MTK_SEC_CHIP_SUPPORT=<span class="built_in">yes</span></span><br><span class="line">-MTK_SEC_USBDL=ATTR_SUSBDL_ONLY_ENABLE_ON_SCHIP</span><br><span class="line">-MTK_SEC_BOOT=ATTR_SBOOT_ENABLE</span><br><span class="line">+MTK_SEC_USBDL=ATTR_SUSBDL_DISABLE</span><br><span class="line">+MTK_SEC_BOOT=ATTR_SBOOT_DISABLE</span><br><span class="line"> MTK_SEC_MODEM_AUTH=no</span><br><span class="line"> MTK_SEC_SECRO_AC_SUPPORT=<span class="built_in">yes</span></span><br><span class="line"> <span class="comment"># Platform</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="4-增加-su-相关，确保-apk-root-权限"><a href="#4-增加-su-相关，确保-apk-root-权限" class="headerlink" title="4.增加 su 相关，确保 apk root 权限"></a>4.增加 su 相关，确保 apk root 权限</h4><p>apk 获取 root 权限，需要内置 su 文件，参考之前 8.1 的做法，在 init.rc 中 boot_completed 时执行脚本</p>
+<p>开机执行脚本的命令可直接加在 <strong>system/core/rootdir/init.rc</strong></p>
+<p>开机脚本执行是否成功，可通过 adb shell dmesg &gt; dmesg.txt 抓取 init 的日志，搜索是否报错，或者缺少权限。</p>
+<p>boot_completed 启动完成时，start suproce</p>
+<p><strong>system/core/rootdir/init.rc</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">     class_reset main</span><br><span class="line"> </span><br><span class="line">+service suproce  /system/bin/suproce.sh</span><br><span class="line">+    class main</span><br><span class="line">+    user root</span><br><span class="line">+    group root</span><br><span class="line">+    oneshot</span><br><span class="line">+    seclabel u:object_r:suproce_exec:s0</span><br><span class="line">+</span><br><span class="line">+</span><br><span class="line"> on property:sys.boot_completed=1</span><br><span class="line">+    start suproce</span><br><span class="line">     bootchart stop</span><br></pre></td></tr></table></figure>
+
+<p><strong>system/extras/su/suproce.sh</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/system/bin/sh</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">mount -o rw,remount /system</span><br><span class="line"><span class="built_in">chmod</span> 06755 su</span><br><span class="line">su --daemon</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;su daemon done.&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>device/mediatek/sepolicy/basic/non_plat/file_contexts</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">#hidl process merging</span></span><br><span class="line"> /(system\/vendor|vendor)/bin/hw/merged_hal_service          u:object_r:merged_hal_service_exec:s0</span><br><span class="line">+</span><br><span class="line">+<span class="comment">#suproce</span></span><br><span class="line">+/system/bin/suproce.sh          u:object_r:suproce_exec:s0</span><br></pre></td></tr></table></figure>
+
+<p>此处写法有变动，suproce.te 中要加 system_file_type，不然编译时报错</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">out/target/product/k62v1_64_bsp/obj/ETC/sepolicy_tests_intermediates/sepolicy_tests )<span class="string">&quot;</span></span><br><span class="line"><span class="string">The following types on /system/ must be associated with the &quot;</span>system_file_type<span class="string">&quot; attribute: suproce_exec</span></span><br><span class="line"><span class="string">checkpolicy:  error(s) encountered while parsing configuration</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>device/mediatek/sepolicy/basic/non_plat/suproce.te</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">type</span> suproce, coredomain;</span><br><span class="line"> </span><br><span class="line"><span class="comment">#type suproce_exec, exec_type, vendor_file_type, file_type;</span></span><br><span class="line"><span class="built_in">type</span>  suproce_exec, exec_type, file_type, system_file_type;</span><br><span class="line"> </span><br><span class="line"><span class="comment"># permissive suproce;</span></span><br><span class="line"><span class="comment"># allow shell suproce_exec:file &#123; read open getattr execute &#125;;</span></span><br><span class="line"> </span><br><span class="line">init_daemon_domain(suproce);</span><br></pre></td></tr></table></figure>
+
+<p>改完后继续编译，再次出现新错误，user 版本不允许 permissive domains</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[ 19% 1135/5824] build out/target/product/k62v1_64_bsp/obj/ETC/sepolicy.recovery_intermediates/sepolicy</span><br><span class="line">FAILED: out/target/product/k62v1_64_bsp/obj/ETC/sepolicy.recovery_intermediates/sepolicy</span><br><span class="line">/bin/bash -c <span class="string">&quot;(ASAN_OPTIONS=detect_leaks=0 out/host/linux-x86/bin/checkpolicy -M -c 		30 -o out/target/product/k62v1_64_bsp/obj/ETC/sepolicy.recovery_intermediates/sepolicy.tmp out/target/product/k62v1_64_bsp/obj/ETC/sepolicy.recovery_intermediates/sepolicy.recovery.conf ) &amp;&amp; (out/host/linux-x86/bin/sepolicy-analyze out/target/product/k62v1_64_bsp/obj/ETC/sepolicy.recovery_intermediates/sepolicy.tmp permissive &gt; out/target/product/k62v1_64_bsp/obj/ETC/sepolicy.recovery_intermediates/sepolicy.permissivedomains ) &amp;&amp; (if [ \&quot;user\&quot; = \&quot;user\&quot; -a -s out/target/product/k62v1_64_bsp/obj/ETC/sepolicy.recovery_intermediates/sepolicy.permissivedomains ]; then 		echo \&quot;==========\&quot; 1&gt;&amp;2; 		echo \&quot;ERROR: permissive domains not allowed in user builds\&quot; 1&gt;&amp;2; 		echo \&quot;List of invalid domains:\&quot; 1&gt;&amp;2; 		cat out/target/product/k62v1_64_bsp/obj/ETC/sepolicy.recovery_intermediates/sepolicy.permissivedomains 1&gt;&amp;2; 		exit 1; 		fi ) &amp;&amp; (mv out/target/product/k62v1_64_bsp/obj/ETC/sepolicy.recovery_intermediates/sepolicy.tmp out/target/product/k62v1_64_bsp/obj/ETC/sepolicy.recovery_intermediates/sepolicy )&quot;</span></span><br><span class="line">device/mediatek/sepolicy/bsp/plat_private/untrusted_app_all.te:7:WARNING <span class="string">&#x27;unrecognized character&#x27;</span> at token <span class="string">&#x27;&#x27;</span> on line 53889:</span><br><span class="line"><span class="comment"># Purpose: Make app can get phoneEx</span></span><br></pre></td></tr></table></figure>
+
+<p>注释下面文件中的 exit 1</p>
+<p><strong>system/sepolicy/Android.mk</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">@@ -518,7 +518,7 @@ $(LOCAL_BUILT_MODULE): $(HOST_OUT_EXECUTABLES)/secilc $(HOST_OUT_EXECUTABLES)/se</span><br><span class="line">                <span class="built_in">echo</span> <span class="string">&quot;ERROR: permissive domains not allowed in user builds&quot;</span> 1&gt;&amp;2; \</span><br><span class="line">                <span class="built_in">echo</span> <span class="string">&quot;List of invalid domains:&quot;</span> 1&gt;&amp;2; \</span><br><span class="line">                <span class="built_in">cat</span> <span class="variable">$@</span>.permissivedomains 1&gt;&amp;2; \</span><br><span class="line">-               <span class="built_in">exit</span> 1; \</span><br><span class="line">+               <span class="comment"># exit 1; \</span></span><br><span class="line">                <span class="keyword">fi</span></span><br><span class="line">        $(hide) <span class="built_in">mv</span> <span class="variable">$@</span>.tmp <span class="variable">$@</span></span><br><span class="line"> </span><br><span class="line">@@ -562,7 +562,7 @@ $(LOCAL_BUILT_MODULE): $(sepolicy.recovery.conf) $(HOST_OUT_EXECUTABLES)/checkpo</span><br><span class="line">                <span class="built_in">echo</span> <span class="string">&quot;ERROR: permissive domains not allowed in user builds&quot;</span> 1&gt;&amp;2; \</span><br><span class="line">                <span class="built_in">echo</span> <span class="string">&quot;List of invalid domains:&quot;</span> 1&gt;&amp;2; \</span><br><span class="line">                <span class="built_in">cat</span> <span class="variable">$@</span>.permissivedomains 1&gt;&amp;2; \</span><br><span class="line">-               <span class="built_in">exit</span> 1; \</span><br><span class="line">+               <span class="comment"># exit 1; \</span></span><br><span class="line">                <span class="keyword">fi</span></span><br><span class="line">        $(hide) <span class="built_in">mv</span> <span class="variable">$@</span>.tmp <span class="variable">$@</span></span><br></pre></td></tr></table></figure>
+
+<p>再重新编译，又报错，卧底马，什么情况, 在 <strong>system/sepolicy/public/domain.te</strong> 中 335 行进行了权限检查</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">libsepol.report_assertion_extended_permissions: neverallowxperm on line 335 of system/sepolicy/public/domain.te (or line 11735 of policy.conf) violated by allow aee_aed suproce_exec:file &#123; ioctl &#125;;</span><br><span class="line">libsepol.report_assertion_extended_permissions: neverallowxperm on line 335 of system/sepolicy/public/domain.te (or line 11735 of policy.conf) violated by allow crash_dump suproce_exec:file &#123; ioctl &#125;;</span><br><span class="line">libsepol.check_assertions: 2 neverallow failures occurred</span><br><span class="line">Error <span class="keyword">while</span> expanding policy</span><br><span class="line"></span><br><span class="line">libsepol.report_assertion_extended_permissions: neverallowxperm on line 335 of system/sepolicy/public/domain.te (or line 11642 of policy.conf) violated by allow aee_aed suproce_exec:file &#123; ioctl &#125;;</span><br><span class="line">libsepol.report_assertion_extended_permissions: neverallowxperm on line 335 of system/sepolicy/public/domain.te (or line 11642 of policy.conf) violated by allow crash_dump suproce_exec:file &#123; ioctl &#125;;</span><br><span class="line">libsepol.check_assertions: 2 neverallow failures occurred</span><br><span class="line">Error <span class="keyword">while</span> expanding policy</span><br></pre></td></tr></table></figure>
+
+<p><strong>system/sepolicy/public/domain.te</strong><br><strong>system/sepolicy/prebuilts/api/29.0/public/domain.te</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># All ioctls on file-like objects (except chr_file and blk_file) and</span></span><br><span class="line"><span class="comment"># sockets must be restricted to a whitelist.</span></span><br><span class="line"><span class="comment"># neverallowxperm * *:&#123; dir notdevfile_class_set socket_class_set blk_file &#125; ioctl &#123; 0 &#125;;</span></span><br></pre></td></tr></table></figure>
+
+<p>直接将 neverallowxperm * *:{ dir notdevfile_class_set socket_class_set blk_file } ioctl { 0 }; 这行注释就行，不过需要两个文件都注释，</p>
+<p>开始按照忽略原则将 aee_aed、crash_dump 通过 - 的方式修改，又报其它错误(宝宝心里苦啊)</p>
+<p>*neverallowxperm { * -aee_aed -crash_dump } :{ dir notdevfile_class_set socket_class_set blk_file } ioctl { 0 }; 这样行不通</p>
+<p>拷贝 su 文件和开机脚本 suproce.sh 到 system/bin 目录下<br><strong>device/mediateksample/k62v1_64_bsp/device.mk</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@@ -19,6 +19,11 @@ PRODUCT_COPY_FILES += $(LOCAL_PATH)/sbk-kpd.kl:system/usr/keylayout/sbk-kpd.kl:m</span><br><span class="line">                       $(LOCAL_PATH)/sbk-kpd.kcm:system/usr/keychars/sbk-kpd.kcm:mtk</span><br><span class="line"> endif</span><br><span class="line"> </span><br><span class="line">+PRODUCT_COPY_FILES += \</span><br><span class="line">+       system/extras/su/su:system/bin/su \</span><br><span class="line">+       system/extras/su/suproce.sh:system/bin/suproce.sh</span><br></pre></td></tr></table></figure>
+
+<p>给 su 文件增加权限</p>
+<p><strong>system/core/libcutils/fs_config.cpp</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@@ <span class="number">-166</span>,<span class="number">7</span> +<span class="number">168</span>,<span class="number">9</span> @@ <span class="type">static</span> <span class="type">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">fs_path_config</span> <span class="title">android_files</span>[] =</span> &#123;</span><br><span class="line">     <span class="comment">// the following two files are INTENTIONALLY set-uid, but they</span></span><br><span class="line">     <span class="comment">// are NOT included on user builds.</span></span><br><span class="line">     &#123; <span class="number">06755</span>, AID_ROOT,      AID_ROOT,      <span class="number">0</span>, <span class="string">&quot;system/xbin/procmem&quot;</span> &#125;,</span><br><span class="line">-    &#123; <span class="number">04750</span>, AID_ROOT,      AID_SHELL,     <span class="number">0</span>, <span class="string">&quot;system/xbin/su&quot;</span> &#125;,</span><br><span class="line">+    &#123; <span class="number">06755</span>, AID_ROOT,      AID_SHELL,     <span class="number">0</span>, <span class="string">&quot;system/bin/su&quot;</span> &#125;,</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line">     <span class="comment">// the following files have enhanced capabilities and ARE included</span></span><br><span class="line">     <span class="comment">// in user builds.</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5-解锁-fastboot，并关闭-verity-按需操作"><a href="#5-解锁-fastboot，并关闭-verity-按需操作" class="headerlink" title="5.解锁 fastboot，并关闭 verity 按需操作"></a>5.解锁 fastboot，并关闭 verity 按需操作</h4><p><strong>system/core/adb/Android.bp</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">@@ -76,7 +76,15 @@ cc_defaults &#123;</span><br><span class="line">     name: <span class="string">&quot;adbd_defaults&quot;</span>,</span><br><span class="line">     defaults: [<span class="string">&quot;adb_defaults&quot;</span>],</span><br><span class="line"> </span><br><span class="line">-    cflags: [<span class="string">&quot;-UADB_HOST&quot;</span>, <span class="string">&quot;-DADB_HOST=0&quot;</span>],</span><br><span class="line">+    //cflags: [<span class="string">&quot;-UADB_HOST&quot;</span>, <span class="string">&quot;-DADB_HOST=0&quot;</span>],</span><br><span class="line">+    cflags: [</span><br><span class="line">+        <span class="string">&quot;-UADB_HOST&quot;</span>,</span><br><span class="line">+        <span class="string">&quot;-DADB_HOST=0&quot;</span>,</span><br><span class="line">+        <span class="string">&quot;-UALLOW_ADBD_ROOT&quot;</span>,</span><br><span class="line">+        <span class="string">&quot;-DALLOW_ADBD_ROOT=1&quot;</span>,</span><br><span class="line">+        <span class="string">&quot;-DALLOW_ADBD_DISABLE_VERITY&quot;</span>,</span><br><span class="line">+        <span class="string">&quot;-DALLOW_ADBD_NO_AUTH&quot;</span>,</span><br><span class="line">+    ],</span><br><span class="line">     product_variables: &#123;</span><br><span class="line">         debuggable: &#123;</span><br><span class="line">             cflags: [</span><br></pre></td></tr></table></figure>
+
+<p><strong>system/core/adb/daemon/main.cpp</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">@@ -63,12 +63,13 @@ static inline bool <span class="function"><span class="title">is_device_unlocked</span></span>() &#123;</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> static bool <span class="function"><span class="title">should_drop_capabilities_bounding_set</span></span>() &#123;</span><br><span class="line">-    <span class="keyword">if</span> (ALLOW_ADBD_ROOT || is_device_unlocked()) &#123;</span><br><span class="line">+    /*<span class="keyword">if</span> (ALLOW_ADBD_ROOT || is_device_unlocked()) &#123;</span><br><span class="line">         <span class="keyword">if</span> (__android_log_is_debuggable()) &#123;</span><br><span class="line">             <span class="built_in">return</span> <span class="literal">false</span>;</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line">-    <span class="built_in">return</span> <span class="literal">true</span>;</span><br><span class="line">+    <span class="built_in">return</span> <span class="literal">true</span>;*/</span><br><span class="line">+    <span class="built_in">return</span> <span class="literal">false</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> static bool <span class="function"><span class="title">should_drop_privileges</span></span>() &#123;</span><br></pre></td></tr></table></figure>
+
+<p>解锁时可能音量上键不生效，那需要进行对调</p>
+<p><strong>vendor/mediatek/proprietary/bootable/bootloader/lk/app/mt_boot/sec_unlock.c</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">        unlock_warranty();</span><br><span class="line"> </span><br><span class="line">        <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">-               <span class="keyword">if</span> (mtk_detect_key(MT65XX_MENU_SELECT_KEY)) &#123; <span class="comment">//VOL_UP</span></span><br><span class="line">+               <span class="comment">//if (mtk_detect_key(MT65XX_MENU_SELECT_KEY)) &#123; //VOL_UP</span></span><br><span class="line">+               <span class="keyword">if</span> (mtk_detect_key(MT65XX_MENU_OK_KEY)) &#123; <span class="comment">//VOL_DOWN</span></span><br><span class="line">                        fastboot_info(<span class="string">&quot;Start unlock flow\n&quot;</span>);</span><br><span class="line">                        <span class="comment">//Invoke security check after confirming &quot;yes&quot; by user</span></span><br><span class="line">                        ret = fastboot_get_unlock_perm(&amp;unlock_allowed);</span><br><span class="line">@@ <span class="number">-374</span>,<span class="number">7</span> +<span class="number">375</span>,<span class="number">8</span> @@ <span class="type">void</span> <span class="title function_">fastboot_oem_unlock</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *arg, <span class="type">void</span> *data, <span class="type">unsigned</span> sz)</span></span><br><span class="line">                                <span class="title function_">fastboot_okay</span><span class="params">(<span class="string">&quot;&quot;</span>)</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">-               &#125; <span class="keyword">else</span> <span class="keyword">if</span> (mtk_detect_key(MT65XX_MENU_OK_KEY)) &#123; <span class="comment">//VOL_DOWN</span></span><br><span class="line">+               <span class="comment">//&#125; else if (mtk_detect_key(MT65XX_MENU_OK_KEY)) &#123; //VOL_DOWN</span></span><br><span class="line">+               &#125; <span class="keyword">else</span> <span class="keyword">if</span> (mtk_detect_key(MT65XX_MENU_SELECT_KEY)) &#123; <span class="comment">//VOL_UP</span></span><br><span class="line">                        video_printf(<span class="string">&quot;return to fastboot in 3s\n&quot;</span>);</span><br><span class="line">                        mdelay(<span class="number">3000</span>);</span><br><span class="line">                        fastboot_boot_menu();</span><br></pre></td></tr></table></figure>
+
+<p>去除 oem 解锁后每次开机提示 <strong>Your device has been unlocked and can’t be trusted</strong> 警告字眼</p>
+<p><strong>vendor/mediatek/proprietary/bootable/bootloader/lk/platform/common/boot/vboot_state.c</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">@@ <span class="number">-133</span>,<span class="number">9</span> +<span class="number">133</span>,<span class="number">10</span> @@ <span class="type">int</span> <span class="title function_">orange_state_warning</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line"> </span><br><span class="line">        <span class="title function_">video_clean_screen</span><span class="params">()</span>;</span><br><span class="line">        video_set_cursor(video_get_rows() / <span class="number">2</span>, <span class="number">0</span>);</span><br><span class="line">-       video_printf(title_msg);</span><br><span class="line">-       video_printf(<span class="string">&quot;Your device has been unlocked and can&#x27;t be trusted\n&quot;</span>);</span><br><span class="line">-       video_printf(<span class="string">&quot;Your device will boot in 5 seconds\n&quot;</span>);</span><br><span class="line">+       <span class="comment">//20191206  annotaion </span></span><br><span class="line">+       <span class="comment">// video_printf(title_msg);</span></span><br><span class="line">+       <span class="comment">// video_printf(&quot;Your device has been unlocked and can&#x27;t be trusted\n&quot;);</span></span><br><span class="line">+       <span class="comment">// video_printf(&quot;Your device will boot in 5 seconds\n&quot;);</span></span><br><span class="line">        mtk_wdt_restart();</span><br><span class="line">        mdelay(<span class="number">5000</span>);</span><br><span class="line">        mtk_wdt_restart();</span><br></pre></td></tr></table></figure>
+
+<p>获取 adb root 权限, user 版本目前还不能 remount 成功， userdebug 版本可成功 remount，</p>
+<p>后续 user 版本 adb 成功后会持续更新，以下是操作比对</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">=user==========</span><br><span class="line">C:&gt;adb root</span><br><span class="line"></span><br><span class="line">C:&gt;adb remount</span><br><span class="line">/system/bin/remount exited with status 2</span><br><span class="line">remount failed</span><br><span class="line"></span><br><span class="line">C:&gt;adb disable-verity</span><br><span class="line">Device is locked. Please unlock the device first</span><br><span class="line"></span><br><span class="line">C:&gt;adb reboot bootloader</span><br><span class="line"></span><br><span class="line">C:&gt;fastboot flashing unlock</span><br><span class="line">…</span><br><span class="line">(bootloader) Start unlock flow</span><br><span class="line"></span><br><span class="line">OKAY [ 12.394s]</span><br><span class="line">finished. total time: 12.398s</span><br><span class="line"></span><br><span class="line">C:&gt;fastboot reboot</span><br><span class="line">rebooting…</span><br><span class="line"></span><br><span class="line">finished. total time: 0.003s</span><br><span class="line"></span><br><span class="line">C:&gt;adb root</span><br><span class="line"></span><br><span class="line">C:&gt;adb disable-verity</span><br><span class="line">Successfully disabled verity</span><br><span class="line">Now reboot your device <span class="keyword">for</span> settings to take effect</span><br><span class="line"></span><br><span class="line">C:&gt;adb reboot</span><br><span class="line"></span><br><span class="line">C:&gt;adb root</span><br><span class="line"></span><br><span class="line">C:&gt;adb remount</span><br><span class="line">/system/bin/remount exited with status 2</span><br><span class="line">remount failed</span><br><span class="line"></span><br><span class="line">=userdebug==========</span><br><span class="line"></span><br><span class="line">C:&gt;adb root</span><br><span class="line"></span><br><span class="line">C:&gt;adb remount</span><br><span class="line">E Skipping /system</span><br><span class="line">E Skipping /vendor</span><br><span class="line">E Skipping /product</span><br><span class="line">W No partitions to remount</span><br><span class="line">/system/bin/remount exited with status 7</span><br><span class="line">remount failed</span><br><span class="line"></span><br><span class="line">C:&gt;adb disable-verity</span><br><span class="line">Device is locked. Please unlock the device first</span><br><span class="line"></span><br><span class="line">C:&gt;adb reboot bootloader</span><br><span class="line"></span><br><span class="line">C:&gt;fastboot flashing unlock</span><br><span class="line">…</span><br><span class="line">(bootloader) Start unlock flow</span><br><span class="line"></span><br><span class="line">OKAY [ 12.394s]</span><br><span class="line">finished. total time: 12.398s</span><br><span class="line"></span><br><span class="line">C:&gt;fastboot reboot</span><br><span class="line">rebooting…</span><br><span class="line"></span><br><span class="line">finished. total time: 0.003s</span><br><span class="line"></span><br><span class="line">C:&gt;adb root</span><br><span class="line"></span><br><span class="line">C:&gt;adb disable-verity</span><br><span class="line">Successfully disabled verity</span><br><span class="line">Now reboot your device <span class="keyword">for</span> settings to take effect</span><br><span class="line"></span><br><span class="line">C:&gt;adb reboot</span><br><span class="line"></span><br><span class="line">C:&gt;adb root</span><br><span class="line"></span><br><span class="line">C:&gt;adb remount</span><br><span class="line">remount succeeded</span><br></pre></td></tr></table></figure>
+
+<p>user 版本已成功获取 adb root</p>
+<h4 id="6-修改-adb-root-权限，编译-userdebug-版本进行比对"><a href="#6-修改-adb-root-权限，编译-userdebug-版本进行比对" class="headerlink" title="6.修改 adb root 权限，编译 userdebug 版本进行比对"></a>6.修改 adb root 权限，编译 userdebug 版本进行比对</h4><p>user 和 userdebug 区别在于 remount 时感觉走的地方不太一样，userdebug remount 时打印的日志来自 system\core\fs_mgr\fs_mgr_remount.cpp</p>
+<p>思路为只要让 user 版本下 remount 时打印一样的日志即可</p>
+<p>修改文件清单</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">modified:   system/core/adb/Android.bp</span><br><span class="line">modified:   system/core/fs_mgr/Android.bp</span><br><span class="line">modified:   system/sepolicy/Android.mk</span><br><span class="line">modified:   system/sepolicy/definitions.mk</span><br><span class="line">modified:   frameworks/base/services/usb/java/com/android/server/usb/UsbDeviceManager.java</span><br></pre></td></tr></table></figure>
+
+<p><strong>system/core/adb/Android.bp</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">+++ b/alps/system/core/adb/Android.bp</span><br><span class="line">@@ -412,6 +412,8 @@ cc_library &#123;</span><br><span class="line">         <span class="string">&quot;liblog&quot;</span>,</span><br><span class="line">     ],</span><br><span class="line"> </span><br><span class="line">+    required: [ <span class="string">&quot;remount&quot;</span>,],</span><br><span class="line">+</span><br><span class="line">     product_variables: &#123;</span><br><span class="line">         debuggable: &#123;</span><br><span class="line">             required: [</span><br></pre></td></tr></table></figure>
+
+<p><strong>system/core/fs_mgr/Android.bp</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">+++ b/alps/system/core/fs_mgr/Android.bp</span><br><span class="line">@@ -76,7 +76,8 @@ cc_library &#123;</span><br><span class="line">         <span class="string">&quot;libfstab&quot;</span>,</span><br><span class="line">     ],</span><br><span class="line">     cppflags: [</span><br><span class="line">-        <span class="string">&quot;-DALLOW_ADBD_DISABLE_VERITY=0&quot;</span>,</span><br><span class="line">+        <span class="string">&quot;-UALLOW_ADBD_DISABLE_VERITY&quot;</span>,</span><br><span class="line">+        <span class="string">&quot;-DALLOW_ADBD_DISABLE_VERITY=1&quot;</span>,</span><br><span class="line">     ],</span><br><span class="line">     product_variables: &#123;</span><br><span class="line">         debuggable: &#123;</span><br><span class="line">@@ -133,7 +134,8 @@ cc_binary &#123;</span><br><span class="line">         <span class="string">&quot;fs_mgr_remount.cpp&quot;</span>,</span><br><span class="line">     ],</span><br><span class="line">     cppflags: [</span><br><span class="line">-        <span class="string">&quot;-DALLOW_ADBD_DISABLE_VERITY=0&quot;</span>,</span><br><span class="line">+        <span class="string">&quot;-UALLOW_ADBD_DISABLE_VERITY&quot;</span>,</span><br><span class="line">+        <span class="string">&quot;-DALLOW_ADBD_DISABLE_VERITY=1&quot;</span>,</span><br><span class="line">     ],</span><br><span class="line">     product_variables: &#123;</span><br><span class="line">         debuggable: &#123;</span><br></pre></td></tr></table></figure>
+
+<p>user 版本启用 overlayfs 来装载 remount 对应分区<br><strong>system/sepolicy/Android.mk</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">+++ b/alps/system/sepolicy/Android.mk</span><br><span class="line">@@ -309,7 +309,7 @@ LOCAL_REQUIRED_MODULES += \</span><br><span class="line"> </span><br><span class="line"> endif</span><br><span class="line"> </span><br><span class="line">-ifneq ($(TARGET_BUILD_VARIANT), user)</span><br><span class="line">+ifneq ($(TARGET_BUILD_VARIANT), eng)</span><br><span class="line"> LOCAL_REQUIRED_MODULES += \</span><br><span class="line">     selinux_denial_metadata \</span><br><span class="line"> </span><br><span class="line">@@ -1104,7 +1104,8 @@ endif</span><br><span class="line"> ifneq ($(filter address,$(SANITIZE_TARGET)),)</span><br><span class="line">   local_fc_files += $(wildcard $(addsuffix /file_contexts_asan, $(PLAT_PRIVATE_POLICY)))</span><br><span class="line"> endif</span><br><span class="line">-ifneq (,$(filter userdebug eng,$(TARGET_BUILD_VARIANT)))</span><br><span class="line">+ifneq (,$(filter user userdebug eng,$(TARGET_BUILD_VARIANT)))</span><br><span class="line">   local_fc_files += $(wildcard $(addsuffix /file_contexts_overlayfs, $(PLAT_PRIVATE_POLICY)))</span><br><span class="line"> endif</span><br><span class="line"> ifeq ($(TARGET_FLATTEN_APEX),<span class="literal">true</span>)</span><br><span class="line">@@ -1166,7 +1167,9 @@ file_contexts.device.tmp :=</span><br><span class="line"> file_contexts.local.tmp :=</span><br><span class="line"> </span><br><span class="line"> <span class="comment">##################################</span></span><br><span class="line">-ifneq ($(TARGET_BUILD_VARIANT), user)</span><br><span class="line">+<span class="comment"># ifneq ($(TARGET_BUILD_VARIANT), user)</span></span><br><span class="line">+ifneq ($(TARGET_BUILD_VARIANT), eng)</span><br><span class="line"> include $(CLEAR_VARS)</span><br><span class="line"> </span><br><span class="line"> LOCAL_MODULE := selinux_denial_metadata</span><br></pre></td></tr></table></figure>
+
+<p><strong>system/sepolicy/definitions.mk</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">+++ b/alps/system/sepolicy/definitions.mk</span><br><span class="line">@@ -1,10 +1,11 @@</span><br><span class="line"> <span class="comment"># Command to turn collection of policy files into a policy.conf file to be</span></span><br><span class="line"> <span class="comment"># processed by checkpolicy</span></span><br><span class="line"> define transform-policy-to-conf</span><br><span class="line"> @<span class="built_in">mkdir</span> -p $(<span class="built_in">dir</span> <span class="variable">$@</span>)</span><br><span class="line"> $(hide) m4 --fatal-warnings $(PRIVATE_ADDITIONAL_M4DEFS) \</span><br><span class="line">        -D mls_num_sens=$(PRIVATE_MLS_SENS) -D mls_num_cats=$(PRIVATE_MLS_CATS) \</span><br><span class="line">-       -D target_build_variant=$(PRIVATE_TARGET_BUILD_VARIANT) \</span><br><span class="line">+       -D target_build_variant=eng \</span><br><span class="line">        -D target_with_dexpreopt=$(WITH_DEXPREOPT) \</span><br><span class="line">        -D target_arch=$(PRIVATE_TGT_ARCH) \</span><br></pre></td></tr></table></figure>
+
+<p>默认开启 OEM 解锁选项</p>
+<p><strong>frameworks/base/services/usb/java/com/android/server/usb/UsbDeviceManager.java</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">+++ b/alps/frameworks/base/services/usb/java/com/android/server/usb/UsbDeviceManager.java</span><br><span class="line">@@ -995,6 +995,10 @@ public class UsbDeviceManager implements ActivityTaskManagerInternal.ScreenObser</span><br><span class="line">         &#125;</span><br><span class="line"> </span><br><span class="line">         protected void <span class="function"><span class="title">finishBoot</span></span>() &#123;</span><br><span class="line">+            android.service.oemlock.OemLockManager mOemLockManager </span><br><span class="line">+            = (android.service.oemlock.OemLockManager) mContext.getSystemService(Context.OEM_LOCK_SERVICE);</span><br><span class="line">+            mOemLockManager.setOemUnlockAllowedByUser(<span class="literal">true</span>);</span><br><span class="line">+</span><br><span class="line">             <span class="keyword">if</span> (mBootCompleted &amp;&amp; mCurrentUsbFunctionsReceived &amp;&amp; mSystemReady) &#123;</span><br><span class="line">                 <span class="keyword">if</span> (mPendingBootBroadcast) &#123;</span><br><span class="line">                     updateUsbStateBroadcastIfNeeded(getAppliedFunctions(mCurrentFunctions));</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">C:&gt;adb root</span><br><span class="line"></span><br><span class="line">C:&gt;adb remount</span><br><span class="line">W DM_DEV_STATUS failed <span class="keyword">for</span> scratch: No such device or address</span><br><span class="line">E [liblp]No device named scratch</span><br><span class="line">[liblp]Partition scratch will resize from 0 bytes to 1315950592 bytes</span><br><span class="line">[liblp]Updated logical partition table at slot 0 on device /dev/block/by-name/super</span><br><span class="line">[libfs_mgr]Created logical partition scratch on device /dev/block/dm-3</span><br><span class="line">[libfs_mgr]superblock s_max_mnt_count:65535,/dev/block/dm-3</span><br><span class="line">[libfs_mgr]__mount(<span class="built_in">source</span>=/dev/block/dm-3,target=/mnt/scratch,<span class="built_in">type</span>=ext4)=0: Success</span><br><span class="line">Using overlayfs <span class="keyword">for</span> /system</span><br><span class="line">Using overlayfs <span class="keyword">for</span> /vendor</span><br><span class="line">Using overlayfs <span class="keyword">for</span> /product</span><br><span class="line">[libfs_mgr]__mount(<span class="built_in">source</span>=overlay,target=/system,<span class="built_in">type</span>=overlay,upperdir=/mnt/scratch/overlay/system/upper)=0</span><br><span class="line">[libfs_mgr]__mount(<span class="built_in">source</span>=overlay,target=/vendor,<span class="built_in">type</span>=overlay,upperdir=/mnt/scratch/overlay/vendor/upper)=0</span><br><span class="line">[libfs_mgr]__mount(<span class="built_in">source</span>=overlay,target=/product,<span class="built_in">type</span>=overlay,upperdir=/mnt/scratch/overlay/product/upper)=0</span><br><span class="line">remount succeeded</span><br></pre></td></tr></table></figure>
+
+      
+      <blockquote>
+        
+        <strong>本文链接：</strong><br><a href="http://longzhiye.top/2023/10/15/2023-10-15/">http://longzhiye.top/2023/10/15/2023-10-15/</a>
+      </blockquote>
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Android/" rel="tag">Android</a><a class="mdui-ripple article_tags-link" href="/tags/AndroidStudio/" rel="tag">AndroidStudio</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2023/10/21/2023-10-21/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Firefox无法访问localhost和127.0.0.1的问题与解决'}">上一篇</span>
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2023/10/14/2023-10-14/">
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android Studio错误修复Connect to repo.maven.apache.org:443'}">下一篇</span>
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+
+
+
+</main>
+  <footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="http://github.com/longzhiye" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe7ab;</i></a>
+    
+    
+    
+      <a href="https://www.zhihu.com/people/long-zhi-xie-61" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe6c0;</i></a>
+    
+    
+    
+      <a href="tencent://tencent:////message/?uin=951898105&Menu=yes" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2022 - 2025 龙之叶<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>
+    <br>
+      <span id="busuanzi_container_site_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_site_pv"></span></span> &nbsp;&nbsp;
+      <span id="busuanzi_container_site_uv" style="display: none;"><i class="iconfont">&#xe601;</i> <span id="busuanzi_value_site_uv"></span></span>
+    
+  </div>
+</footer>
+
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+  
+<script src="/custom.js"></script>
+
+</body>
+</html>

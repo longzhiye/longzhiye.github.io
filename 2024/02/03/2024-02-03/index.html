@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>Android SystemUI 通知面板实现 | 龙之叶的博客</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="alternate" href="/atom.xml" title="龙之叶的博客" type="application/atom+xml">
+  <meta name="description" content="Android SystemUI 通知面板实现">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android SystemUI 通知面板实现">
+<meta property="og:url" content="http://longzhiye.top/2024/02/03/2024-02-03/index.html">
+<meta property="og:site_name" content="龙之叶的博客">
+<meta property="og:description" content="Android SystemUI 通知面板实现">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://longzhiye.top/images/20240203/20240203001.png">
+<meta property="og:image" content="http://longzhiye.top/images/20240203/20240203002.png">
+<meta property="og:image" content="http://longzhiye.top/images/20240203/20240203003.png">
+<meta property="og:image" content="http://longzhiye.top/images/20240203/20240203004.png">
+<meta property="og:image" content="http://longzhiye.top/images/20240203/20240203005.png">
+<meta property="og:image" content="http://longzhiye.top/images/20240203/20240203006.png">
+<meta property="og:image" content="http://longzhiye.top/images/20240203/20240203007.png">
+<meta property="og:image" content="http://longzhiye.top/images/20240203/20240203008.png">
+<meta property="og:image" content="http://longzhiye.top/images/20240203/20240203009.png">
+<meta property="article:published_time" content="2024-02-02T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-04T08:39:58.965Z">
+<meta property="article:author" content="龙之叶">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="SystemUI">
+<meta property="article:tag" content="framework">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://longzhiye.top/images/20240203/20240203001.png">
+
+  <meta name="keywords" content=",Android,SystemUI,framework">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="龙之叶的博客">
+  <meta name="msapplication-starturl" content="http://longzhiye.top/2024/02/03/2024-02-03/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="龙之叶的博客">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <link rel="canonical" href="http://longzhiye.top/2024/02/03/2024-02-03/">
+  
+
+  
+  
+
+  
+  
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/custom.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(!a){document.getElementsByTagName("body")[0].className+=" mdui-drawer-body-left"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">龙之叶的博客</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+	<!--
+    <a href="/atom.xml" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'RSS'}"><i class="mdui-icon material-icons">rss_feed</i></a>
+	-->
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(a){document.getElementById("sidebar").className+=" mdui-drawer-close"};</script>
+  <div class="mdui-grid-tile">
+    <img src="/images/banner.png" style="height: 160px;">
+    <img src="/images/avatar.png" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;background-color:#fff;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">龙之叶</div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>生命不息，折腾不止</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:longzhiye163@163.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'longzhiye163@163.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-0");if(a){document.getElementsByClassName("mdui-collapse-item")[0].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">archive</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2025/10/">十月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/09/">九月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/08/">八月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/07/">七月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/06/">六月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/03/">三月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/02/">二月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/01/">一月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/10/">十月 2024<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/09/">九月 2024<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/08/">八月 2024<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/03/">三月 2024<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/02/">二月 2024<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/01/">一月 2024<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/12/">十二月 2023<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/11/">十一月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/10/">十月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/09/">九月 2023<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/08/">八月 2023<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/06/">六月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/05/">五月 2023<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/04/">四月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/03/">三月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/02/">二月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/09/">九月 2022<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/04/">四月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/03/">三月 2017<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/02/">二月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/01/">一月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/12/">十二月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/11/">十一月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/10/">十月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/08/">八月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-1");if(a){document.getElementsByClassName("mdui-collapse-item")[1].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">class</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">108</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E8%B5%84%E8%AE%AF/">资讯<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E9%80%9A%E7%9F%A5/">通知<span class="mdui-ripple sidebar_archives-count">4</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-2");if(a){document.getElementsByClassName("mdui-collapse-item")[2].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/ANR/" rel="tag">ANR<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/APP/" rel="tag">APP<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android/" rel="tag">Android<span class="mdui-ripple sidebar_archives-count">98</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android12/" rel="tag">Android12<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android13/" rel="tag">Android13<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android14/" rel="tag">Android14<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android16/" rel="tag">Android16<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AndroidStudio/" rel="tag">AndroidStudio<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AutoDraw/" rel="tag">AutoDraw<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Build/" rel="tag">Build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Crash/" rel="tag">Crash<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Foxmail/" rel="tag">Foxmail<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Framework/" rel="tag">Framework<span class="mdui-ripple sidebar_archives-count">20</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GPS%E8%BD%A8%E8%BF%B9%E5%9B%BE/" rel="tag">GPS轨迹图<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Git/" rel="tag">Git<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GitHub/" rel="tag">GitHub<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Google/" rel="tag">Google<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Java/" rel="tag">Java<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Kernel/" rel="tag">Kernel<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Launcher/" rel="tag">Launcher<span class="mdui-ripple sidebar_archives-count">17</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Lib/" rel="tag">Lib<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Linux/" rel="tag">Linux<span class="mdui-ripple sidebar_archives-count">18</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Markdown/" rel="tag">Markdown<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Material-Design/" rel="tag">Material Design<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OS-X/" rel="tag">OS X<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OTA/" rel="tag">OTA<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/QuickTime/" rel="tag">QuickTime<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SSH/" rel="tag">SSH<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Settings/" rel="tag">Settings<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SystemUI/" rel="tag">SystemUI<span class="mdui-ripple sidebar_archives-count">19</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/UAC/" rel="tag">UAC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Ubuntu/" rel="tag">Ubuntu<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WPS/" rel="tag">WPS<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Wifi/" rel="tag">Wifi<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WindTerm/" rel="tag">WindTerm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows/" rel="tag">Windows<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows-11/" rel="tag">Windows 11<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/androidmk/" rel="tag">androidmk<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/blog/" rel="tag">blog<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/build/" rel="tag">build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/feel/" rel="tag">feel<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/framework/" rel="tag">framework<span class="mdui-ripple sidebar_archives-count">58</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/inotify/" rel="tag">inotify<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/life/" rel="tag">life<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/ninja/" rel="tag">ninja<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/rsync/" rel="tag">rsync<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/standard/" rel="tag">standard<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/test/" rel="tag">test<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1/" rel="tag">企业微信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E7%94%9F%E6%B4%BB%E6%84%9F%E6%82%9F/" rel="tag">生活感悟<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+      <a href="/timeline" class="mdui-list-item mdui-ripple">时间轴</a>
+    
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-3");if(a){document.getElementsByClassName("mdui-collapse-item")[3].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+          <a href="http://www.niemingzhao.top" target="_blank" class="mdui-list-item mdui-p-l-2 mdui-text-color-theme-accent mdui-ripple" style="justify-content: center;">聂明照的博客</a>
+        
+        
+      </div>
+    </div>
+  </div>
+</aside>
+
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <style>#main article .mdui-card-content .text-center{text-align:center!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-13.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">Android SystemUI 通知面板实现</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2024-02-03 / <i class="iconfont">&#xe601;</i> 龙之叶 &nbsp;&nbsp; <span id="busuanzi_container_page_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_page_pv"></span></span></div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#qrcode', align: 'right'}"><i class="mdui-icon material-icons">devices</i></button>
+          <ul class="mdui-menu" id="qrcode">
+            
+              <li class="mdui-menu-item"><a class="mdui-text-center mdui-ripple">发送到手机</a></li>
+            
+            <li class="mdui-menu-item" disabled>
+              
+                <img src="//qr.liantu.com/api.php?w=246&m=10&text=http://longzhiye.top/2024/02/03/2024-02-03/">
+              
+            </li>
+          </ul>
+        
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="mdui-icon material-icons">share</i></button>
+          <ul class="mdui-menu" id="share_menu">
+            <li class="mdui-menu-item">
+              <a href="https://service.weibo.com/share/share.php?appkey=&title=Android SystemUI 通知面板实现&url=http://longzhiye.top/2024/02/03/2024-02-03/&pic=http://longzhiye.top/images/favicon.png&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://twitter.com/intent/tweet?text=Android SystemUI 通知面板实现&url=http://longzhiye.top/2024/02/03/2024-02-03/&via=龙之叶" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=http://longzhiye.top/2024/02/03/2024-02-03/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://plus.google.com/share?url=http://longzhiye.top/2024/02/03/2024-02-03/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://longzhiye.top/2024/02/03/2024-02-03/&title=Android SystemUI 通知面板实现" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://connect.qq.com/widget/shareqq/index.html?site=龙之叶的博客&title=Android SystemUI 通知面板实现&pics=http://longzhiye.top/images/favicon.png&url=http://longzhiye.top/2024/02/03/2024-02-03/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://telegram.me/share/url?url=http://longzhiye.top/2024/02/03/2024-02-03/&text=Android SystemUI 通知面板实现" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+            </li>
+          </ul>
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>这篇文章给大家分享下Android SystemUI中下拉通知面板时所看到的开关面板(即QS面板)的实现原理,包括其整体架构,UI构建流程与事件处理流程,对这块感兴趣的同学可以看看</p>
+<h3 id="一-QS面板构成元素解析"><a href="#一-QS面板构成元素解析" class="headerlink" title="一. QS面板构成元素解析"></a>一. QS面板构成元素解析</h3><p>QS面板实际上有多种状态,包括:</p>
+<ul>
+<li><strong>Quick Quick Settings (QQS)</strong> : 即初级展开面板,是一次下拉面板看到的简版QS面板,包含少量的开关,如下左侧的图</li>
+<li><strong>Quick Settings (QS)</strong> : 完整QS面板,是二次下拉面板看到的完成QS面板,其包含更多的开关,如下右侧的图</li>
+<li>另外还有开关编辑面板,开关详情页面,本文不展开描述</li>
+</ul>
+<p><img src="/images/20240203/20240203001.png"></p>
+<p>备注:SystemUI中称通知栏下拉面板开关区域中的单个开关为<strong>Tile</strong></p>
+<p>先看看整个QS面板中主要的几大类簇:</p>
+<p><img src="/images/20240203/20240203002.png"></p>
+<p>下面分别介绍各个类簇的主要作用</p>
+<p><strong>1. QSTile类簇</strong>,该类簇包括的主要类如下,类图如下</p>
+<p><img src="/images/20240203/20240203003.png"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">packages/SystemUI/plugin/src/com/android/systemui/plugins/qs/QSTile.java</span><br><span class="line">packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileImpl.java</span><br><span class="line">packages/SystemUI/src/com/android/systemui/qs/tiles/WifiTile.java</span><br><span class="line">packages/SystemUI/src/com/android/systemui/qs/tiles/XxxTile.java</span><br></pre></td></tr></table></figure>
+<p>该类簇构成了的<strong>Tile</strong>的”后端”,负责处理单个<strong>Tile</strong>的逻辑处理,其中:</p>
+<ul>
+<li><strong>QSTile</strong> : 接口,主要定义了所有<strong>Tile</strong>的通用行为,如<strong>注册监听,点击事件的处理</strong>,Tile视图中Icon元素(QSIconView)的构建,刷新Tile状态(state)等</li>
+<li><strong>QSTileImpl</strong> : 实现了<strong>QSTile</strong> 定义的通用行为,同时提供了一系列的抽象接口(详见类图)允许不同类型的子类去做差异化实现.后续所有的开关都需要继承自<strong>QSTileImpl</strong>. 如<strong>WifiTile</strong>,通过继承<strong>QSTileImpl</strong>来享用其提供的通用方法,不需要每个开关都去做实现,同时利用差异化接口便可实现开关自身的特有逻辑,如<strong>WifiTile</strong>的<strong>handleClick</strong>可以打开Wifi开关,而BluetoothTile的handleClick则可以打开蓝牙开关</li>
+</ul>
+<p><strong>2. QSTileView类簇</strong> 该类簇包括的主要类如下,类图如下</p>
+<p><img src="/images/20240203/20240203004.png"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">packages/SystemUI/plugin/src/com/android/systemui/plugins/qs/QSTileView.java</span><br><span class="line">packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileBaseView.java</span><br><span class="line">packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileView.java</span><br><span class="line">packages/SystemUI/plugin/src/com/android/systemui/plugins/qs/QSIconView.java</span><br><span class="line">packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSIconViewImpl.java</span><br></pre></td></tr></table></figure>
+<p>该类簇构成了的Tile的视图层,负责处理单个<strong>Tile</strong>的界面展示,其中:</p>
+<ul>
+<li><strong>qs/QSTileView</strong> : 抽象类,定义了<strong>Tile</strong>视图相关的操作,如点击事件设置,视图刷新**onStateChanged(State state)**等</li>
+<li><strong>QSTileBaseView</strong> : 实现了<strong>QSTileView</strong>中定义的抽象接口,同时在其构造方法中完成了<strong>Tile</strong>视图的构建,包括背景的处理,点击效果的处理(如ripple),点击事件的处理等. <strong>在QQS面板中使用</strong></li>
+<li><strong>QSTileView</strong> : 注意与上面的同名抽象类区分开来,这里的起名容易让人疑惑,实际上这里的<strong>QSTileView</strong>继承了<strong>QSTileBaseView</strong>,在其构建的视图的基础上,扩展了<strong>label</strong>相关的东西,<strong>label</strong>即为开关中的文字描述视图,如蓝牙开关对应的<strong>label</strong>为”蓝牙”. 在QS面板中使用</li>
+</ul>
+<p><strong>3. QSHost类簇</strong>,该类簇包括的主要类如下,类图如下</p>
+<p><img src="/images/20240203/20240203005.png"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">packages/SystemUI/src/com/android/systemui/qs/QSHost.java</span><br><span class="line">packages/SystemUI/src/com/android/systemui/qs/QSTileHost.java</span><br><span class="line">packages/SystemUI/plugin/src/com/android/systemui/plugins/qs/QSFactory.java</span><br><span class="line">packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSFactoryImpl.java</span><br></pre></td></tr></table></figure>
+<p>该类簇主要完成单个<strong>Tile</strong>的构建,其中:</p>
+<ul>
+<li><strong>QSHost</strong> : 接口,主要向外界提供获取<strong>QSTile</strong>集合的接口(getTiles())以及作为Tile对外沟通的桥梁,例如点击某个开关后需要触发收起面板的操作,开关便会通过<strong>QSHost</strong>来触发收起面板的操作</li>
+<li><strong>QSTileHost</strong> : 实现了<strong>QSHost</strong>中定义的接口,同时扩展了创建Tile后端对象QSTile和创建Tile视图对象<strong>QSTileView</strong>的接口. 创建时使用了工厂模式,由<strong>QSFactoryImpl</strong>类实现</li>
+</ul>
+<p>其中<strong>QSTileHost</strong>作为外界创建Tile的入口,<strong>会在对象构造的过程中先去创建Tile后端对象QSTile集合</strong>,这个集合在后续创建完整Tile对象时会用到. 具体创建哪些Tile则是通过获取配置在 <strong>config.xml</strong> 中的字段来决定了,具体过程可查看 <strong>QSTileHost.onTuningChanged(String key, String newValue)</strong> 方法</p>
+<p><strong>4. QSPanel类簇</strong>,该类簇包括的主要类如下,类图如下</p>
+<p><img src="/images/20240203/20240203006.png"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">packages/SystemUI/src/com/android/systemui/qs/QSPanel.java</span><br><span class="line">packages/SystemUI/src/com/android/systemui/qs/QuickQSPanel.java</span><br><span class="line">packages/SystemUI/src/com/android/systemui/qs/QSPanel<span class="comment">#QSTileLayout</span></span><br><span class="line">packages/SystemUI/src/com/android/systemui/qs/TileLayout.java</span><br><span class="line">packages/SystemUI/src/com/android/systemui/qs/PagedTileLayout.java</span><br></pre></td></tr></table></figure>
+<p>该类簇主要完成QS面板元素的动态添加,其中:</p>
+<ul>
+<li><strong>QSPanel</strong> : 对应我们前面说的QS面板,即二次展开面板,是该页面的顶层容器,其嵌套在一个<strong>ScrollView</strong>中. 负责动态添加相应的元素,添加的元素包括 [亮度条 / 根据屏幕方向动态添加开关容器 QSTileLayout / Footer ] 等. 同时为这些元素提供了一系列的操作接口,如<blockquote>
+<p>为开关容器创建具体开关对象(通过QSHost) 并为其添加刷新监听器,在后续开关后端收到开关状态刷新需求时,将刷新需求分发到对应的开关视图层.<br>开关详情页(Details)的创建与刷新<br>QS面板展开状态变化时做相应的处理(setExpanded(boolean expanded))</p>
+</blockquote>
+</li>
+<li><strong>QuickQSPanel</strong> : 对应我们前面说的初级展开面板QQS面板,继承自QSPanel并对展示的Tile数做了限制(通过setMaxTiles(int)),同时复写了父类提供的添加子元素的方法,按需添加QQS面板的元素,因为QQS面板是QS面板的精简版,所以很多子元素未做添加</li>
+<li><strong>QSTileLayout</strong> : 开关容器接口,主要定义了开关容器绘制相关的接口</li>
+<li><strong>TileLayout</strong> : QQS面板开关容器类,负责精简QS面板的绘制,继承自 Viewgroup</li>
+<li><strong>PagedTileLayout</strong> : QS面板开关容器类,负责QS面板的绘制,继承自 ViewPager</li>
+</ul>
+<p>5.QS类簇,该类簇包括的主要类如下,类图如下</p>
+<p><img src="/images/20240203/20240203007.png"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">packages/SystemUI/plugin/src/com/android/systemui/plugins/qs/QS.java</span><br><span class="line">packages/SystemUI/src/com/android/systemui/qs/QSFragment.java</span><br><span class="line">packages/SystemUI/src/com/android/systemui/qs/QSContainerImpl.java</span><br></pre></td></tr></table></figure>
+<p>该类簇主要作为整个QS面板的顶层容器,主要处理QS面板的展开/收起逻辑,其中:</p>
+<ul>
+<li><strong>QS</strong> : 接口,主要定义了 QS 面板展开/收起相关的接口</li>
+<li><strong>QSFragment</strong> : 继承自 <strong>Fragment</strong>,实现了 QS 接口,主要负责接收 QS 面板展开/收起状态的改变,并将最新状态同步给该 Fragment 中的 View 元素,如 QSContainerImpl</li>
+<li><strong>QSContainerImpl</strong> : 添加到<strong>QSFragment</strong>中的自定义 View,继承自<strong>FrameLayout</strong>对应布局 <strong>qs_panel.xml</strong> ,主要通过接收来自 <strong>QSFragment</strong> 的面板展开/收起状态的变化并做刷新</li>
+</ul>
+<p>至此,整个QS面板中的关键类就介绍完了,下面将通过几条主线来洞悉整个QS面板的具体实现:</p>
+<ul>
+<li>QS面板开关集合构建流程</li>
+<li>Tile后端是如何与Tile视图层产生联系的</li>
+<li>Tile的一次点击事件背后的流程是怎么样的</li>
+</ul>
+<h3 id="二-QS面板内部实现梳理"><a href="#二-QS面板内部实现梳理" class="headerlink" title="二 QS面板内部实现梳理"></a>二 QS面板内部实现梳理</h3><h4 id="2-1-QS面板开关集合构建流程"><a href="#2-1-QS面板开关集合构建流程" class="headerlink" title="2.1 QS面板开关集合构建流程"></a>2.1 QS面板开关集合构建流程</h4><p>QsPanel 中除了创建各个开关View,还创建了亮度条,Footer等元素,本文重心放在开关的构建上,故不会分析其他元素的创建流程. 另外QsFragment / QSHost 等元素是在 SystemUI 启动流程中通过注入或反射构建的,其前期构建流程跳过分析<br>先看看整体的流程图</p>
+<p><img src="/images/20240203/20240203008.png"></p>
+<p>流程比较简单,对照源码阅读即可.简单说就是<strong>QSTileHost</strong>对象在构建初期就借助<strong>QSFactoryImpl</strong>工具对象提前创建好了各个开关的后端对象<strong>QSTile</strong>,而后<strong>QSPanel</strong>在初始化的过程中,再次利用<strong>QSTileHost</strong>去构建各个开关的视图对象<strong>QSTileView</strong>,至此一个完整的开关就构建完成,最后add到开关容器<strong>PagedTileLayout</strong>中去.若对上述各个类的作用不清楚的话可回头看看前面对各个类簇的介绍</p>
+<h4 id="2-2-Tile后端-是如何与-Tile视图层-产生联系的"><a href="#2-2-Tile后端-是如何与-Tile视图层-产生联系的" class="headerlink" title="2.2 Tile后端 是如何与 Tile视图层 产生联系的"></a>2.2 Tile后端 是如何与 Tile视图层 产生联系的</h4><p>前面<strong>QSTile</strong>的类簇中我们可以看到其有多个内部类,与此相关的内部类包括 <strong>Callback</strong> 和 <strong>State</strong></p>
+<p><img src="/images/20240203/20240203009.png"></p>
+<p>Tile 视图与后端的联系就是借助这两个内部类以及<strong>QSPanel</strong>这个中介产生联系的,我们来看看代码.</p>
+<p>前面 2.1小节我们在梳理QS面板开关集合构建流程时可以看到步骤10通过<strong>addTile</strong>函数来构建<strong>Tile</strong>开关对象,其代码细节如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">[packages/SystemUI/src/com/android/systemui/qs/QSPanel.java]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">TileRecord</span> <span class="keyword">extends</span> <span class="title class_">Record</span> &#123;</span><br><span class="line">        <span class="keyword">public</span> QSTile tile;</span><br><span class="line">        <span class="keyword">public</span> com.android.systemui.plugins.qs.QSTileView tileView;</span><br><span class="line">        <span class="keyword">public</span> <span class="type">boolean</span> scanState;</span><br><span class="line">        <span class="keyword">public</span> QSTile.Callback callback;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> TileRecord <span class="title function_">addTile</span><span class="params">(<span class="keyword">final</span> QSTile tile, <span class="type">boolean</span> collapsedView)</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">TileRecord</span> <span class="variable">r</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TileRecord</span>();</span><br><span class="line">        r.tile = tile;</span><br><span class="line">        r.tileView = createTileView(tile, collapsedView); <span class="comment">// 构建开关视图层</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> QSTile.<span class="type">Callback</span> <span class="variable">callback</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">QSTile</span>.Callback() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onStateChanged</span><span class="params">(QSTile.State state)</span> &#123;</span><br><span class="line">                drawTile(r, state);</span><br><span class="line">            &#125;</span><br><span class="line">            ......</span><br><span class="line">        &#125;;</span><br><span class="line">        r.tile.addCallback(callback); <span class="comment">// 向开关后端注册回调</span></span><br><span class="line">        r.callback = callback;</span><br><span class="line">        r.tileView.init(r.tile); <span class="comment">// 初始化点击事件</span></span><br><span class="line">        r.tile.refreshState(); <span class="comment">// 首次刷新</span></span><br><span class="line">        mRecords.add(r);</span><br><span class="line">        mCachedSpecs = getTilesSpecs();</span><br><span class="line">        <span class="keyword">if</span> (mTileLayout != <span class="literal">null</span>) &#123;</span><br><span class="line">            mTileLayout.addTile(r); <span class="comment">// add到开关容器</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> r;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">drawTile</span><span class="params">(TileRecord r, QSTile.State state)</span> &#123;</span><br><span class="line">        r.tileView.onStateChanged(state); <span class="comment">// 将变化交给开关视图层</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到<strong>QSPanel</strong>向 <strong>r.tile</strong> 即后端注册了一个回调器,并在回调发生时将开关状态<strong>State</strong>传递给 <strong>r.tileView</strong> 即开关视图层去做视图刷新.<br>至于这个<strong>State</strong>是在哪里刷新的这个我们2.3 小节再分析.</p>
+<h4 id="2-3-Tile的一次点击事件背后的流程是怎么样的"><a href="#2-3-Tile的一次点击事件背后的流程是怎么样的" class="headerlink" title="2.3 Tile的一次点击事件背后的流程是怎么样的"></a>2.3 Tile的一次点击事件背后的流程是怎么样的</h4><p>前面 2.2 小结介绍<strong>addTile</strong>函数时我们可以看到这么一句 <strong>r.tileView.init(r.tile)</strong> ; ,这里完成了将视图层的点击事件转交给后端的操作</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileBaseView.java]</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">(QSTile tile)</span> &#123;</span><br><span class="line">        init(v -&gt; tile.click(), v -&gt; tile.secondaryClick(), view -&gt; &#123;</span><br><span class="line">            tile.longClick();</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">(OnClickListener click, OnClickListener secondaryClick,</span></span><br><span class="line"><span class="params">            OnLongClickListener longClick)</span> &#123;</span><br><span class="line">        setOnClickListener(click);</span><br><span class="line">        setOnLongClickListener(longClick);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>即将<strong>QSTileView</strong>收到的点击事件分别交给<strong>QSTile</strong>对应的点击函数处理</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileImpl.java]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">click</span><span class="params">()</span> &#123;</span><br><span class="line">        mHandler.sendEmptyMessage(H.CLICK);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handleMessage</span><span class="params">(Message msg)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (msg.what == CLICK) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (mState.disabledByPolicy) &#123;</span><br><span class="line">                        ......</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        handleClick();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">abstract</span> <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">handleClick</span><span class="params">()</span>;</span><br></pre></td></tr></table></figure>
+<p><strong>QSTileImpl</strong>中 <strong>handleClick()</strong> 函数是个抽象方法,分别由对应的开关子类去实现,例如Wifi开关</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[packages/SystemUI/src/com/android/systemui/qs/tiles/WifiTile.java]</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">handleClick</span><span class="params">()</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">        refreshState(wifiEnabled ? <span class="literal">null</span> : ARG_SHOW_TRANSIENT_ENABLING);</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>又回到<strong>QSTileImpl</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileImpl.java]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">refreshState</span><span class="params">(Object arg)</span> &#123;</span><br><span class="line">        mHandler.obtainMessage(H.REFRESH_STATE, arg).sendToTarget();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handleMessage</span><span class="params">(Message msg)</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (msg.what == REFRESH_STATE) &#123;</span><br><span class="line">                    handleRefreshState(msg.obj);</span><br><span class="line">                &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">handleRefreshState</span><span class="params">(Object arg)</span> &#123;</span><br><span class="line">        handleUpdateState(mTmpState, arg);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="type">boolean</span> <span class="variable">changed</span> <span class="operator">=</span> mTmpState.copyTo(mState);</span><br><span class="line">        <span class="keyword">if</span> (changed) &#123;</span><br><span class="line">            handleStateChanged();</span><br><span class="line">        &#125;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">abstract</span> <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">handleUpdateState</span><span class="params">(TState state, Object arg)</span>;</span><br></pre></td></tr></table></figure>
+<p>可以看到<strong>QSTileImpl</strong>用一个<strong>State</strong>类型的临时变量去<strong>handleUpdateState</strong>函数中收集当前开关的最新状态,而这个函数是个抽象方法,实现依旧是在各个开关子类中,我们看下Wifi开关</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[packages/SystemUI/src/com/android/systemui/qs/tiles/WifiTile.java]</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">handleUpdateState</span><span class="params">(SignalState state, Object arg)</span> &#123;</span><br><span class="line">            state.state = Tile.STATE_ACTIVE;</span><br><span class="line">            state.dualTarget = <span class="literal">true</span>;</span><br><span class="line">            state.value = transientEnabling || cb.enabled;</span><br><span class="line">            state.activityIn = cb.enabled &amp;&amp; cb.activityIn;</span><br><span class="line">            state.activityOut = cb.enabled &amp;&amp; cb.activityOut;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里抽取了一些代码片段,可以看到开关后端会根据当前开关状态对 state 进行赋值,这些赋值会在后续开关视图刷新时产生作用</p>
+<p><strong>handleUpdateState</strong>函数收集完开关状态后,我们回到前面</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileImpl.java]</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">handleRefreshState</span><span class="params">(Object arg)</span> &#123;</span><br><span class="line">        handleUpdateState(mTmpState, arg);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="type">boolean</span> <span class="variable">changed</span> <span class="operator">=</span> mTmpState.copyTo(mState);</span><br><span class="line">        <span class="keyword">if</span> (changed) &#123;</span><br><span class="line">            handleStateChanged();</span><br><span class="line">        &#125;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到假如开关状态发生了改变则会导致 <strong>handleStateChanged()</strong> 被调用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileImpl.java]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">handleStateChanged</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (mCallbacks.size() != <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; mCallbacks.size(); i++) &#123;</span><br><span class="line">                mCallbacks.get(i).onStateChanged(mState);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这里就和前面 2.2 小节关联起来了,即 <strong>state会被传递到视图层</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[packages/SystemUI/src/com/android/systemui/qs/tileimpl/QSTileBaseView.java]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onStateChanged</span><span class="params">(QSTile.State state)</span> &#123;</span><br><span class="line">        mHandler.obtainMessage(H.STATE_CHANGED, state).sendToTarget();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">H</span> <span class="keyword">extends</span> <span class="title class_">Handler</span> &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">STATE_CHANGED</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">H</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="built_in">super</span>(Looper.getMainLooper());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handleMessage</span><span class="params">(Message msg)</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (msg.what == STATE_CHANGED) &#123;</span><br><span class="line">                handleStateChanged((QSTile.State) msg.obj);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>handleStateChanged</strong>函数不展开讲,该函数是真正做开关视图显示刷新的地方,细节看源码。</p>
+<p>至此,我们就将开关点击背后的流程梳理清楚了,相信阅读完这三条主线的代码流程后,对整个QS面板的整体实现就很清晰了</p>
+<h3 id="设计思考"><a href="#设计思考" class="headerlink" title="设计思考"></a>设计思考</h3><p>阅读前面 2.3小节的代码我们可以看到,不管是在Tile的逻辑层还是视图层,其内部均通过Handler来组织开关的状态刷新,因为整个QS面板有各种各样的开关,各个开关的刷新时机是不确定的,而通过消息机制则可以有条不紊得将所有开关的刷新有序组织起来,这里体现了Android中很重要的一个特性-<strong>有序性</strong>,这是我们值得借鉴和参考的.</p>
+
+      
+      <blockquote>
+        
+        <strong>本文链接：</strong><br><a href="http://longzhiye.top/2024/02/03/2024-02-03/">http://longzhiye.top/2024/02/03/2024-02-03/</a>
+      </blockquote>
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Android/" rel="tag">Android</a><a class="mdui-ripple article_tags-link" href="/tags/SystemUI/" rel="tag">SystemUI</a><a class="mdui-ripple article_tags-link" href="/tags/framework/" rel="tag">framework</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2024/02/10/2024-02-10/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android 14 截屏流程解析'}">上一篇</span>
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2024/01/28/2024-01-28/">
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android14 StatusBar顶部图标加载流程'}">下一篇</span>
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+
+
+
+</main>
+  <footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="http://github.com/longzhiye" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe7ab;</i></a>
+    
+    
+    
+      <a href="https://www.zhihu.com/people/long-zhi-xie-61" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe6c0;</i></a>
+    
+    
+    
+      <a href="tencent://tencent:////message/?uin=951898105&Menu=yes" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2022 - 2025 龙之叶<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>
+    <br>
+      <span id="busuanzi_container_site_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_site_pv"></span></span> &nbsp;&nbsp;
+      <span id="busuanzi_container_site_uv" style="display: none;"><i class="iconfont">&#xe601;</i> <span id="busuanzi_value_site_uv"></span></span>
+    
+  </div>
+</footer>
+
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+  
+<script src="/custom.js"></script>
+
+</body>
+</html>

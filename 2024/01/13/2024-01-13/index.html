@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>Android APP启动流程解析 | 龙之叶的博客</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="alternate" href="/atom.xml" title="龙之叶的博客" type="application/atom+xml">
+  <meta name="description" content="Android APP启动流程解析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android APP启动流程解析">
+<meta property="og:url" content="http://longzhiye.top/2024/01/13/2024-01-13/index.html">
+<meta property="og:site_name" content="龙之叶的博客">
+<meta property="og:description" content="Android APP启动流程解析">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-01-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-04T08:39:58.963Z">
+<meta property="article:author" content="龙之叶">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="framework">
+<meta name="twitter:card" content="summary">
+
+  <meta name="keywords" content=",Android,framework">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="龙之叶的博客">
+  <meta name="msapplication-starturl" content="http://longzhiye.top/2024/01/13/2024-01-13/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="龙之叶的博客">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <link rel="canonical" href="http://longzhiye.top/2024/01/13/2024-01-13/">
+  
+
+  
+  
+
+  
+  
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/custom.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(!a){document.getElementsByTagName("body")[0].className+=" mdui-drawer-body-left"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">龙之叶的博客</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+	<!--
+    <a href="/atom.xml" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'RSS'}"><i class="mdui-icon material-icons">rss_feed</i></a>
+	-->
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(a){document.getElementById("sidebar").className+=" mdui-drawer-close"};</script>
+  <div class="mdui-grid-tile">
+    <img src="/images/banner.png" style="height: 160px;">
+    <img src="/images/avatar.png" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;background-color:#fff;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">龙之叶</div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>生命不息，折腾不止</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:longzhiye163@163.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'longzhiye163@163.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-0");if(a){document.getElementsByClassName("mdui-collapse-item")[0].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">archive</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2025/10/">十月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/09/">九月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/08/">八月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/07/">七月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/06/">六月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/03/">三月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/02/">二月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/01/">一月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/10/">十月 2024<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/09/">九月 2024<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/08/">八月 2024<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/03/">三月 2024<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/02/">二月 2024<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/01/">一月 2024<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/12/">十二月 2023<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/11/">十一月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/10/">十月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/09/">九月 2023<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/08/">八月 2023<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/06/">六月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/05/">五月 2023<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/04/">四月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/03/">三月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/02/">二月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/09/">九月 2022<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/04/">四月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/03/">三月 2017<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/02/">二月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/01/">一月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/12/">十二月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/11/">十一月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/10/">十月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/08/">八月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-1");if(a){document.getElementsByClassName("mdui-collapse-item")[1].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">class</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">108</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E8%B5%84%E8%AE%AF/">资讯<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E9%80%9A%E7%9F%A5/">通知<span class="mdui-ripple sidebar_archives-count">4</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-2");if(a){document.getElementsByClassName("mdui-collapse-item")[2].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/ANR/" rel="tag">ANR<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/APP/" rel="tag">APP<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android/" rel="tag">Android<span class="mdui-ripple sidebar_archives-count">98</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android12/" rel="tag">Android12<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android13/" rel="tag">Android13<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android14/" rel="tag">Android14<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android16/" rel="tag">Android16<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AndroidStudio/" rel="tag">AndroidStudio<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AutoDraw/" rel="tag">AutoDraw<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Build/" rel="tag">Build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Crash/" rel="tag">Crash<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Foxmail/" rel="tag">Foxmail<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Framework/" rel="tag">Framework<span class="mdui-ripple sidebar_archives-count">20</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GPS%E8%BD%A8%E8%BF%B9%E5%9B%BE/" rel="tag">GPS轨迹图<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Git/" rel="tag">Git<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GitHub/" rel="tag">GitHub<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Google/" rel="tag">Google<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Java/" rel="tag">Java<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Kernel/" rel="tag">Kernel<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Launcher/" rel="tag">Launcher<span class="mdui-ripple sidebar_archives-count">17</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Lib/" rel="tag">Lib<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Linux/" rel="tag">Linux<span class="mdui-ripple sidebar_archives-count">18</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Markdown/" rel="tag">Markdown<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Material-Design/" rel="tag">Material Design<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OS-X/" rel="tag">OS X<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OTA/" rel="tag">OTA<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/QuickTime/" rel="tag">QuickTime<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SSH/" rel="tag">SSH<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Settings/" rel="tag">Settings<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SystemUI/" rel="tag">SystemUI<span class="mdui-ripple sidebar_archives-count">19</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/UAC/" rel="tag">UAC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Ubuntu/" rel="tag">Ubuntu<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WPS/" rel="tag">WPS<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Wifi/" rel="tag">Wifi<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WindTerm/" rel="tag">WindTerm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows/" rel="tag">Windows<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows-11/" rel="tag">Windows 11<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/androidmk/" rel="tag">androidmk<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/blog/" rel="tag">blog<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/build/" rel="tag">build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/feel/" rel="tag">feel<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/framework/" rel="tag">framework<span class="mdui-ripple sidebar_archives-count">58</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/inotify/" rel="tag">inotify<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/life/" rel="tag">life<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/ninja/" rel="tag">ninja<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/rsync/" rel="tag">rsync<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/standard/" rel="tag">standard<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/test/" rel="tag">test<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1/" rel="tag">企业微信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E7%94%9F%E6%B4%BB%E6%84%9F%E6%82%9F/" rel="tag">生活感悟<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+      <a href="/timeline" class="mdui-list-item mdui-ripple">时间轴</a>
+    
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-3");if(a){document.getElementsByClassName("mdui-collapse-item")[3].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+          <a href="http://www.niemingzhao.top" target="_blank" class="mdui-list-item mdui-p-l-2 mdui-text-color-theme-accent mdui-ripple" style="justify-content: center;">聂明照的博客</a>
+        
+        
+      </div>
+    </div>
+  </div>
+</aside>
+
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <style>#main article .mdui-card-content .text-center{text-align:center!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-17.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">Android APP启动流程解析</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2024-01-13 / <i class="iconfont">&#xe601;</i> 龙之叶 &nbsp;&nbsp; <span id="busuanzi_container_page_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_page_pv"></span></span></div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#qrcode', align: 'right'}"><i class="mdui-icon material-icons">devices</i></button>
+          <ul class="mdui-menu" id="qrcode">
+            
+              <li class="mdui-menu-item"><a class="mdui-text-center mdui-ripple">发送到手机</a></li>
+            
+            <li class="mdui-menu-item" disabled>
+              
+                <img src="//qr.liantu.com/api.php?w=246&m=10&text=http://longzhiye.top/2024/01/13/2024-01-13/">
+              
+            </li>
+          </ul>
+        
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="mdui-icon material-icons">share</i></button>
+          <ul class="mdui-menu" id="share_menu">
+            <li class="mdui-menu-item">
+              <a href="https://service.weibo.com/share/share.php?appkey=&title=Android APP启动流程解析&url=http://longzhiye.top/2024/01/13/2024-01-13/&pic=http://longzhiye.top/images/favicon.png&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://twitter.com/intent/tweet?text=Android APP启动流程解析&url=http://longzhiye.top/2024/01/13/2024-01-13/&via=龙之叶" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=http://longzhiye.top/2024/01/13/2024-01-13/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://plus.google.com/share?url=http://longzhiye.top/2024/01/13/2024-01-13/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://longzhiye.top/2024/01/13/2024-01-13/&title=Android APP启动流程解析" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://connect.qq.com/widget/shareqq/index.html?site=龙之叶的博客&title=Android APP启动流程解析&pics=http://longzhiye.top/images/favicon.png&url=http://longzhiye.top/2024/01/13/2024-01-13/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://telegram.me/share/url?url=http://longzhiye.top/2024/01/13/2024-01-13/&text=Android APP启动流程解析" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+            </li>
+          </ul>
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h2 id="手机启动"><a href="#手机启动" class="headerlink" title="手机启动"></a>手机启动</h2><p>Android手机在开机Linux内核启动的时候，会加载system/core/init/init.rc文件，启动init进程，这个是Android特有的初始化程序，主要负责</p>
+<ul>
+<li>各种复杂工作</li>
+<li>负责开关机画面</li>
+<li>文件系统的创建和挂载</li>
+<li>启动Zygote(孵化器)进程</li>
+<li>启动ServiceManager，它是Binder服务管理器，管理所有Android系统服务</li>
+</ul>
+<h3 id="fork-Zygote"><a href="#fork-Zygote" class="headerlink" title="fork Zygote"></a>fork Zygote</h3><p>在启动init进程后会fork Zygote进程，它是一个孵化器进程，它的main函数会创建好环境并且等待孵化，接到指令后就会开始fork子进程<br>创建一个server端的socket， name为zynote，用于和客户端进程通信<br>预加载类和资源，提高应用启动速度<br>启动SystemServer进程<br>监听socket，当有一个应用程序启动时，就会向它发出请求，然后zygote进程fock自己来创建的一个新的子进程。<br>所以说Android内所有的应用其实都是Zygote的子进程</p>
+<h3 id="SystemServer"><a href="#SystemServer" class="headerlink" title="SystemServer"></a>SystemServer</h3><p>SystemServer是由zygote进程fork出来的第一个进程，SystemServer和Zygote是Android Framework最重要的2个进程。 系统里面重要的服务都是在这个进程里面开启的，比如ActivityManagerService（AMS）、PackageManagerService（PMS）、WindowManagerService（WMS）。<br>应用启动流程基本是围绕着ActivityManagerService和ActivityThread展开。<br>并且负责启动并且管理整个framework。<br>ActivityManagerService<br>ActivityManagerService，简称AMS，服务端对象，负责系统中所有Activity的生命周期。<br>并且他在SystemServer进程开启的时候，就会直接跟着一起初始化</p>
+<h3 id="应用启动"><a href="#应用启动" class="headerlink" title="应用启动"></a>应用启动</h3><h4 id="涉及进程"><a href="#涉及进程" class="headerlink" title="涉及进程"></a>涉及进程</h4><p>Android开发中，我们可以通过Package包名和Activity类名，来打开一个APP。实际上，项目里的业务代码startActivity()方法并不是直接创建进程、拉起APP的。而是通过一系列的调用，把请求传递给SystemServer的AMS。AMS收到来自客户端的请求后，再通知zygote进程来fork一个新进程，来开启我们的目标APP。APP中所有Activity的生命周期过程，都由AMS（SystemServer进程）统一调度，并在APP自身进程中具体完成。<br>所以打开应用总共涉及了三个进程：Zygote进程、AMS进程、APP进程<br>App进程与AMS通过Binder机制进行跨进程通信<br>AMS(SystemServer进程)与zygote通过Socket进行跨进程通信。<br>在Android系统中，任何一个Activity的启动都是由AMS和App进程（主要是ActivityThread）相互配合来完成的。AMS服务统一调度系统中所有进程的Activity启动，而每个Activity的启动过程则由其所属的进程具体来完成。</p>
+<h4 id="启动步骤"><a href="#启动步骤" class="headerlink" title="启动步骤"></a>启动步骤</h4><ol>
+<li>activity中的startActivity方法最终都会通过拿到ATSM的代理IActivityTaskManager调用的startActivity;</li>
+<li>之后进入system server进程中的ATMS startActivity，ATMS 经过收集Intent信息，然后使用ActivityStackSupervisor.startSpecificActivityLocked，如果进程已经存在，则直接使用realStartActivityLocked，通过App的binder客户端的代理ApplicationThread调用回到bindApplication，走入Activity的启动流程;如果进程不存在则通过socket链接Zygote，请求fork新的进程;</li>
+<li>App进程创建完成后，进程启动会调用ActivityThread.main方法，初始化主线程Handler,接着走入attach方法，然后通过AMS的代理调用AMS的attachApplication方法，并将App进程的通信代理ApplicationThread传入AMS;</li>
+<li>AMS获取到ATMS调用ApplicationThread的bindApplication回到App进程的ActivityThread.ApplicationThread.bindApplication方法中，然后使用Handler切换到主线程执行handleBindApplication，这里初始化了App的进程名字、时间，用户的硬件配置，包括App的文件系统，创建了App的Context实例，Instrumentation实例，调用App的onCreate回调方法，同时告诉AMS APP初始化工作完毕;</li>
+<li>AMS接着会调用ATMS的attachApplication，最后调用ClientLifecycleManager的scheduleTransaction方法，通过App的Binder代理ApplicationThread回到ActivityThread;</li>
+<li>进入ActivityThread.ApplicationThread.scheduleTransaction方法之后就进入了Activity的onStart、onResume回调</li>
+</ol>
+<h2 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h2><h4 id="ActivityThread"><a href="#ActivityThread" class="headerlink" title="ActivityThread"></a>ActivityThread</h4><p>一个应用，在被点击后首先要fork出一个Zygote进程，接下来执行ActivityThread.main<br><strong>frameworks/base/core/java/android/app/ActivityThread.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123; </span><br><span class="line">    <span class="type">ActivityThread</span> <span class="variable">thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ActivityThread</span>(); </span><br><span class="line">    thread.attach(<span class="literal">false</span>, startSeq); </span><br><span class="line">    <span class="keyword">if</span> (sMainThreadHandler == <span class="literal">null</span>) &#123; </span><br><span class="line">        sMainThreadHandler = thread.getHandler(); </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">false</span>) &#123; </span><br><span class="line">        Looper.myLooper().setMessageLogging(<span class="keyword">new</span> </span><br><span class="line">                <span class="title class_">LogPrinter</span>(Log.DEBUG, <span class="string">&quot;ActivityThread&quot;</span>)); </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="comment">// End of event ActivityThreadMain. </span></span><br><span class="line">    Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER); </span><br><span class="line">    Looper.loop(); </span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;Main thread loop unexpectedly exited&quot;</span>); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后调用ActivityThread的attach方法，然后将activity和AMS通信的Binder代理IApplicationThread实例传入AMS<br><strong>frameworks/base/core/java/android/app/ActivityThread.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@UnsupportedAppUsage</span> </span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">attach</span><span class="params">(<span class="type">boolean</span> system, <span class="type">long</span> startSeq)</span> &#123; </span><br><span class="line">    sCurrentActivityThread = <span class="built_in">this</span>; </span><br><span class="line">    mSystemThread = system; </span><br><span class="line">    <span class="keyword">if</span> (!system) &#123; </span><br><span class="line">        android.ddm.DdmHandleAppName.setAppName(<span class="string">&quot;&lt;pre-initialized&gt;&quot;</span>, </span><br><span class="line">                                                UserHandle.myUserId()); </span><br><span class="line">        RuntimeInit.setApplicationObject(mAppThread.asBinder()); </span><br><span class="line">        <span class="keyword">final</span> <span class="type">IActivityManager</span> <span class="variable">mgr</span> <span class="operator">=</span> ActivityManager.getService(); </span><br><span class="line">        <span class="keyword">try</span> &#123; </span><br><span class="line">            mgr.attachApplication(mAppThread, startSeq); </span><br><span class="line">        &#125; <span class="keyword">catch</span> (RemoteException ex) &#123; </span><br><span class="line">            <span class="keyword">throw</span> ex.rethrowFromSystemServer(); </span><br><span class="line">        &#125; </span><br><span class="line">        <span class="comment">// Watch for getting close to heap limit. </span></span><br><span class="line">        BinderInternal.addGcWatcher(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123; </span><br><span class="line">            <span class="meta">@Override</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123; </span><br><span class="line">                <span class="keyword">if</span> (!mSomeActivitiesChanged) &#123; </span><br><span class="line">                    <span class="keyword">return</span>; </span><br><span class="line">                &#125; </span><br><span class="line">                <span class="type">Runtime</span> <span class="variable">runtime</span> <span class="operator">=</span> Runtime.getRuntime(); </span><br><span class="line">                <span class="type">long</span> <span class="variable">dalvikMax</span> <span class="operator">=</span> runtime.maxMemory(); </span><br><span class="line">                <span class="type">long</span> <span class="variable">dalvikUsed</span> <span class="operator">=</span> runtime.totalMemory() - runtime.freeMemory(); </span><br><span class="line">                <span class="keyword">if</span> (dalvikUsed &gt; ((<span class="number">3</span>*dalvikMax)/<span class="number">4</span>)) &#123; </span><br><span class="line">                    <span class="keyword">if</span> (DEBUG_MEMORY_TRIM) Slog.d(TAG, <span class="string">&quot;Dalvik max=&quot;</span> + (dalvikMax/<span class="number">1024</span>) </span><br><span class="line">                            + <span class="string">&quot; total=&quot;</span> + (runtime.totalMemory()/<span class="number">1024</span>) </span><br><span class="line">                            + <span class="string">&quot; used=&quot;</span> + (dalvikUsed/<span class="number">1024</span>)); </span><br><span class="line">                    mSomeActivitiesChanged = <span class="literal">false</span>; </span><br><span class="line">                    <span class="keyword">try</span> &#123; </span><br><span class="line">                        ActivityTaskManager.getService().releaseSomeActivities(mAppThread); </span><br><span class="line">                    &#125; <span class="keyword">catch</span> (RemoteException e) &#123; </span><br><span class="line">                        <span class="keyword">throw</span> e.rethrowFromSystemServer(); </span><br><span class="line">                    &#125; </span><br><span class="line">                &#125; </span><br><span class="line">            &#125; </span><br><span class="line">        &#125;); </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="AMS"><a href="#AMS" class="headerlink" title="AMS"></a>AMS</h4><p>接着进入AMS进程，ActivityManagerService.attachApplicationLocked<br><strong>frameworks/base/services/core/java/com/android/server/am/ActivityManagerService.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">attachApplicationLocked</span><span class="params">(IApplicationThread thread, </span></span><br><span class="line"><span class="params">        <span class="type">int</span> pid, <span class="type">int</span> callingUid, <span class="type">long</span> startSeq)</span> &#123; </span><br><span class="line">        <span class="keyword">if</span> (app.isolatedEntryPoint != <span class="literal">null</span>) &#123; </span><br><span class="line">            <span class="comment">// This is an isolated process which should just call an entry point instead of </span></span><br><span class="line">            <span class="comment">// being bound to an application. </span></span><br><span class="line">            thread.runIsolatedEntryPoint(app.isolatedEntryPoint, app.isolatedEntryPointArgs); </span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (instr2 != <span class="literal">null</span>) &#123; </span><br><span class="line">            thread.bindApplication(processName, appInfo, providers, </span><br><span class="line">                    instr2.mClass, </span><br><span class="line">                    profilerInfo, instr2.mArguments, </span><br><span class="line">                    instr2.mWatcher, </span><br><span class="line">                    instr2.mUiAutomationConnection, testMode, </span><br><span class="line">                    mBinderTransactionTrackingEnabled, enableTrackAllocation, </span><br><span class="line">                    isRestrictedBackupMode || !normalMode, app.isPersistent(), </span><br><span class="line">                    <span class="keyword">new</span> <span class="title class_">Configuration</span>(app.getWindowProcessController().getConfiguration()), </span><br><span class="line">                    app.compat, getCommonServicesLocked(app.isolated), </span><br><span class="line">                    mCoreSettingsObserver.getCoreSettingsLocked(), </span><br><span class="line">                    buildSerial, autofillOptions, contentCaptureOptions); </span><br><span class="line">        &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">            thread.bindApplication(processName, appInfo, providers, <span class="literal">null</span>, profilerInfo, </span><br><span class="line">                    <span class="literal">null</span>, <span class="literal">null</span>, <span class="literal">null</span>, testMode, </span><br><span class="line">                    mBinderTransactionTrackingEnabled, enableTrackAllocation, </span><br><span class="line">                    isRestrictedBackupMode || !normalMode, app.isPersistent(), </span><br><span class="line">                    <span class="keyword">new</span> <span class="title class_">Configuration</span>(app.getWindowProcessController().getConfiguration()), </span><br><span class="line">                    app.compat, getCommonServicesLocked(app.isolated), </span><br><span class="line">                    mCoreSettingsObserver.getCoreSettingsLocked(), </span><br><span class="line">                    buildSerial, autofillOptions, contentCaptureOptions); </span><br><span class="line">        &#125; </span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123; </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="comment">// See if the top visible activity is waiting to run in this process... </span></span><br><span class="line">    <span class="keyword">if</span> (normalMode) &#123; </span><br><span class="line">        <span class="keyword">try</span> &#123; </span><br><span class="line">            didSomething = mAtmInternal.attachApplication(app.getWindowProcessController()); </span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123; </span><br><span class="line">            Slog.wtf(TAG, <span class="string">&quot;Exception thrown launching activities in &quot;</span> + app, e); </span><br><span class="line">            badApp = <span class="literal">true</span>; </span><br><span class="line">        &#125; </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="comment">// Find any services that should be running in this process... </span></span><br><span class="line">    <span class="keyword">if</span> (!badApp) &#123; </span><br><span class="line">        <span class="keyword">try</span> &#123; </span><br><span class="line">            didSomething |= mServices.attachApplicationLocked(app, processName); </span><br><span class="line">            checkTime(startTime, <span class="string">&quot;attachApplicationLocked: after mServices.attachApplicationLocked&quot;</span>); </span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123; </span><br><span class="line">            Slog.wtf(TAG, <span class="string">&quot;Exception thrown starting services in &quot;</span> + app, e); </span><br><span class="line">            badApp = <span class="literal">true</span>; </span><br><span class="line">        &#125; </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>thread.bindApplication：该方法主要讲App进程的配置信息通过IApplicationThread Binder通信回传到ActivityThread中;<br>mAtmInternal.attachApplication：mAtmInternal实际就是ActivityTaskManager的实例，通过LocalServices加载;<br>mAtmInternal = LocalServices.getService(ActivityTaskManagerInternal.class); </p>
+<p>那么这里相当于走到了ActivityTaskManagerServer的attachApplication中;<br><strong>frameworks/base/core/java/android/app/ActivityThread.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span> </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">bindApplication</span><span class="params">(String processName, ApplicationInfo appInfo, </span></span><br><span class="line"><span class="params">        ProviderInfoList providerList, ComponentName instrumentationName, </span></span><br><span class="line"><span class="params">        ProfilerInfo profilerInfo, Bundle instrumentationArgs, </span></span><br><span class="line"><span class="params">        IInstrumentationWatcher instrumentationWatcher, </span></span><br><span class="line"><span class="params">        IUiAutomationConnection instrumentationUiConnection, <span class="type">int</span> debugMode, </span></span><br><span class="line"><span class="params">        <span class="type">boolean</span> enableBinderTracking, <span class="type">boolean</span> trackAllocation, </span></span><br><span class="line"><span class="params">        <span class="type">boolean</span> isRestrictedBackupMode, <span class="type">boolean</span> persistent, Configuration config, </span></span><br><span class="line"><span class="params">        CompatibilityInfo compatInfo, Map services, Bundle coreSettings, </span></span><br><span class="line"><span class="params">        String buildSerial, AutofillOptions autofillOptions, </span></span><br><span class="line"><span class="params">        ContentCaptureOptions contentCaptureOptions, <span class="type">long</span>[] disabledCompatChanges)</span> &#123; </span><br><span class="line">    setCoreSettings(coreSettings); </span><br><span class="line">    <span class="type">AppBindData</span> <span class="variable">data</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AppBindData</span>(); </span><br><span class="line">    data.processName = processName; </span><br><span class="line">    ..... </span><br><span class="line">    sendMessage(H.BIND_APPLICATION, data); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的bindApplication主要初始化了AppBindData，然后发送BIND_APPLICATION给APP的主线程BIND_APPLICATION，最后执行了handleBindApplication<br><strong>frameworks/base/core/java/android/app/ActivityThread.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> BIND_APPLICATION: </span><br><span class="line">    Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, <span class="string">&quot;bindApplication&quot;</span>); </span><br><span class="line">    <span class="type">AppBindData</span> <span class="variable">data</span> <span class="operator">=</span> (AppBindData)msg.obj; </span><br><span class="line">    handleBindApplication(data); </span><br><span class="line">    Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER); </span><br><span class="line">    <span class="keyword">break</span>;</span><br></pre></td></tr></table></figure>
+<p>Application的onCreate方法<br><strong>frameworks/base/core/java/android/app/ActivityThread.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">handleBindApplication</span><span class="params">(AppBindData data)</span> &#123; </span><br><span class="line">          mBoundApplication = data; </span><br><span class="line">        mConfiguration = <span class="keyword">new</span> <span class="title class_">Configuration</span>(data.config); </span><br><span class="line">        mCompatConfiguration = <span class="keyword">new</span> <span class="title class_">Configuration</span>(data.config); </span><br><span class="line">         <span class="keyword">if</span> (data.initProfilerInfo != <span class="literal">null</span>) &#123; </span><br><span class="line">            mProfiler.profileFile = data.initProfilerInfo.profileFile; </span><br><span class="line">            mProfiler.profileFd = data.initProfilerInfo.profileFd; </span><br><span class="line">            mProfiler.samplingInterval = data.initProfilerInfo.samplingInterval; </span><br><span class="line">            mProfiler.autoStopProfiler = data.initProfilerInfo.autoStopProfiler; </span><br><span class="line">            mProfiler.streamingOutput = data.initProfilerInfo.streamingOutput; </span><br><span class="line">            <span class="keyword">if</span> (data.initProfilerInfo.attachAgentDuringBind) &#123; </span><br><span class="line">                agent = data.initProfilerInfo.agent; </span><br><span class="line">            &#125; </span><br><span class="line">        &#125; </span><br><span class="line">mInstrumentationPackageName = ii.packageName; </span><br><span class="line">            mInstrumentationAppDir = ii.sourceDir; </span><br><span class="line">            mInstrumentationSplitAppDirs = ii.splitSourceDirs; </span><br><span class="line">            mInstrumentationLibDir = getInstrumentationLibrary(data.appInfo, ii); </span><br><span class="line">            mInstrumentedAppDir = data.info.getAppDir(); </span><br><span class="line">            mInstrumentedSplitAppDirs = data.info.getSplitAppDirs(); </span><br><span class="line">            mInstrumentedLibDir = data.info.getLibDir(); </span><br><span class="line">             mInstrumentation.callApplicationOnCreate(app); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法主要在App进程中对App的一些硬件资源配置申请的属性、App的文件夹等完成App基本信息的初始化<br>并且<br>mAtmInternal.attachApplication最终会调用mRootActivityContainer.attachApplication(wpc)<br>RootActivityContainer.attachApplication<br><strong>frameworks/base/services/core/java/com/android/server/wm/RootActivityContainer.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">boolean</span> <span class="title function_">attachApplication</span><span class="params">(WindowProcessController app)</span> <span class="keyword">throws</span> RemoteException &#123; </span><br><span class="line">    <span class="keyword">final</span> <span class="type">String</span> <span class="variable">processName</span> <span class="operator">=</span> app.mName; </span><br><span class="line">    <span class="type">boolean</span> <span class="variable">didSomething</span> <span class="operator">=</span> <span class="literal">false</span>; </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">displayNdx</span> <span class="operator">=</span> mActivityDisplays.size() - <span class="number">1</span>; displayNdx &gt;= <span class="number">0</span>; --displayNdx) &#123; </span><br><span class="line">        <span class="keyword">final</span> <span class="type">ActivityDisplay</span> <span class="variable">display</span> <span class="operator">=</span> mActivityDisplays.get(displayNdx); </span><br><span class="line">        <span class="keyword">final</span> <span class="type">ActivityStack</span> <span class="variable">stack</span> <span class="operator">=</span> display.getFocusedStack(); </span><br><span class="line">        <span class="keyword">if</span> (stack != <span class="literal">null</span>) &#123; </span><br><span class="line">            stack.getAllRunningVisibleActivitiesLocked(mTmpActivityList); </span><br><span class="line">            <span class="comment">//获取前台栈顶第一个非finishing的Activity </span></span><br><span class="line">            <span class="keyword">final</span> <span class="type">ActivityRecord</span> <span class="variable">top</span> <span class="operator">=</span> stack.topRunningActivityLocked(); </span><br><span class="line">            <span class="keyword">final</span> <span class="type">int</span> <span class="variable">size</span> <span class="operator">=</span> mTmpActivityList.size(); </span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; size; i++) &#123; </span><br><span class="line">                <span class="keyword">final</span> <span class="type">ActivityRecord</span> <span class="variable">activity</span> <span class="operator">=</span> mTmpActivityList.get(i); </span><br><span class="line">                <span class="keyword">if</span> (activity.app == <span class="literal">null</span> &amp;&amp; app.mUid == activity.info.applicationInfo.uid </span><br><span class="line">                        &amp;&amp; processName.equals(activity.processName)) &#123; </span><br><span class="line">                    <span class="keyword">try</span> &#123; </span><br><span class="line">                    <span class="comment">//真正启动Activity </span></span><br><span class="line">                        <span class="keyword">if</span> (mStackSupervisor.realStartActivityLocked(activity, app, </span><br><span class="line">                                top == activity <span class="comment">/* andResume */</span>, <span class="literal">true</span> <span class="comment">/* checkConfig */</span>)) &#123; </span><br><span class="line">                            didSomething = <span class="literal">true</span>; </span><br><span class="line">                        &#125; </span><br><span class="line">                    &#125; <span class="keyword">catch</span> (RemoteException e) &#123; </span><br><span class="line">                        Slog.w(TAG, <span class="string">&quot;Exception in new application when starting activity &quot;</span> </span><br><span class="line">                                + top.intent.getComponent().flattenToShortString(), e); </span><br><span class="line">                        <span class="keyword">throw</span> e; </span><br><span class="line">                    &#125; </span><br><span class="line">                &#125; </span><br><span class="line">            &#125; </span><br><span class="line">        &#125; </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">if</span> (!didSomething) &#123; </span><br><span class="line">        ensureActivitiesVisible(<span class="literal">null</span>, <span class="number">0</span>, <span class="literal">false</span> <span class="comment">/* preserve_windows */</span>); </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">return</span> didSomething; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接着调用ActivityStackSupervisor开始创建Activity</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">realStartActivityLocked</span><span class="params">(ActivityRecord r, ProcessRecord app, </span></span><br><span class="line"><span class="params">            <span class="type">boolean</span> andResume, <span class="type">boolean</span> checkConfig)</span> <span class="keyword">throws</span> RemoteException &#123; </span><br><span class="line">    <span class="keyword">try</span> &#123; </span><br><span class="line">        r.startFreezingScreenLocked(app, <span class="number">0</span>); </span><br><span class="line">        <span class="comment">//启动tick，收集应用启动慢的信息 </span></span><br><span class="line">        <span class="comment">// schedule launch ticks to collect information about slow apps. </span></span><br><span class="line">        r.startLaunchTickingLocked(); </span><br><span class="line">        r.setProcess(app); </span><br><span class="line">        <span class="keyword">try</span> &#123; </span><br><span class="line">            <span class="comment">//创建Activity启动事务 </span></span><br><span class="line">            <span class="comment">// Create activity launch transaction. </span></span><br><span class="line">            <span class="keyword">final</span> <span class="type">ClientTransaction</span> <span class="variable">clientTransaction</span> <span class="operator">=</span> ClientTransaction.obtain(app.thread, </span><br><span class="line">                    r.appToken); </span><br><span class="line">            clientTransaction.addCallback(LaunchActivityItem.obtain(<span class="keyword">new</span> <span class="title class_">Intent</span>(r.intent), </span><br><span class="line">                    System.identityHashCode(r), r.info, </span><br><span class="line">                    <span class="comment">// <span class="doctag">TODO:</span> Have this take the merged configuration instead of separate global </span></span><br><span class="line">                    <span class="comment">// and override configs. </span></span><br><span class="line">                    mergedConfiguration.getGlobalConfiguration(), </span><br><span class="line">                    mergedConfiguration.getOverrideConfiguration(), r.compat, </span><br><span class="line">                    r.launchedFromPackage, task.voiceInteractor, app.repProcState, r.icicle, </span><br><span class="line">                    r.persistentState, results, newIntents, mService.isNextTransitionForward(), </span><br><span class="line">                    profilerInfo)); </span><br><span class="line">            <span class="comment">//设置目标事务的状态为onResume </span></span><br><span class="line">            <span class="comment">// Set desired final state. </span></span><br><span class="line">            <span class="keyword">final</span> ActivityLifecycleItem lifecycleItem; </span><br><span class="line">            <span class="keyword">if</span> (andResume) &#123; </span><br><span class="line">                lifecycleItem = ResumeActivityItem.obtain(mService.isNextTransitionForward()); </span><br><span class="line">            &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">                lifecycleItem = PauseActivityItem.obtain(); </span><br><span class="line">            &#125; </span><br><span class="line">            clientTransaction.setLifecycleStateRequest(lifecycleItem); </span><br><span class="line">            <span class="comment">//通过transaciton方式开始activity生命周期，onCreate,onStart,onResume </span></span><br><span class="line">            <span class="comment">// Schedule transaction. </span></span><br><span class="line">            mService.getLifecycleManager().scheduleTransaction(clientTransaction); </span><br><span class="line">        &#125; <span class="keyword">catch</span> (RemoteException e) &#123; </span><br><span class="line">        &#125; </span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123; </span><br><span class="line">        endDeferResume(); </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个方法中间ClientLifecycleManager.scheduleTransaction最终会调用ClientTransaction的schedule方法，然后这个方法实际上会回调回ActivityThread<br>运用了IApplicationThread ，也就是AMS和ActivityThread通信的桥梁<br>APP.onCreate<br>所以我们调用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span> </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">scheduleTransaction</span><span class="params">(ClientTransaction transaction)</span> <span class="keyword">throws</span> RemoteException &#123; </span><br><span class="line">    ActivityThread.<span class="built_in">this</span>.scheduleTransaction(transaction); </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">scheduleTransaction</span><span class="params">(ClientTransaction transaction)</span> &#123; </span><br><span class="line">    transaction.preExecute(<span class="built_in">this</span>); </span><br><span class="line">    sendMessage(ActivityThread.H.EXECUTE_TRANSACTION, transaction); </span><br><span class="line">&#125;</span><br><span class="line">......</span><br><span class="line">（最后再调用了几个方法，根据代码走就可以了没啥特殊的这里就不放了）</span><br></pre></td></tr></table></figure>
+<p>最后调用了activity.attach方法。<br>在这期间，ActivityThread做了这样几件事<br>通过反射创建Activity实例，这是通过Instrumentation.newActivity方法实现的；<br>调用Activity的onCreate回调；<br>通过Activity.attach方法，实例化Window对象；</p>
+
+      
+      <blockquote>
+        
+        <strong>本文链接：</strong><br><a href="http://longzhiye.top/2024/01/13/2024-01-13/">http://longzhiye.top/2024/01/13/2024-01-13/</a>
+      </blockquote>
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Android/" rel="tag">Android</a><a class="mdui-ripple article_tags-link" href="/tags/framework/" rel="tag">framework</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2024/01/14/2024-01-14/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android ART编译模式解析'}">上一篇</span>
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2024/01/07/2024-01-07/">
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android 10 音量UI更新解析'}">下一篇</span>
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+
+
+
+</main>
+  <footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="http://github.com/longzhiye" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe7ab;</i></a>
+    
+    
+    
+      <a href="https://www.zhihu.com/people/long-zhi-xie-61" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe6c0;</i></a>
+    
+    
+    
+      <a href="tencent://tencent:////message/?uin=951898105&Menu=yes" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2022 - 2025 龙之叶<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>
+    <br>
+      <span id="busuanzi_container_site_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_site_pv"></span></span> &nbsp;&nbsp;
+      <span id="busuanzi_container_site_uv" style="display: none;"><i class="iconfont">&#xe601;</i> <span id="busuanzi_value_site_uv"></span></span>
+    
+  </div>
+</footer>
+
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+  
+<script src="/custom.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>Android 14(U)适配攻略 | 龙之叶的博客</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="alternate" href="/atom.xml" title="龙之叶的博客" type="application/atom+xml">
+  <meta name="description" content="Android 14(U)适配攻略">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 14(U)适配攻略">
+<meta property="og:url" content="http://longzhiye.top/2023/09/03/2023-09-03/index.html">
+<meta property="og:site_name" content="龙之叶的博客">
+<meta property="og:description" content="Android 14(U)适配攻略">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://longzhiye.top/images/20230903/20230903001.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20230903/20230903002.png">
+<meta property="og:image" content="http://longzhiye.top/images/20230903/20230903004.jpg">
+<meta property="og:image" content="http://longzhiye.top/images/20230903/20230903005.jpg">
+<meta property="article:published_time" content="2023-09-02T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-04T08:39:58.952Z">
+<meta property="article:author" content="龙之叶">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Ubuntu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://longzhiye.top/images/20230903/20230903001.jpg">
+
+  <meta name="keywords" content=",Android,Linux,Ubuntu">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="龙之叶的博客">
+  <meta name="msapplication-starturl" content="http://longzhiye.top/2023/09/03/2023-09-03/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="龙之叶的博客">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <link rel="canonical" href="http://longzhiye.top/2023/09/03/2023-09-03/">
+  
+
+  
+  
+
+  
+  
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/custom.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(!a){document.getElementsByTagName("body")[0].className+=" mdui-drawer-body-left"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">龙之叶的博客</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+	<!--
+    <a href="/atom.xml" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'RSS'}"><i class="mdui-icon material-icons">rss_feed</i></a>
+	-->
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(a){document.getElementById("sidebar").className+=" mdui-drawer-close"};</script>
+  <div class="mdui-grid-tile">
+    <img src="/images/banner.png" style="height: 160px;">
+    <img src="/images/avatar.png" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;background-color:#fff;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">龙之叶</div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>生命不息，折腾不止</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:longzhiye163@163.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'longzhiye163@163.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-0");if(a){document.getElementsByClassName("mdui-collapse-item")[0].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">archive</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2025/10/">十月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/09/">九月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/08/">八月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/07/">七月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/06/">六月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/03/">三月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/02/">二月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/01/">一月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/10/">十月 2024<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/09/">九月 2024<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/08/">八月 2024<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/03/">三月 2024<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/02/">二月 2024<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/01/">一月 2024<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/12/">十二月 2023<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/11/">十一月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/10/">十月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/09/">九月 2023<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/08/">八月 2023<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/06/">六月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/05/">五月 2023<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/04/">四月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/03/">三月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/02/">二月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/09/">九月 2022<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/04/">四月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/03/">三月 2017<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/02/">二月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/01/">一月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/12/">十二月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/11/">十一月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/10/">十月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/08/">八月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-1");if(a){document.getElementsByClassName("mdui-collapse-item")[1].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">class</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">108</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E8%B5%84%E8%AE%AF/">资讯<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E9%80%9A%E7%9F%A5/">通知<span class="mdui-ripple sidebar_archives-count">4</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-2");if(a){document.getElementsByClassName("mdui-collapse-item")[2].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/ANR/" rel="tag">ANR<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/APP/" rel="tag">APP<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android/" rel="tag">Android<span class="mdui-ripple sidebar_archives-count">98</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android12/" rel="tag">Android12<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android13/" rel="tag">Android13<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android14/" rel="tag">Android14<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android16/" rel="tag">Android16<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AndroidStudio/" rel="tag">AndroidStudio<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AutoDraw/" rel="tag">AutoDraw<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Build/" rel="tag">Build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Crash/" rel="tag">Crash<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Foxmail/" rel="tag">Foxmail<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Framework/" rel="tag">Framework<span class="mdui-ripple sidebar_archives-count">20</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GPS%E8%BD%A8%E8%BF%B9%E5%9B%BE/" rel="tag">GPS轨迹图<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Git/" rel="tag">Git<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GitHub/" rel="tag">GitHub<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Google/" rel="tag">Google<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Java/" rel="tag">Java<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Kernel/" rel="tag">Kernel<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Launcher/" rel="tag">Launcher<span class="mdui-ripple sidebar_archives-count">17</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Lib/" rel="tag">Lib<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Linux/" rel="tag">Linux<span class="mdui-ripple sidebar_archives-count">18</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Markdown/" rel="tag">Markdown<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Material-Design/" rel="tag">Material Design<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OS-X/" rel="tag">OS X<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OTA/" rel="tag">OTA<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/QuickTime/" rel="tag">QuickTime<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SSH/" rel="tag">SSH<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Settings/" rel="tag">Settings<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SystemUI/" rel="tag">SystemUI<span class="mdui-ripple sidebar_archives-count">19</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/UAC/" rel="tag">UAC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Ubuntu/" rel="tag">Ubuntu<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WPS/" rel="tag">WPS<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Wifi/" rel="tag">Wifi<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WindTerm/" rel="tag">WindTerm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows/" rel="tag">Windows<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows-11/" rel="tag">Windows 11<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/androidmk/" rel="tag">androidmk<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/blog/" rel="tag">blog<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/build/" rel="tag">build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/feel/" rel="tag">feel<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/framework/" rel="tag">framework<span class="mdui-ripple sidebar_archives-count">58</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/inotify/" rel="tag">inotify<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/life/" rel="tag">life<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/ninja/" rel="tag">ninja<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/rsync/" rel="tag">rsync<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/standard/" rel="tag">standard<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/test/" rel="tag">test<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1/" rel="tag">企业微信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E7%94%9F%E6%B4%BB%E6%84%9F%E6%82%9F/" rel="tag">生活感悟<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+      <a href="/timeline" class="mdui-list-item mdui-ripple">时间轴</a>
+    
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-3");if(a){document.getElementsByClassName("mdui-collapse-item")[3].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+          <a href="http://www.niemingzhao.top" target="_blank" class="mdui-list-item mdui-p-l-2 mdui-text-color-theme-accent mdui-ripple" style="justify-content: center;">聂明照的博客</a>
+        
+        
+      </div>
+    </div>
+  </div>
+</aside>
+
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <style>#main article .mdui-card-content .text-center{text-align:center!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-9.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">Android 14(U)适配攻略</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2023-09-03 / <i class="iconfont">&#xe601;</i> 龙之叶 &nbsp;&nbsp; <span id="busuanzi_container_page_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_page_pv"></span></span></div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#qrcode', align: 'right'}"><i class="mdui-icon material-icons">devices</i></button>
+          <ul class="mdui-menu" id="qrcode">
+            
+              <li class="mdui-menu-item"><a class="mdui-text-center mdui-ripple">发送到手机</a></li>
+            
+            <li class="mdui-menu-item" disabled>
+              
+                <img src="//qr.liantu.com/api.php?w=246&m=10&text=http://longzhiye.top/2023/09/03/2023-09-03/">
+              
+            </li>
+          </ul>
+        
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="mdui-icon material-icons">share</i></button>
+          <ul class="mdui-menu" id="share_menu">
+            <li class="mdui-menu-item">
+              <a href="https://service.weibo.com/share/share.php?appkey=&title=Android 14(U)适配攻略&url=http://longzhiye.top/2023/09/03/2023-09-03/&pic=http://longzhiye.top/images/favicon.png&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://twitter.com/intent/tweet?text=Android 14(U)适配攻略&url=http://longzhiye.top/2023/09/03/2023-09-03/&via=龙之叶" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=http://longzhiye.top/2023/09/03/2023-09-03/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://plus.google.com/share?url=http://longzhiye.top/2023/09/03/2023-09-03/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://longzhiye.top/2023/09/03/2023-09-03/&title=Android 14(U)适配攻略" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://connect.qq.com/widget/shareqq/index.html?site=龙之叶的博客&title=Android 14(U)适配攻略&pics=http://longzhiye.top/images/favicon.png&url=http://longzhiye.top/2023/09/03/2023-09-03/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://telegram.me/share/url?url=http://longzhiye.top/2023/09/03/2023-09-03/&text=Android 14(U)适配攻略" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+            </li>
+          </ul>
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <p><img src="/images/20230903/20230903001.jpg"></p>
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>Android 14 预览版计划从2023年2月开始启动，正式版会在9-10月份发布。<br><img src="/images/20230903/20230903002.png"></p>
+<h3 id="一、应用行为变更"><a href="#一、应用行为变更" class="headerlink" title="一、应用行为变更"></a>一、应用行为变更</h3><h4 id="1-进程只能杀死自己的后台进程"><a href="#1-进程只能杀死自己的后台进程" class="headerlink" title="1.进程只能杀死自己的后台进程"></a>1.进程只能杀死自己的后台进程</h4><p>  <strong>说明：</strong>从Android 14开始，当应用调用 <strong>killBackgroundProcesses()</strong> 时，该API只能杀死应用自己的后台进程。如果传入其他应用的包名，该方法对其他应用的后台进程没有影响。</p>
+<p>  应用不应使用 <strong>killBackgroundProcesses()</strong> 或以其他方式尝试影响其他应用的进程生命周期。如果应用不必要地杀死其他应用，会降低系统性能并增加电池消耗，因为稍后需要完全重启这些应用，这比恢复现有的缓存应用占用的资源要多得多。</p>
+<h4 id="2-默认情况下拒绝使用精准闹钟"><a href="#2-默认情况下拒绝使用精准闹钟" class="headerlink" title="2.默认情况下拒绝使用精准闹钟"></a>2.默认情况下拒绝使用精准闹钟</h4><p><img src="/images/20230903/20230903004.jpg"></p>
+<p>  <strong>说明：</strong>Android 12中引入的精准闹钟权限<strong>SCHEDULE_EXACT_ALARM</strong>，不再预先授予大多数针对Android 13及更高版本的新安装应用，将默认设置为拒绝。如果用户通过备份还原操作将应用数据传输到Android14的设备上，权限仍然会被拒绝。如果现有的应用已经拥有此权限，它将在设备升级到Android 14 时预先授予。</p>
+<blockquote>
+<p>始终允许以下类型的应用程序调用 <strong>setExact()</strong> 或 <strong>setExactAndAllowWhileIdle()</strong> 方法：</p>
+<ul>
+<li>使用平台证书签名的应用程序；</li>
+<li>特权应用程序；</li>
+<li>电源许可名单上的应用程序（如果应用符合要求，可以使用intent操作+ 请求ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS）</li>
+</ul>
+<p><strong>影响范围：</strong></p>
+<ul>
+<li>targetSdkVersion为33或更高版本的应用；</li>
+<li>在 manifest中声明SCHEDULE_EXACT_ALARM权限；</li>
+<li>不属于豁免或者授权前拥有权限；</li>
+<li>不是日历或者闹钟应用。</li>
+</ul>
+</blockquote>
+<h4 id="3-前台服务类型是必填项"><a href="#3-前台服务类型是必填项" class="headerlink" title="3.前台服务类型是必填项"></a>3.前台服务类型是必填项</h4><p>  <strong>说明：</strong>Android 14 为目标平台，则必须指定适当的前台服务类型。与以前的 Android 版本一样，可组合使用多个类型。</p>
+<blockquote>
+<p>下面列出了可供选择的前台服务类型：</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Foreground service type declared</th>
+<th>Permission that must be declared</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>camera</td>
+<td>FOREGROUND_SERVICE_CAMERA</td>
+</tr>
+<tr>
+<td>connectedDevice</td>
+<td>FOREGROUND_SERVICE_CONNECTED_DEVICES</td>
+</tr>
+<tr>
+<td>dataSync</td>
+<td>FOREGROUND_SERVICE_DATA_SYNC</td>
+</tr>
+<tr>
+<td>health(Android 14 support)</td>
+<td>FOREGROUND_SERVICE_HEALTH</td>
+</tr>
+<tr>
+<td>location</td>
+<td>FOREGROUND_SERVICE_LOCATION</td>
+</tr>
+<tr>
+<td>mediaPlayback</td>
+<td>FOREGROUND_SERVICE_MEDIA_PLAYBACK</td>
+</tr>
+<tr>
+<td>mediaProjection</td>
+<td>FOREGROUND_SERVICE_MEDIA_PROJECTION</td>
+</tr>
+<tr>
+<td>microphone</td>
+<td>FOREGROUND_SERVICE_MICROPHONE</td>
+</tr>
+<tr>
+<td>phoneCall</td>
+<td>FOREGROUND_SERVICE_PHONE_CALL</td>
+</tr>
+<tr>
+<td>remoteMessaging(Android 14 support)</td>
+<td>FOREGROUND_SERVICE_REMOTE_MESSAGING</td>
+</tr>
+<tr>
+<td>shortService(Android 14 support)</td>
+<td>No additional permission requirements</td>
+</tr>
+<tr>
+<td>specialUse(Android 14 support)</td>
+<td>FOREGROUND_SERVICE_SPECIAL_USE</td>
+</tr>
+<tr>
+<td>systemExempted(Android 14 support)</td>
+<td>FOREGROUND_SERVICE_SYSTEM_EXEMPTED</td>
+</tr>
+</tbody></table>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 示例</span><br><span class="line"><span class="tag">&lt;<span class="name">manifest</span> <span class="attr">...</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">&quot;android.permission.FOREGROUND_SERVICE&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">&quot;android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">application</span> <span class="attr">...</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">service</span></span></span><br><span class="line"><span class="tag">      <span class="attr">android:name</span>=<span class="string">&quot;.MyMediaPlaybackService&quot;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">android:foregroundServiceType</span>=<span class="string">&quot;mediaPlayback&quot;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">android:exported</span>=<span class="string">&quot;false&quot;</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">service</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">application</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">manifest</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>  如果应用中的用例与这些类型均不相关，强烈建议您迁移逻辑以使用 <a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/workmanager?hl=zh-cn">WorkManager</a> 或<a target="_blank" rel="noopener" href="https://developer.android.com/about/versions/14/changes/user-initiated-data-transfers?hl=zh-cn">用户发起的数据传输作业</a>。</p>
+<h4 id="4-将前台服务迁移到用户启动的数据传输作业类型中"><a href="#4-将前台服务迁移到用户启动的数据传输作业类型中" class="headerlink" title="4.将前台服务迁移到用户启动的数据传输作业类型中"></a>4.将前台服务迁移到用户启动的数据传输作业类型中</h4><p>  <strong>说明：</strong>由于Android 14对应用使用前台服务应用了严格的规则，所以在Android 14中，我们引入了一种新的API，用于指定作业是由用户启动的数据传输作业。该API 有助于需要持续时间更长、用户启动的数据传输的用例，例如从远程服务器下载文件。</p>
+<p>  用户启动的数据传输作业由用户启动。这些作业需要通知，立即启动，并且可能会在系统条件允许的情况下运行更长的时间。</p>
+<p>  用户启动的数据传输作业需要新的运行权限： <strong>RUN_USER_INITIATED_JOBS</strong>。系统将会自动授予此权限。如果未在应用manifest中声明权限，系统将抛出<strong>SecurityException</strong>。</p>
+<p>  <strong>影响范围：</strong>targetSdkVersion为34的应用。</p>
+<h4 id="5-语法性别"><a href="#5-语法性别" class="headerlink" title="5.语法性别"></a>5.语法性别</h4><p>Android 14 推出了针对语法性别的 API：<strong>GrammaticalInflectionManager</strong>，其提供了针对单个 App 获取、设置性别偏好的入口。</p>
+<p> <strong>getApplicationGrammaticalGender()</strong> ：获取语法性别偏好，返回的是 Configuration 类中的 int 常量，有这么几种类型：</p>
+<ul>
+<li>   GRAMMATICAL_GENDER_NOT_SPECIFIED, 0：尚未指定性别偏好，将用默认的资源文本</li>
+<li>   GRAMMATICAL_GENDER_NEUTRAL, 1：指定中性、客观的资源文本</li>
+<li>   GRAMMATICAL_GENDER_FEMININE, 2：指定针对女性的资源文本</li>
+<li>   GRAMMATICAL_GENDER_MASCULINE, 3：指定针对男性的资源文本</li>
+</ul>
+<p> <strong>setRequestedApplicationGrammaticalGender()</strong> ：相对应的将上述常量类型动态设置到性别偏好。</p>
+<blockquote>
+<p>这样可以针对不同的性别，加载不同的资源目录：</p>
+<ul>
+<li>女性 —— res/values-fr-feminine</li>
+<li>男性 —— res/values-fr-masculine</li>
+<li>中性 —— res/values-fr</li>
+</ul>
+</blockquote>
+<h3 id="二、用户体验"><a href="#二、用户体验" class="headerlink" title="二、用户体验"></a>二、用户体验</h3><h4 id="1-授予对照片和视频的部分访问权限"><a href="#1-授予对照片和视频的部分访问权限" class="headerlink" title="1.授予对照片和视频的部分访问权限"></a>1.授予对照片和视频的部分访问权限</h4><p>  新增权限：<strong>READ_MEDIA_VISUAL_USER_SELECTED</strong></p>
+<p>  <strong>说明：</strong> 在Android14上与应用交互的用户现在可以授予对其媒体库的部分访问权限（READ_MEDIA_IMAGES和READ_MEDIA_VIDEO）。</p>
+<blockquote>
+<p>新对话框包含以下选项：</p>
+<ul>
+<li>选择照片和视频： Android14中的新功能。用户选择想要提供给应用的特定照片和视频；</li>
+<li>全部允许：用户授予对设备上所有照片和视频的完整库访问权限；</li>
+<li>不允许：用户拒绝所有访问。</li>
+</ul>
+</blockquote>
+<p>  如果用户选择了“选择照片和视频”并且应用稍后再次请求READ_MEDIA_IMAGES 或者 READ_MEDIA_VIDEO权限，系统会显示不同的对话框，让用户有机会授予完全访问的权限，维持现状，或者授予对其他照片和视频的访问权限。为了帮助应用支持新的变化，系统引入了一个新的权限<strong>READ_MEDIA_VISUAL_USER_SELECTED</strong>。</p>
+<blockquote>
+<p>如果应用不声明READ_MEDIA_VISUAL_USER_SELECTED权限，则会发生以下行为：</p>
+<ul>
+<li>在用户与应用会话期间，将会授予对用户选择的照片和视频的READ_MEDIA_IMAGES 和 READ_MEDIA_VIDEO 临时访问权限。当应用移到后台或者当用户主动杀死应用时，系统最终会拒绝这些权限。此行为就像其他一次性权限一样;</li>
+</ul>
+</blockquote>
+<p>  如果应用稍后需要访问其他照片和视频，必须手动请求权限重新获得权限。</p>
+<h4 id="2-改变不可关闭通知的方式"><a href="#2-改变不可关闭通知的方式" class="headerlink" title="2.改变不可关闭通知的方式"></a>2.改变不可关闭通知的方式</h4><p>  <strong>说明：</strong>对于应用向用户显示不可关闭的前台通知，从Android14开始允许用户关闭此类通知。</p>
+<p>  这项变更适用于通过 <strong>Notification.Builder#setOngoing(true)</strong> 或 <strong>NotificationCompat.Builder#setOngoing(true)</strong> 设置 <strong>Notification.FLAG_ONGOING_EVENT</strong> 来阻止用户关闭前台通知的应用。<strong>FLAG_ONGOING_EVENT</strong> 的行为已发生变化，使用户实际上能够关闭此类通知。</p>
+<blockquote>
+<p>在以下情况下，此类通知仍不可关闭：</p>
+<ul>
+<li>当手机处于锁定状态时</li>
+<li>如果用户选择全部清除通知操作（有助于防止意外关闭）</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>此外，这一新行为不适用于以下用例中的不可关闭通知：</p>
+<ul>
+<li>使用 MediaStyle 创建的通知</li>
+<li>安全和隐私用例的政策限制使用</li>
+<li>企业设备政策控制器 (DPC) 和支持软件包</li>
+</ul>
+</blockquote>
+<h4 id="3-非线性字体放大至-200"><a href="#3-非线性字体放大至-200" class="headerlink" title="3.非线性字体放大至 200%"></a>3.非线性字体放大至 200%</h4><p><img src="/images/20230903/20230903005.jpg"></p>
+<p>  <strong>说明：</strong>从Android14开始，系统支持高达200%的字体缩放，为弱视用户提供了符合网络内容无障碍指南 (WCAG) 的其他无障碍功能选项。</p>
+<h4 id="4-区域偏好"><a href="#4-区域偏好" class="headerlink" title="4.区域偏好"></a>4.区域偏好</h4><p>  <strong>说明：</strong>区域偏好使用户能够自定义温度单位、一周的第一天、数字系统。新 Android设置菜单为用户提供了一个集中位置来更改应用程序区域偏好，应用可通过API例如<strong>getTemperatureUnit</strong>和<strong>getFirstDayOfWeek</strong>获取用户设置，以便调整应用内显示信息的方式。</p>
+<h4 id="5-数据安全信息更显眼"><a href="#5-数据安全信息更显眼" class="headerlink" title="5.数据安全信息更显眼"></a>5.数据安全信息更显眼</h4><p>  <strong>说明：</strong>为了加强用户隐私保护，Android 14 增加了系统显示您在 Play 管理中心表单中声明的信息的位置数量。目前，用户可以在 Google Play 中的应用详情的数据安全部分查看此信息。</p>
+<h4 id="6-安全的全屏-intent-通知"><a href="#6-安全的全屏-intent-通知" class="headerlink" title="6.安全的全屏 intent 通知"></a>6.安全的全屏 intent 通知</h4><p>  <strong>说明：</strong> 在 Android 11（API 级别 30）中，任何应用都可以在手机处于锁定状态时使用 <strong>Notification.Builder.setFullScreenIntent</strong> 发送全屏 intent。您可以通过在 AndroidManifest 中声明 <strong>USE_FULL_SCREEN_INTENT</strong> 权限，在应用安装时自动授予此权限。</p>
+<p>  全屏 intent 通知适用于需要用户立即注意的极高优先级通知，例如用户来电或用户配置的闹钟设置。从 Android 14 开始，获准使用此权限的应用仅限于提供通话和闹钟的应用。对于不适合此情况的任何应用，Google Play 商店会撤消其默认的 <strong>USE_FULL_SCREEN_INTENT</strong> 权限。</p>
+<p>  在用户更新到 Android 14 之前，在手机上安装的应用仍拥有此权限。用户可以开启和关闭此权限。</p>
+<p>  您可以使用新 <strong>API NotificationManager.canUseFullScreenIntent</strong> 检查应用是否具有该权限；如果没有，应用可以使用新 intent <strong>ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT</strong> 启动设置页面，在该页面中，用户可以授予权限。</p>
+<h3 id="三、图形"><a href="#三、图形" class="headerlink" title="三、图形"></a>三、图形</h3><h4 id="1-Path可查询和可插值"><a href="#1-Path可查询和可插值" class="headerlink" title="1.Path可查询和可插值"></a>1.Path可查询和可插值</h4><p>  <strong>说明：</strong>Android的Path API是一种用于创建和渲染矢量图形的强大而灵活的机制，具有描边或填充路径、从线段或二次或三次曲线构建路径、执行布尔运算以获得更复杂的形状。但是对象的内部在创建后对调用者是不透明的。</p>
+<p>  可以调用moveTo()、lineTo()和cubicTo() 添加路径段等方法创建Path，但是没有办法询问该路径的段是什么，因此必须在创建时保留该信息。从 Android 14 开始，可以查询路径里面有些什么，同时支持路径内部插值返回新路径。</p>
+<h3 id="四、安全"><a href="#四、安全" class="headerlink" title="四、安全"></a>四、安全</h3><h4 id="1-限制隐式intent"><a href="#1-限制隐式intent" class="headerlink" title="1.限制隐式intent"></a>1.限制隐式intent</h4><p>  <strong>说明：</strong> Android 通过以下方式限制应用向内部应用组件发送隐式intent：</p>
+<ul>
+<li>   隐式intent仅传递给exported的组件。应用程序必须使用明确的intent传递给unexported的组件，或者将组件标记为exported。</li>
+<li>   如果应用创建一个pending intent，但intent未指定组件或包，系统现在会抛出异常。</li>
+</ul>
+<p>  这些更改可防止恶意应用拦截用在供应用内部组件使用的隐式intent。</p>
+<h4 id="2-更安全的动态代码加载"><a href="#2-更安全的动态代码加载" class="headerlink" title="2.更安全的动态代码加载"></a>2.更安全的动态代码加载</h4><p>  <strong>说明：</strong> 如果应用使用动态代码加载 (DCL)，则所有动态加载的文件都必须标记为只读，否则系统会抛出异常。建议应用尽可能避免动态加载代码，因为这样做会大大增加应用程序因代码注入或代码篡改而受到危害的风险。</p>
+<p>  为防止现有动态加载文件抛出异常，建议尝试在应用中再次动态加载文件之前删除并重新创建这些文件。重新创建文件时，请按照前面的指导在写入时将文件标记为只读。或者将现有文件重新标记为只读，但在这种情况下，强烈建议首先验证文件的完整性（例如，通过根据可信值检查文件的签名），来保护你的app避免被恶意篡改。</p>
+<h4 id="3-Zip路径遍历"><a href="#3-Zip路径遍历" class="headerlink" title="3.Zip路径遍历"></a>3.Zip路径遍历</h4><p>  <strong>说明：</strong>对于以 Android 14 为目标平台的应用，Android 会通过以下方式防止 Zip 路径遍历漏洞：如果 Zip 文件条目名称包含“..”或以“/”开头，<strong>ZipFile(String)</strong> 和 <strong>ZipInputStream.getNextEntry()</strong> 会抛出 <strong>ZipException</strong>。</p>
+<p>  应用可以通过调用 <strong>dalvik.system.ZipPathValidator.clearCallback()</strong> 选择停用此验证。</p>
+<h4 id="4-额外的后台启动activity限制"><a href="#4-额外的后台启动activity限制" class="headerlink" title="4.额外的后台启动activity限制"></a>4.额外的后台启动activity限制</h4><p>  <strong>说明：</strong>系统进一步限制了应用在后台启动 Activity 的时机：</p>
+<ul>
+<li>   当应用发送PendingIntent使用PendingIntent.send()或类似方法时，如果应用想要授予自己的后台activity启动权限以启动intent，则该应用现在必须调用 <strong>setPendingIntentBackgroundActivityStartMode(MODE_BACKGROUND_ACTIVITY_START_ALLOWED)</strong> 来明确的表达意图。</li>
+<li>   当一个可见应用使用bindService()方法绑定另一个在后台运行的应用的服务时 ，如果该可见应用想要将其自己的后台活动启动权限授予绑定服务，则它现在必须添加 <strong>BIND_ALLOW_ACTIVITY_STARTS</strong> 标志。</li>
+</ul>
+<p>  通过这样的限制可以防止恶意应用程序滥用API从后台启动破坏性activity以便保护用户。</p>
+<h4 id="5-广播接收器必须指定导出行为"><a href="#5-广播接收器必须指定导出行为" class="headerlink" title="5.广播接收器必须指定导出行为"></a>5.广播接收器必须指定导出行为</h4><p>  <strong>说明：</strong> 以 Android 14 为目标平台并使用 上下文注册 的接收器的应用和服务指定以下标志，以指定接收器是否应导出到设备上的所有其他应用：<strong>RECEIVER_EXPORTED</strong>或<strong>RECEIVER_NOT_EXPORTED</strong>。此要求有助于使用Android 13 中引入的这些接收器的功能，来保护应用主板安全漏洞的影响。</p>
+<h3 id="五、可升级Android-14的机子"><a href="#五、可升级Android-14的机子" class="headerlink" title="五、可升级Android 14的机子"></a>五、可升级Android 14的机子</h3><p>以下只列出部份品牌：</p>
+<table>
+<thead>
+<tr>
+<th>品牌</th>
+<th>型号</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>谷歌</td>
+<td>Pixel 4a (5G)、Pixel 5、Pixel 5a、Pixel 6、Pixel 6 Pro、Pixel 6a、Pixel 7、Pixel 7 Pro、Pixel 7a、Pixel Tablet、Pixel Fold</td>
+</tr>
+<tr>
+<td>小米</td>
+<td>小米13Pro、小米13、小米12T</td>
+</tr>
+<tr>
+<td>OPPO</td>
+<td>Find N2 Flip、realme GT 2 Pro</td>
+</tr>
+<tr>
+<td>vivo</td>
+<td>X90 Pro、iQOO 11</td>
+</tr>
+<tr>
+<td>一加</td>
+<td>OnePlus 11</td>
+</tr>
+</tbody></table>
+
+      
+      <blockquote>
+        
+        <strong>本文链接：</strong><br><a href="http://longzhiye.top/2023/09/03/2023-09-03/">http://longzhiye.top/2023/09/03/2023-09-03/</a>
+      </blockquote>
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Android/" rel="tag">Android</a><a class="mdui-ripple article_tags-link" href="/tags/Linux/" rel="tag">Linux</a><a class="mdui-ripple article_tags-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2023/09/24/2023-09-25/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android 13 深色主题切换流程解析'}">上一篇</span>
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2023/09/02/2023-09-02/">
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'android 10 user版本默认打开usb调试'}">下一篇</span>
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+
+
+
+</main>
+  <footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="http://github.com/longzhiye" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe7ab;</i></a>
+    
+    
+    
+      <a href="https://www.zhihu.com/people/long-zhi-xie-61" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe6c0;</i></a>
+    
+    
+    
+      <a href="tencent://tencent:////message/?uin=951898105&Menu=yes" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2022 - 2025 龙之叶<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>
+    <br>
+      <span id="busuanzi_container_site_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_site_pv"></span></span> &nbsp;&nbsp;
+      <span id="busuanzi_container_site_uv" style="display: none;"><i class="iconfont">&#xe601;</i> <span id="busuanzi_value_site_uv"></span></span>
+    
+  </div>
+</footer>
+
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+  
+<script src="/custom.js"></script>
+
+</body>
+</html>

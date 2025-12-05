@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>Android View的渲染过程 | 龙之叶的博客</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="alternate" href="/atom.xml" title="龙之叶的博客" type="application/atom+xml">
+  <meta name="description" content="Android View的渲染过程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android View的渲染过程">
+<meta property="og:url" content="http://longzhiye.top/2023/08/12/2023-08-12/index.html">
+<meta property="og:site_name" content="龙之叶的博客">
+<meta property="og:description" content="Android View的渲染过程">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://longzhiye.top/images/20230812/20230812001.png">
+<meta property="og:image" content="http://longzhiye.top/images/20230812/20230812002.jpg">
+<meta property="article:published_time" content="2023-08-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-04T08:39:58.949Z">
+<meta property="article:author" content="龙之叶">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Framework">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://longzhiye.top/images/20230812/20230812001.png">
+
+  <meta name="keywords" content=",Android,Framework">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="龙之叶的博客">
+  <meta name="msapplication-starturl" content="http://longzhiye.top/2023/08/12/2023-08-12/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="龙之叶的博客">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <link rel="canonical" href="http://longzhiye.top/2023/08/12/2023-08-12/">
+  
+
+  
+  
+
+  
+  
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/custom.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(!a){document.getElementsByTagName("body")[0].className+=" mdui-drawer-body-left"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">龙之叶的博客</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+	<!--
+    <a href="/atom.xml" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'RSS'}"><i class="mdui-icon material-icons">rss_feed</i></a>
+	-->
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(a){document.getElementById("sidebar").className+=" mdui-drawer-close"};</script>
+  <div class="mdui-grid-tile">
+    <img src="/images/banner.png" style="height: 160px;">
+    <img src="/images/avatar.png" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;background-color:#fff;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">龙之叶</div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>生命不息，折腾不止</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:longzhiye163@163.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'longzhiye163@163.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-0");if(a){document.getElementsByClassName("mdui-collapse-item")[0].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">archive</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2025/10/">十月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/09/">九月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/08/">八月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/07/">七月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/06/">六月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/03/">三月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/02/">二月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/01/">一月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/10/">十月 2024<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/09/">九月 2024<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/08/">八月 2024<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/03/">三月 2024<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/02/">二月 2024<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/01/">一月 2024<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/12/">十二月 2023<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/11/">十一月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/10/">十月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/09/">九月 2023<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/08/">八月 2023<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/06/">六月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/05/">五月 2023<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/04/">四月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/03/">三月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/02/">二月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/09/">九月 2022<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/04/">四月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/03/">三月 2017<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/02/">二月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/01/">一月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/12/">十二月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/11/">十一月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/10/">十月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/08/">八月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-1");if(a){document.getElementsByClassName("mdui-collapse-item")[1].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">class</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">108</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E8%B5%84%E8%AE%AF/">资讯<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E9%80%9A%E7%9F%A5/">通知<span class="mdui-ripple sidebar_archives-count">4</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-2");if(a){document.getElementsByClassName("mdui-collapse-item")[2].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/ANR/" rel="tag">ANR<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/APP/" rel="tag">APP<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android/" rel="tag">Android<span class="mdui-ripple sidebar_archives-count">98</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android12/" rel="tag">Android12<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android13/" rel="tag">Android13<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android14/" rel="tag">Android14<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android16/" rel="tag">Android16<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AndroidStudio/" rel="tag">AndroidStudio<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AutoDraw/" rel="tag">AutoDraw<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Build/" rel="tag">Build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Crash/" rel="tag">Crash<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Foxmail/" rel="tag">Foxmail<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Framework/" rel="tag">Framework<span class="mdui-ripple sidebar_archives-count">20</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GPS%E8%BD%A8%E8%BF%B9%E5%9B%BE/" rel="tag">GPS轨迹图<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Git/" rel="tag">Git<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GitHub/" rel="tag">GitHub<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Google/" rel="tag">Google<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Java/" rel="tag">Java<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Kernel/" rel="tag">Kernel<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Launcher/" rel="tag">Launcher<span class="mdui-ripple sidebar_archives-count">17</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Lib/" rel="tag">Lib<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Linux/" rel="tag">Linux<span class="mdui-ripple sidebar_archives-count">18</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Markdown/" rel="tag">Markdown<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Material-Design/" rel="tag">Material Design<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OS-X/" rel="tag">OS X<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OTA/" rel="tag">OTA<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/QuickTime/" rel="tag">QuickTime<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SSH/" rel="tag">SSH<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Settings/" rel="tag">Settings<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SystemUI/" rel="tag">SystemUI<span class="mdui-ripple sidebar_archives-count">19</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/UAC/" rel="tag">UAC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Ubuntu/" rel="tag">Ubuntu<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WPS/" rel="tag">WPS<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Wifi/" rel="tag">Wifi<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WindTerm/" rel="tag">WindTerm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows/" rel="tag">Windows<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows-11/" rel="tag">Windows 11<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/androidmk/" rel="tag">androidmk<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/blog/" rel="tag">blog<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/build/" rel="tag">build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/feel/" rel="tag">feel<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/framework/" rel="tag">framework<span class="mdui-ripple sidebar_archives-count">58</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/inotify/" rel="tag">inotify<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/life/" rel="tag">life<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/ninja/" rel="tag">ninja<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/rsync/" rel="tag">rsync<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/standard/" rel="tag">standard<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/test/" rel="tag">test<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1/" rel="tag">企业微信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E7%94%9F%E6%B4%BB%E6%84%9F%E6%82%9F/" rel="tag">生活感悟<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+      <a href="/timeline" class="mdui-list-item mdui-ripple">时间轴</a>
+    
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-3");if(a){document.getElementsByClassName("mdui-collapse-item")[3].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+          <a href="http://www.niemingzhao.top" target="_blank" class="mdui-list-item mdui-p-l-2 mdui-text-color-theme-accent mdui-ripple" style="justify-content: center;">聂明照的博客</a>
+        
+        
+      </div>
+    </div>
+  </div>
+</aside>
+
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <style>#main article .mdui-card-content .text-center{text-align:center!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-6.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">Android View的渲染过程</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2023-08-12 / <i class="iconfont">&#xe601;</i> 龙之叶 &nbsp;&nbsp; <span id="busuanzi_container_page_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_page_pv"></span></span></div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#qrcode', align: 'right'}"><i class="mdui-icon material-icons">devices</i></button>
+          <ul class="mdui-menu" id="qrcode">
+            
+              <li class="mdui-menu-item"><a class="mdui-text-center mdui-ripple">发送到手机</a></li>
+            
+            <li class="mdui-menu-item" disabled>
+              
+                <img src="//qr.liantu.com/api.php?w=246&m=10&text=http://longzhiye.top/2023/08/12/2023-08-12/">
+              
+            </li>
+          </ul>
+        
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="mdui-icon material-icons">share</i></button>
+          <ul class="mdui-menu" id="share_menu">
+            <li class="mdui-menu-item">
+              <a href="https://service.weibo.com/share/share.php?appkey=&title=Android View的渲染过程&url=http://longzhiye.top/2023/08/12/2023-08-12/&pic=http://longzhiye.top/images/favicon.png&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://twitter.com/intent/tweet?text=Android View的渲染过程&url=http://longzhiye.top/2023/08/12/2023-08-12/&via=龙之叶" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=http://longzhiye.top/2023/08/12/2023-08-12/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://plus.google.com/share?url=http://longzhiye.top/2023/08/12/2023-08-12/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://longzhiye.top/2023/08/12/2023-08-12/&title=Android View的渲染过程" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://connect.qq.com/widget/shareqq/index.html?site=龙之叶的博客&title=Android View的渲染过程&pics=http://longzhiye.top/images/favicon.png&url=http://longzhiye.top/2023/08/12/2023-08-12/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://telegram.me/share/url?url=http://longzhiye.top/2023/08/12/2023-08-12/&text=Android View的渲染过程" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+            </li>
+          </ul>
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <p>对于安卓开发猿来说，每天都会跟布局打交道，那么从我们写的一个布局文件，到运行后可视化的视图页面，这么长的时间内到底发生了啥呢？今天我们就一起来探询这一旅程。<br><img src="/images/20230812/20230812001.png"></p>
+<h2 id="View-tree的创建过程"><a href="#View-tree的创建过程" class="headerlink" title="View tree的创建过程"></a>View tree的创建过程</h2><h3 id="布局文件的生成过程"><a href="#布局文件的生成过程" class="headerlink" title="布局文件的生成过程"></a>布局文件的生成过程</h3><p>一般情况下，一个布局写好了，如果不是特别复杂的布局，那么当把布局文件塞给Activity#setContentView或者一个Dialog或者一个Fragment，之后这个View tree就创建好了。那么setContentView，其实是通过LayoutInflater这个对象来具体的把一个布局文件转化为一个内存中的View tree的。这个对象不算太复杂，主要的逻辑就是解析XML文件，把每个TAG，用反射的方式来生成一个View对象，当XML文件解析完成后，一颗View tree就生成完了。</p>
+<p>但是需要注意，inflate之后虽然View tree是创建好了，但是这仅仅是以单纯对象数据的形式存在，这时去获取View的一些GUI的相关属性，如大小，位置和渲染状态，是不存在的，或者是不对的。</p>
+<h3 id="手动创建"><a href="#手动创建" class="headerlink" title="手动创建"></a>手动创建</h3><p>除了用布局文件来生成布局，当然也可以直接用代码来撸，这个就比较直观了，view tree就是你创建的，然后再把根节点塞给某个窗口，如Activity或者Dialog，那么view tree就创建完事了。</p>
+<h2 id="渲染前的准备工作"><a href="#渲染前的准备工作" class="headerlink" title="渲染前的准备工作"></a>渲染前的准备工作</h2><p>View tree生成的最后一步就是把根结点送到ViewRootImpl#setView里面，这里会把view添加到wms之中，并着手开始渲染，接下来就主要看ViewRootImpl这个类了，主要入口方法就是ViewRootImpl#requestLayout，然后是scheduleTraversals()，这里会把请求放入到队列之中，最终执行渲染的是doTraversal，它里面调用的是performTraversals()，所以，我们需要重点查看ViewRootImpl#performTraversals这个方法，view tree渲染的流程全在这里面。这个方法相当之长，接近1000行，主要就是三个方法performMeasure，performLayout和performDraw，就是常说的三大步：measure，layout和draw。</p>
+<h2 id="渲染之measure"><a href="#渲染之measure" class="headerlink" title="渲染之measure"></a>渲染之measure</h2><p>就看performMeasure方法，这个方法很简单，就是调用了根view的measure方法，然后传入widthSpec和heightSpec。measure的目的就是测量view tree的大小，就是说view tree在用户可视化角度所占屏幕大小。要想理解透彻measure，需要理解三个事情，MeasureSpec，View#measure方法和View#onMeasure方法：</p>
+<h2 id="理解MeasureSpec"><a href="#理解MeasureSpec" class="headerlink" title="理解MeasureSpec"></a>理解MeasureSpec</h2><p>从文档中可以了解到，MeasureSpec是从父布局传给子布局，用以代表父布局对子布局在宽度和高度上的约束，它有两部分一个是mode，一个是对应的size，打包成一个integer。</p>
+<h3 id="UNSPECIFIED"><a href="#UNSPECIFIED" class="headerlink" title="UNSPECIFIED"></a>UNSPECIFIED</h3><p>父布局对子布局没有要求，子布局可以设置任意大小，这个 基本上 不常见。</p>
+<h3 id="EXACTLY"><a href="#EXACTLY" class="headerlink" title="EXACTLY"></a>EXACTLY</h3><p>父布局已经计算好了一个精确的大小，子布局要严格按照 这个来。</p>
+<h3 id="AT-MOST"><a href="#AT-MOST" class="headerlink" title="AT_MOST"></a>AT_MOST</h3><p>子布局最大可以达到传过来的这个尺寸。</p>
+<p>光看这几个mode，还是不太好理解。因为我们平日里写布局，在大小（或者说宽和高）这块就三种写法：一个是MATCH_PARENT，也就是要跟父布局一样大；要么是WRAP_CONTENT，也就是说子布局想要刚好合适够显示自己就行了；再者就是写死的如100dp等。需要把measure时的mode与LayoutParams结合联系起来，才能更好的理解measure的过程。</p>
+<p>还是得从performMeasure这时入手，这个MeasureSpec是由父节点传给子节点，追根溯源，最原始的肯定是传给整个view tree根节点的，也就是调用performMeasure时传入的参数值。</p>
+<h3 id="根节点的MeasureSpec"><a href="#根节点的MeasureSpec" class="headerlink" title="根节点的MeasureSpec"></a>根节点的MeasureSpec</h3><p>根节点的MeasureSpec是由getRootMeasureSpec得来的，这个方法传入的是窗口的大小，这是由窗口来给出的，当前的窗口肯定 是知道自己的大小的，以及根节点布局中写的大小。从这个方法就能看出前面说的布局中的三种写法对MeasureSpec的影响了：</p>
+<ul>
+<li>如果 根节点布局是MATCH_PARENT的，那么 mode就是EXACTLY，大小就是父布局的尺寸，因为根节点的父亲就是窗口，所以就是窗口的大小</li>
+<li>如果 根节点布局是WRAP_CONTENT的，那么 mode是AT_MOST，大小依然会是父布局的尺寸。这个要这样理解，WRAP_CONTENT是想让子布局自己决定自己多大，但是，你的极限 就是父布局的大小了。</li>
+<li>其他，其实就是根节点写死了大小的（写布局时是必须 要指定layout_width和layout_height的，即使某些view可以省略一个，也是因为缺省值，而并非不用指定），那么mode会是EXACTLY，大小用根节点指定的值。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">getRootMeasureSpec</span><span class="params">(<span class="type">int</span> windowSize, <span class="type">int</span> rootDimension)</span> &#123;</span><br><span class="line">    <span class="type">int</span> measureSpec;</span><br><span class="line">    <span class="keyword">switch</span> (rootDimension) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">case</span> ViewGroup.LayoutParams.MATCH_PARENT:</span><br><span class="line">        <span class="comment">// Window can&#x27;t resize. Force root view to be windowSize.</span></span><br><span class="line">        measureSpec = MeasureSpec.makeMeasureSpec(windowSize, MeasureSpec.EXACTLY);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> ViewGroup.LayoutParams.WRAP_CONTENT:</span><br><span class="line">        <span class="comment">// Window can resize. Set max size for root view.</span></span><br><span class="line">        measureSpec = MeasureSpec.makeMeasureSpec(windowSize, MeasureSpec.AT_MOST);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="comment">// Window wants to be an exact size. Force root view to be that size.</span></span><br><span class="line">        measureSpec = MeasureSpec.makeMeasureSpec(rootDimension, MeasureSpec.EXACTLY);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> measureSpec;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="子View的MeasureSpec"><a href="#子View的MeasureSpec" class="headerlink" title="子View的MeasureSpec"></a>子View的MeasureSpec</h3><p>MeasureSpec这个东西是自上而下的，从根节点向子View传递。前面看过了根节点的spec生成方式，还有必要再看一下子View在measure过程中是如何生成spec的，以更好的理解整体过程。主要看ViewGroup#getChildMeasureSpec方法就可以了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">getChildMeasureSpec</span><span class="params">(<span class="type">int</span> spec, <span class="type">int</span> padding, <span class="type">int</span> childDimension)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">specMode</span> <span class="operator">=</span> MeasureSpec.getMode(spec);</span><br><span class="line">    <span class="type">int</span> <span class="variable">specSize</span> <span class="operator">=</span> MeasureSpec.getSize(spec);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> <span class="variable">size</span> <span class="operator">=</span> Math.max(<span class="number">0</span>, specSize - padding);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> <span class="variable">resultSize</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">resultMode</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">switch</span> (specMode) &#123;</span><br><span class="line">    <span class="comment">// Parent has imposed an exact size on us</span></span><br><span class="line">    <span class="keyword">case</span> MeasureSpec.EXACTLY:</span><br><span class="line">        <span class="keyword">if</span> (childDimension &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            resultSize = childDimension;</span><br><span class="line">            resultMode = MeasureSpec.EXACTLY;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (childDimension == LayoutParams.MATCH_PARENT) &#123;</span><br><span class="line">            <span class="comment">// Child wants to be our size. So be it.</span></span><br><span class="line">            resultSize = size;</span><br><span class="line">            resultMode = MeasureSpec.EXACTLY;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (childDimension == LayoutParams.WRAP_CONTENT) &#123;</span><br><span class="line">            <span class="comment">// Child wants to determine its own size. It can&#x27;t be</span></span><br><span class="line">            <span class="comment">// bigger than us.</span></span><br><span class="line">            resultSize = size;</span><br><span class="line">            resultMode = MeasureSpec.AT_MOST;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Parent has imposed a maximum size on us</span></span><br><span class="line">    <span class="keyword">case</span> MeasureSpec.AT_MOST:</span><br><span class="line">        <span class="keyword">if</span> (childDimension &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// Child wants a specific size... so be it</span></span><br><span class="line">            resultSize = childDimension;</span><br><span class="line">            resultMode = MeasureSpec.EXACTLY;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (childDimension == LayoutParams.MATCH_PARENT) &#123;</span><br><span class="line">            <span class="comment">// Child wants to be our size, but our size is not fixed.</span></span><br><span class="line">            <span class="comment">// Constrain child to not be bigger than us.</span></span><br><span class="line">            resultSize = size;</span><br><span class="line">            resultMode = MeasureSpec.AT_MOST;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (childDimension == LayoutParams.WRAP_CONTENT) &#123;</span><br><span class="line">            <span class="comment">// Child wants to determine its own size. It can&#x27;t be</span></span><br><span class="line">            <span class="comment">// bigger than us.</span></span><br><span class="line">            resultSize = size;</span><br><span class="line">            resultMode = MeasureSpec.AT_MOST;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Parent asked to see how big we want to be</span></span><br><span class="line">    <span class="keyword">case</span> MeasureSpec.UNSPECIFIED:</span><br><span class="line">        <span class="keyword">if</span> (childDimension &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// Child wants a specific size... let them have it</span></span><br><span class="line">            resultSize = childDimension;</span><br><span class="line">            resultMode = MeasureSpec.EXACTLY;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (childDimension == LayoutParams.MATCH_PARENT) &#123;</span><br><span class="line">            <span class="comment">// Child wants to be our size... find out how big it should</span></span><br><span class="line">            <span class="comment">// be</span></span><br><span class="line">            resultSize = View.sUseZeroUnspecifiedMeasureSpec ? <span class="number">0</span> : size;</span><br><span class="line">            resultMode = MeasureSpec.UNSPECIFIED;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (childDimension == LayoutParams.WRAP_CONTENT) &#123;</span><br><span class="line">            <span class="comment">// Child wants to determine its own size.... find out how</span></span><br><span class="line">            <span class="comment">// big it should be</span></span><br><span class="line">            resultSize = View.sUseZeroUnspecifiedMeasureSpec ? <span class="number">0</span> : size;</span><br><span class="line">            resultMode = MeasureSpec.UNSPECIFIED;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//noinspection ResourceType</span></span><br><span class="line">    <span class="keyword">return</span> MeasureSpec.makeMeasureSpec(resultSize, resultMode);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>单纯从spec角度来理解，与上面的是一样的，基本上WRAP_CONTENT会是AT_MOST，而其他都是EXACTLY。</p>
+<p>后面会再详细讨论一下，父布局与子View的相互影响。</p>
+<h2 id="View-measure和View-onMeasure"><a href="#View-measure和View-onMeasure" class="headerlink" title="View#measure和View#onMeasure"></a>View#measure和View#onMeasure</h2><p>performMeasure比较简单，只是调用根节点的measure方法，然后把计算出来的根节点的MeasureSpec传进去，就完事了，所以 重点要View#measure方法。这里需要注意的是整个View的设计体系里面一些主要的逻辑流程是不允许子类override的，可定制的部分作被动式的方法嵌入在主要逻辑流程中，如measure是不能被override的，它会调用可以被子类override的onMeasure。onMeasure是每个View必须实现的方法，用传入的父布局的约束来计算出自已的大小。</p>
+<p>为了优化measure流程，还有一个cache机制，用从父布局传入的MeasureSpec作为key，从onMeasure得出的结果 作为value，保存在cache中，当后面再次调用measure时，如果MeasureSpec未发生变化，那么就直接从cache中取出结果，如果 有变化 那么再调用onMeasure去计算一次。光看View#measure和onMeasure这两个方法也没啥啊，或者说常见的view或者我们自己定义的view的onMeasure方法也没啥啊，都不算太复杂，有同学就会问，这里为啥这么费劲 非要搞出一个cache呢？这个也好理解，要明白任何一个view不光是你自己，还涉及到所有你的子view啊，如果你只是一个未端的view（叶子），那当然 无所谓了，但如果是一个ViewGroup，下面有很多个子view，那么 如果能少调用一次onMeasure，还是能节省不少CPU资源的。</p>
+<h2 id="ViewGroup的onMeasure"><a href="#ViewGroup的onMeasure" class="headerlink" title="ViewGroup的onMeasure"></a>ViewGroup的onMeasure</h2><p>每个View的本身的onMeasure并不复杂，只需要关注好本身的尺寸就好了。</p>
+<p>复杂的在于ViewGroup的onMeasure，简单来理解也并不复杂，它除了需要测量自己的宽与高之外，还需要逐个遍历子view以measure子view。如果ViewGroup自身是EACTLY的，那么onMeasure过程就会简单不少，因为它自身的宽与高是确定的，只需要挨个measure子View就可了，而且子View并不影响它本身。当然，要把padding和margin考虑进来。</p>
+<p>最为复杂的就是AT_MOST，ViewGroup自身的宽与高是由其所有子View决定的，这才是最复杂的，也是各个ViewGroup子类布局器需要重点解决的，而且过程各不相同，因为每个布局器的特点不一样，所以过程并不相同，下面来各自讨论一下。</p>
+<h2 id="几种常见的ViewGroup的measure逻辑"><a href="#几种常见的ViewGroup的measure逻辑" class="headerlink" title="几种常见的ViewGroup的measure逻辑"></a>几种常见的ViewGroup的measure逻辑</h2><p>下来来看一下一些非常常见的ViewGroup是如何measure的：</p>
+<h3 id="LinearLayout"><a href="#LinearLayout" class="headerlink" title="LinearLayout"></a>LinearLayout</h3><p>它的方向只有两个，可以只分析一个方向，另外一个方向是差不多的，我们就看看measureVertical。</p>
+<p>第1种情况，也就是height mode是EXACTLY的时候，这个时候LinearLayout布局本身的高度是已知的，挨个遍历子view然后measure一下就可以。</p>
+<p>第2种情况，比较复杂的情况，是AT_MOST时，这其实也还好，理论上高度就是所有子view的高度之和。</p>
+<p>对于LinearLayout，最为复杂的情况是处理weight，这需要很多复杂处理，要把剩余所有的空间按weight来分配，具体比较复杂，有兴趣的可以具体去看源码。这也说明了，为何在线性布局中使用weight会影响性能，代码中就可以看出当有weight要处理的时候，至少多遍历一遍子view以进行相关的计算。</p>
+<p>虽然方向是VERTICAL时，重点只处理垂直方向，但是width也是需要计算的，但width的处理就要简单得多，如果其是EXACTLY的，那么就已知了；如果是AT_MOST的，就要找子view中width的最大值。</p>
+<h3 id="FrameLayout"><a href="#FrameLayout" class="headerlink" title="FrameLayout"></a>FrameLayout</h3><p>FrameLayout其实是最简单的一个布局管理器，因为它对子view是没有约束的，无论水平方向还是垂直方向，对子view都是没有约束，所以它的measure过程最简单。</p>
+<p>如果是EXACTLY的，它本身的高度与宽度是确定的，那么就遍历子view，measure一下就可以了，最后再把margin和padding加一下就完事了。</p>
+<p>如果是AT_MOST的，那么也不难，遍历子View并measure，然后取子view中最大宽为它的宽度，取最大的高为其高度，再加上margin和padding，基本上就做完了。</p>
+<p>因为，FrameLayout的measure过程最为简单，因此系统里很多地方默认用的就是FrameLayout，比如窗口里的root view。</p>
+<h3 id="RelativeLayout"><a href="#RelativeLayout" class="headerlink" title="RelativeLayout"></a>RelativeLayout</h3><p>这个是最为复杂的，从设计的目的来看，RelativeLayout要解决的问题也是提供了长与宽两个维度来约束子view。</p>
+<p>总体过的过程就是要分别从vertical方向和horizontal方向，来进行两遍的measure，同时还要计算具体的坐标，实际上RelativeLayout的measure过程是把measure和layout一起做了。</p>
+<h2 id="自定义View如何实现onMeasure"><a href="#自定义View如何实现onMeasure" class="headerlink" title="自定义View如何实现onMeasure"></a>自定义View如何实现onMeasure</h2><p>如果是一个具体的View，那就相当简单了，默认的实现就可以了。</p>
+<p>如果是ViewGroup会相对复杂一些，取决于如何从水平和垂直方向上约束子view，然后进行遍历，并把约束考虑进去。可以参考LinearLayout和RelativeLayout的onMeasure实现。</p>
+<h3 id="渲染之layout"><a href="#渲染之layout" class="headerlink" title="渲染之layout"></a>渲染之layout</h3><p>measure是确定控件的尺寸，下一步就是layout，也就是对控件进行排列。</p>
+<p>首先，需要理解现代GUI窗口的坐标系统，假设屏幕高为height，宽为width，那么屏幕左上角为坐标原点（0，0），右下角为（width, height），屏幕从上向下为Y轴方向，从左向右则是X轴方向。安卓当中，也是如此。每一个控件都是一个矩形区域，为了能知道如何渲染每一块矩形（每 一个控件）就需要知道它的坐标，在前一步measure中，能知道它的宽与高，如果再能确定它的起始坐标左上角，那么它在整个屏幕中的位置就可以确定了。</p>
+<p>对于Android来说，view的渲染的第二步骤就是layout，其目的就是要确定好它的坐标，每一个View都有四个变量mLeft, mTop，mRight和mBottom，(mLeft, mTop)是它的左上角，(mRight, mBottom）是它的右下角，很明显width=mRight-mLeft，而height=mBottom-mTop。这些数值是相对于父布局来说的，每个View都是存在于view tree之中，知道相对于父布局的数值就足够在渲染时使用了，没必要用相对屏幕的绝对数值，而且用相对父布局的坐标数值再加上父布局的坐标，就可以得到在屏幕上的绝对数值，如果需要这样做的话。</p>
+<p><img src="/images/20230812/20230812002.jpg"></p>
+<p>layout过程依然是从根节点开始的，所以仍要从ViewRootImpl#performLayout作为起点来理顺layout的逻辑。performLayout的参数是一个LayoutParam，以及一个windowWidth和desiredWindowHeight，调用performLayout是在performTraversal当中，在做完performMeasure时，传入的参数其实就是窗口window的宽与高（因为毕竟是根节点嘛）。performLayout中会从根节点mView开开对整个view tree进行layout，其实就是调用mView.layout，传入的是0, 0和view的经过measure后宽与高。</p>
+<p>单个View的layout方法实现较简单，把传入的参数保存到mLeft,mTop,mRight和mBottom变量，再调用onLayout就完事了，这个很好理解，因为子view是由父布局确定好的位置，只要在measure过程把自己需要的大小告诉父布局后，父布局会根据LayoutParam做安排，传给子view的就是计算过后的结果，每个子view记录一下结果就可以了，不需要做啥额外的事情。</p>
+<p>ViewGroup稍复杂，因为它要处理其子view，并且要根据其设计的特点对子view进行约束排列。还是可以看看常见的三个ViewGroup是如何做layout的。</p>
+<h3 id="LinearLayout-1"><a href="#LinearLayout-1" class="headerlink" title="LinearLayout"></a>LinearLayout</h3><p>依然是两个方向，因为LinearLayout的目的就是在某一个方向上对子view进行约束。看layoutVertical就可以了，水平方向上逻辑是一样的。</p>
+<p>遍历一次子View即可，从父布局的left, top起始，考虑子view的height 以及上下的padding和margin，依次排列就可以了。需要注意的是，对于left的处理，理论上子view的left就应该等于父布局，因为这毕竟是vertical的，水平上是没有约束的，但是也要考虑Gravity，当然也要把padding和margin考虑进来。最后通过setChildFrame把排列好的坐标设置给子view。</p>
+<p>总体来看，线性布局的layout过程比其measure过程要简单不少。</p>
+<h3 id="FrameLayout-1"><a href="#FrameLayout-1" class="headerlink" title="FrameLayout"></a>FrameLayout</h3><p>FrameLayout对子view的排列其实是没有约束的，所以layout过程也不复杂，遍历子view，子view的left和top初始均为父布局，依据其Gravity来做一下排布即可，比如如果Gravity是right，那么子view就要从父布局的右侧开始计算，childRight=parentRight-margin-padding，childLeft=childRight-childWidth，以次类推，还是比较好理解的。</p>
+<h3 id="RelativeLayout-1"><a href="#RelativeLayout-1" class="headerlink" title="RelativeLayout"></a>RelativeLayout</h3><p>前面提到过RelativeLayout是在measure的时候就把坐标都计算好了，它的layout就是把坐标设置给子view，其余啥也没有。</p>
+<h3 id="自定义View如何实现onLayout"><a href="#自定义View如何实现onLayout" class="headerlink" title="自定义View如何实现onLayout"></a>自定义View如何实现onLayout</h3><p>如果是自定义View的话，不需要做什么。</p>
+<p>如果是自定义的ViewGroup的话，要看设计的目的，是如何排列子view的。</p>
+<p>总之，layout过程相较measure过程还是比较好理解的，约束规则越复杂的view，其measure过程越复杂，但layout过程却不复杂。</p>
+<h2 id="渲染之draw"><a href="#渲染之draw" class="headerlink" title="渲染之draw"></a>渲染之draw</h2><p>draw是整个渲染过程的核心也是最复杂的一步，前面的measure和layout只能算作准备，draw才会真正进行绘制。</p>
+<h3 id="draw的整个逻辑流程"><a href="#draw的整个逻辑流程" class="headerlink" title="draw的整个逻辑流程"></a>draw的整个逻辑流程</h3><p>与measure和layout的过程非常不一样，虽然在performTraversals中也会调用performDraw，也就是说看似draw流程的起点仍是ViewRootImpl#performDraw，但查看一下这个方法的实现就可以发现，这里面其实并没有调用到View#draw，就是说它其实也是做一些准备工作，整个View tree的draw触发，并不在这里。</p>
+<p>从performDraw中并没有做直接与draw相关的事情，它会调用另外一个方法draw()来做此事情，在draw方法中，它会先计算需要渲染的区域（dirty区域），然后再针对 此区域做渲染，正常情况下会走硬件加速方式去渲染，这部分比较复杂，它直接与一个叫做ThreadedRenderer打交道，稍后再作分析。</p>
+<p>由于各种原因，假如硬件加速未没有成功，那么会走到软件渲染，这部分逻辑相对清晰一些，可以先从这里看起，会直接调用到drawSoftware()，这个方法有助于我们看清楚渲染的流程。这个方法里面会创建一个Canvas对象，是由ViewRootImpl持有的一个Surface对象中创建出来的，并调用view tree根节点的mView.draw(canvas)，由此便把流程转移到了view tree上面。</p>
+<h3 id="view-tree的draw的过程"><a href="#view-tree的draw的过程" class="headerlink" title="view tree的draw的过程"></a>view tree的draw的过程</h3><p>ViewRootImpl是直接调用根节点的draw方法，那么这里便是整个view tree的入口。可先从View#draw(canvas）方法看起。主要分为四步：1）画背景drawBackground；2）画自己的内容通过onDraw来委派，具体的内容是在onDraw里面做的；3）画子view，通过dispatchDraw方法；4）画其他的东西，如scroll bar或者focus highlight等。可以重点关注一下这些操作的顺序，先画背景，然后画自己，然后画子view，最后画scroll bar和focus之类的东西。</p>
+<p>重点来看看dispatchDraw方法，因为其他几个都相对非常好理解，这个方法主要要靠ViewGroup来实现，因为在View里面它是空的，节点自己只需要管自己就可以了，只有父节点才需要关注如何画子View。ViewGroup#dispatchDraw这个方法做一些准备工作，如把padding考虑进来并进行clip，后会遍历子View，针对 每个子view调用drawChild方法，这实际上就 是调用回了View#draw(canvas，parent，drawingTime)方法，注意这个方法是package scope的，也就是说只能供view框架内部调用。这个方法并没有做具体的渲染工作（因为每个View的具体渲染都是在onDraw里面做的），这个方法里面做了大量与动画相关的各种变换。</p>
+<h3 id="Canvas对象是从哪里来的"><a href="#Canvas对象是从哪里来的" class="headerlink" title="Canvas对象是从哪里来的"></a>Canvas对象是从哪里来的</h3><p>View的渲染过程其实大都是GUI框架内部的逻辑流程控制，真正涉及graphics方面的具体的图形如何画出来，其实都是由Canvas对象来做的，比如如何画点，如何画线，如何画文字，如何画图片等等。一个Canvas对象从ViewRootImpl传给View tree，就在view tree中一层一层的传递，每个view都把其想要展示的内容渲染到Canvas对象中去。</p>
+<p>那么，这个Canvas对象又是从何而来的呢？从view tree的一些方法中可以看到，都是从外面传进来的，view tree的各个方法（draw, dipsatchDraw和drawChild）都只接收Canvas对象，但并不创建它。</p>
+<p>从上面的逻辑可以看到Canvas对象有二个来源：一是在ViewRootImpl中创建的，当走软件渲染时，会用Surface创建出一个Canvas对象，然后传给view tree。从ViewRootImpl的代码来看，它本身就会持有一个Surface对象，大概的逻辑就是每一个Window对象内，都会有一个用来渲染的Surface；</p>
+<p>另外一个来源就是走硬件加速时，会由hwui创建出Canvas对象。</p>
+<h3 id="draw过程的触发逻辑"><a href="#draw过程的触发逻辑" class="headerlink" title="draw过程的触发逻辑"></a>draw过程的触发逻辑</h3><p>从上面的讨论中可以看出draw的触发逻辑有两条路：</p>
+<p>一是，没有启用硬件加速时，走的软件draw流程，也是一条比较好理解的简单流程：performTraversal-&gt;performDraw-&gt;draw-&gt;drawSoftware-&gt;View#draw。</p>
+<p>二是，启用了硬件加速时，走的是performTraversal-&gt;performDraw-&gt;draw-&gt;ThreadedRenderer#draw，到这里就走进了硬件加速相关的逻辑了。</p>
+<h2 id="硬件加速"><a href="#硬件加速" class="headerlink" title="硬件加速"></a>硬件加速</h2><p>硬件加速是从Android 4.0开始支持的，在此之前都是走的软件渲染，也就是从ViewRoot（4.0版本以前是叫ViewRoot，后来才是ViewRootImpl）中持有的Surface直接创建Canvas，然后传给view tree去做具体的渲染，与前面提到的drawSoftware过程类似。</p>
+<p>硬件加速则要复杂得多，多了好多东西，它又搞出了一套渲染架构，但这套东西是直接与GPU联系，有点类似于OpenGL，把view tree的渲染转换成为一系列命令，直接传给GPU，软件渲染则是需要CPU把所有的运算都做了，最终生成graphic buffer送给屏幕（当然也是GPU）。</p>
+<p>这一坨东西中最为核心就是RenderNode和RecordingCanvas。其中RenderNode是纯新的东西，它是为了构建 一个render tree（类似于view tree），用以构建复杂的渲染逻辑关系。RecordingCanvas是Canvas的一个子类，它是专门用于硬件加速渲染的，但又为了兼容老的Canvas（软件渲染），为啥叫recording呢？因为硬件加速方式渲染，对于view tree的draw过程来说就是记录一系列的操作，这其实就是给GPU的指令，渲染的最后一步就是把整个render tree丢给GPU，就完了。</p>
+<p>前面说的两个是数据结构，还不够，还有HardwareRenderer和ThreadedRenderer，这两个用来建立和管理render tree的，也就是说它们内部管理着一组由RenderNode组成的render tree，并且做一些上下文环境的初始化与清理资源的工作。类似于OpenGL中GLSurfaceView的RenderThread做的事情。</p>
+<p>硬件加速与原框架的切入点都是RenderNode和RecordingCanvas，View类中多了一个RenderNode成员，当draw的时候，从RenderNode中得到RecordingCanvas，其余操作都与原来一致，都是调用Canvas的方法进行graphics的绘制，这样整体渲染流程就走入到了硬件加速里面。</p>
+<h2 id="Choreographer与vsync"><a href="#Choreographer与vsync" class="headerlink" title="Choreographer与vsync"></a>Choreographer与vsync</h2><p>虽然在Android 4.0版本加入了硬件加速的支持，但这还是不够，因为它只是相当于具体的渲染时间可能快了一些，举例来说，可能是普通火车与高铁之间的差异，虽然确实行程所花时间变短了，但是对于整体的效率来说提升并不大。对于整体GUI的流畅度，响应度，特别是动画这一块的流程程度与其他平台（如水果）差距仍是巨大的。一个最重要的原因就在于，GUI整体的渲染流程是缺少协同的，仍是按需式渲染：应用层布局加载完了要渲染了，或者ViewRootImpl发现dirty了，需要重绘了，或者有用户事件了需要响应了，触发整体渲染流程，更新graphic buffer，屏幕刷新了。</p>
+<p>这一过程其实也没有啥大问题，对于常规的UI显示，没有问题，我没有更新，没有变化 ，当然 不需要重绘了，如果有更新有变化时再按需重新渲染，这显然 没有什么问题。最大的问题在于动画，动画是要求连续不停的重绘，如果仅靠客户这一端（相较于graphic buffer和屏幕这一端来说）来触发，显然FPS（帧率）是不够的，由此造成流畅度肯定不够好。</p>
+<p>于是在Android 4.1 （Jelly Bean）中就引入了Choreographer以及vsync机制，来解决此问题，它们两个并不全完是一回事，Choreographer是纯软件的，vsync则是更为复杂的更底层的机制，有没有vsync，Choreographer都能很好的工作，只不过有了vsync会更好，就好比硬件加速之于View的渲染，没有硬件加速也可以渲染啊，有了硬件加速渲染会更加的快一些。</p>
+<h3 id="Choreographer"><a href="#Choreographer" class="headerlink" title="Choreographer"></a>Choreographer</h3><p>它的英文本意是歌舞的编舞者，有点类似于导演，但歌舞一般时间更短，所以对编舞者要求更高，需要在短时间内把精华全部展现出来。它的目的就是要协调整个View的渲染过程，对输入事件响应，动画和渲染进行时间上的把控。文档原文是说：Coordinates the timing of animations, input and drawing.，精华就在于timing这个词上。</p>
+<p>但其实，这个类本身并不是很复杂，相较于其他frameworks层的东西来说它算简单的了，它就是负责定时回调，按照一定的FPS来给你回调，简单来说它就是做了这么一件事情。它公开的接口也特别少，就是postFrameCallback和removeFrameCallback，而FrameCallback也是一个非常简单的接口doFrame(long frameTimeNanos)，里面的参数是当前帧开始渲染的时间序列。</p>
+<p>所以，它的工作就是在计时，或者叫把控时间，到了每一帧该渲染的时候了，它会告诉你。有了它，那么GUI的渲染将不再是按需重绘了，而是有节奏的，可以以固定FPS定时刷新。ViewRootImpl那头也需要做调整，每当有主动重绘时（view tree有变化，用户有输入事件等），也并不是说立马就去做draw，而是往Choreographer里post一个FrameCallback，在里面做具体的draw。</p>
+<h3 id="vsync（Vertical-Synchronization）"><a href="#vsync（Vertical-Synchronization）" class="headerlink" title="vsync（Vertical Synchronization）"></a>vsync（Vertical Synchronization）</h3><p>垂直同步，是另外一套更为底层的机制，简单来理解就是由屏幕显示系统直接向软件层派发定时的脉冲信号，用以提高整体的渲染流畅程度，屏幕刷新，graphic buffer和window GUI（view tree）三者在这个脉冲信号下，做到同步。</p>
+<p>vsync是通过对Choreographer来发挥作用的。Choreographer有两套timing机制，一是靠它自己实现的一套，另外就是直接传导vsync的信号。通过DisplayEventReceiver（这个类对于App层是完全不可见的被hide了）就可以接收到vsync的信号了，调用其sheduleVsync来告诉vsync说我想接收下一次同步的信号，然后在重载onVsync方法以接收信号，就能够与vsync系统连接起来了。</p>
+<h2 id="渲染性能优化"><a href="#渲染性能优化" class="headerlink" title="渲染性能优化"></a>渲染性能优化</h2><p>这是一个很大的话题</p>
+<h3 id="保持简单"><a href="#保持简单" class="headerlink" title="保持简单"></a>保持简单</h3><p>最最重要的原则就是要保持简单，比如，UI页面尽可能的简洁，view tree的层级要尽可能的少，能用颜色就别用背景图片，能merge就merge。</p>
+<p>动画也要尽可能的简单，并且使用标准的ValueAnimator接口，而不要简单粗暴的去修改LayoutParams（如height和width）。</p>
+<h3 id="减少重绘"><a href="#减少重绘" class="headerlink" title="减少重绘"></a>减少重绘</h3><p>这个要多用系统中开发者模式里面的重绘调试工具来做优化，尽可能的减少重绘。</p>
+<h3 id="专项定制"><a href="#专项定制" class="headerlink" title="专项定制"></a>专项定制</h3><p>有些时候，对于一些特殊需求的view要进行定制优化。举个例子，比如一个巨复杂的页面（如某宝的首页），中有一个用于显示倒计时的view，实现起来并不复杂，一个TextView就搞定了，一个Timer来倒计时，不断的刷新数字 就可以了。但是，这通常会导致整个页面都跟着在重绘。因为数字在变化，会导致TextView的大小在变化，进而导致整个View tree都在不断的跟着重绘。</p>
+<p>像这种case，如果遇到了，就需要自定义一个专门用于此的View，并针对数字不断刷新做专门的优化，以不让其影响整个view tree。</p>
+<p>不要在意这个例子的真实性，要知道，当某个View演变成了整个页面的瓶颈的时候，就需要专门针对 其进行特殊定制以优化整体页面的渲染性能。</p>
+
+      
+      <blockquote>
+        
+        <strong>本文链接：</strong><br><a href="http://longzhiye.top/2023/08/12/2023-08-12/">http://longzhiye.top/2023/08/12/2023-08-12/</a>
+      </blockquote>
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Android/" rel="tag">Android</a><a class="mdui-ripple article_tags-link" href="/tags/Framework/" rel="tag">Framework</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2023/08/13/2023-08-13/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android单独编译framework模块'}">上一篇</span>
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2023/06/25/2023-06-25/">
+        <span class="mdui-p-x-3" mdui-tooltip="{content: '如何让Android设备实现息屏显示'}">下一篇</span>
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+
+
+
+</main>
+  <footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="http://github.com/longzhiye" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe7ab;</i></a>
+    
+    
+    
+      <a href="https://www.zhihu.com/people/long-zhi-xie-61" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe6c0;</i></a>
+    
+    
+    
+      <a href="tencent://tencent:////message/?uin=951898105&Menu=yes" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2022 - 2025 龙之叶<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>
+    <br>
+      <span id="busuanzi_container_site_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_site_pv"></span></span> &nbsp;&nbsp;
+      <span id="busuanzi_container_site_uv" style="display: none;"><i class="iconfont">&#xe601;</i> <span id="busuanzi_value_site_uv"></span></span>
+    
+  </div>
+</footer>
+
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+  
+<script src="/custom.js"></script>
+
+</body>
+</html>

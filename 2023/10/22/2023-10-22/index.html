@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>android10.0(Q) user版本打开root权限 | 龙之叶的博客</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="alternate" href="/atom.xml" title="龙之叶的博客" type="application/atom+xml">
+  <meta name="description" content="android10.0(Q) user版本打开root权限">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android10.0(Q) user版本打开root权限">
+<meta property="og:url" content="http://longzhiye.top/2023/10/22/2023-10-22/index.html">
+<meta property="og:site_name" content="龙之叶的博客">
+<meta property="og:description" content="android10.0(Q) user版本打开root权限">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-10-21T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-04T08:39:58.953Z">
+<meta property="article:author" content="龙之叶">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Framework">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+
+  <meta name="keywords" content=",Android,Framework,Java">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="龙之叶的博客">
+  <meta name="msapplication-starturl" content="http://longzhiye.top/2023/10/22/2023-10-22/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="龙之叶的博客">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <link rel="canonical" href="http://longzhiye.top/2023/10/22/2023-10-22/">
+  
+
+  
+  
+
+  
+  
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/custom.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(!a){document.getElementsByTagName("body")[0].className+=" mdui-drawer-body-left"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">龙之叶的博客</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+	<!--
+    <a href="/atom.xml" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'RSS'}"><i class="mdui-icon material-icons">rss_feed</i></a>
+	-->
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(a){document.getElementById("sidebar").className+=" mdui-drawer-close"};</script>
+  <div class="mdui-grid-tile">
+    <img src="/images/banner.png" style="height: 160px;">
+    <img src="/images/avatar.png" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;background-color:#fff;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">龙之叶</div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>生命不息，折腾不止</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:longzhiye163@163.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'longzhiye163@163.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-0");if(a){document.getElementsByClassName("mdui-collapse-item")[0].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">archive</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2025/10/">十月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/09/">九月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/08/">八月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/07/">七月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/06/">六月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/03/">三月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/02/">二月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/01/">一月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/10/">十月 2024<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/09/">九月 2024<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/08/">八月 2024<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/03/">三月 2024<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/02/">二月 2024<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/01/">一月 2024<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/12/">十二月 2023<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/11/">十一月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/10/">十月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/09/">九月 2023<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/08/">八月 2023<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/06/">六月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/05/">五月 2023<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/04/">四月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/03/">三月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/02/">二月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/09/">九月 2022<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/04/">四月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/03/">三月 2017<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/02/">二月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/01/">一月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/12/">十二月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/11/">十一月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/10/">十月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/08/">八月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-1");if(a){document.getElementsByClassName("mdui-collapse-item")[1].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">class</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">108</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E8%B5%84%E8%AE%AF/">资讯<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E9%80%9A%E7%9F%A5/">通知<span class="mdui-ripple sidebar_archives-count">4</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-2");if(a){document.getElementsByClassName("mdui-collapse-item")[2].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/ANR/" rel="tag">ANR<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/APP/" rel="tag">APP<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android/" rel="tag">Android<span class="mdui-ripple sidebar_archives-count">98</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android12/" rel="tag">Android12<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android13/" rel="tag">Android13<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android14/" rel="tag">Android14<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android16/" rel="tag">Android16<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AndroidStudio/" rel="tag">AndroidStudio<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AutoDraw/" rel="tag">AutoDraw<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Build/" rel="tag">Build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Crash/" rel="tag">Crash<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Foxmail/" rel="tag">Foxmail<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Framework/" rel="tag">Framework<span class="mdui-ripple sidebar_archives-count">20</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GPS%E8%BD%A8%E8%BF%B9%E5%9B%BE/" rel="tag">GPS轨迹图<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Git/" rel="tag">Git<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GitHub/" rel="tag">GitHub<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Google/" rel="tag">Google<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Java/" rel="tag">Java<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Kernel/" rel="tag">Kernel<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Launcher/" rel="tag">Launcher<span class="mdui-ripple sidebar_archives-count">17</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Lib/" rel="tag">Lib<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Linux/" rel="tag">Linux<span class="mdui-ripple sidebar_archives-count">18</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Markdown/" rel="tag">Markdown<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Material-Design/" rel="tag">Material Design<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OS-X/" rel="tag">OS X<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OTA/" rel="tag">OTA<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/QuickTime/" rel="tag">QuickTime<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SSH/" rel="tag">SSH<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Settings/" rel="tag">Settings<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SystemUI/" rel="tag">SystemUI<span class="mdui-ripple sidebar_archives-count">19</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/UAC/" rel="tag">UAC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Ubuntu/" rel="tag">Ubuntu<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WPS/" rel="tag">WPS<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Wifi/" rel="tag">Wifi<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WindTerm/" rel="tag">WindTerm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows/" rel="tag">Windows<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows-11/" rel="tag">Windows 11<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/androidmk/" rel="tag">androidmk<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/blog/" rel="tag">blog<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/build/" rel="tag">build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/feel/" rel="tag">feel<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/framework/" rel="tag">framework<span class="mdui-ripple sidebar_archives-count">58</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/inotify/" rel="tag">inotify<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/life/" rel="tag">life<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/ninja/" rel="tag">ninja<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/rsync/" rel="tag">rsync<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/standard/" rel="tag">standard<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/test/" rel="tag">test<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1/" rel="tag">企业微信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E7%94%9F%E6%B4%BB%E6%84%9F%E6%82%9F/" rel="tag">生活感悟<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+      <a href="/timeline" class="mdui-list-item mdui-ripple">时间轴</a>
+    
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-3");if(a){document.getElementsByClassName("mdui-collapse-item")[3].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+          <a href="http://www.niemingzhao.top" target="_blank" class="mdui-list-item mdui-p-l-2 mdui-text-color-theme-accent mdui-ripple" style="justify-content: center;">聂明照的博客</a>
+        
+        
+      </div>
+    </div>
+  </div>
+</aside>
+
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <style>#main article .mdui-card-content .text-center{text-align:center!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-8.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">android10.0(Q) user版本打开root权限</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2023-10-22 / <i class="iconfont">&#xe601;</i> 龙之叶 &nbsp;&nbsp; <span id="busuanzi_container_page_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_page_pv"></span></span></div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#qrcode', align: 'right'}"><i class="mdui-icon material-icons">devices</i></button>
+          <ul class="mdui-menu" id="qrcode">
+            
+              <li class="mdui-menu-item"><a class="mdui-text-center mdui-ripple">发送到手机</a></li>
+            
+            <li class="mdui-menu-item" disabled>
+              
+                <img src="//qr.liantu.com/api.php?w=246&m=10&text=http://longzhiye.top/2023/10/22/2023-10-22/">
+              
+            </li>
+          </ul>
+        
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="mdui-icon material-icons">share</i></button>
+          <ul class="mdui-menu" id="share_menu">
+            <li class="mdui-menu-item">
+              <a href="https://service.weibo.com/share/share.php?appkey=&title=android10.0(Q) user版本打开root权限&url=http://longzhiye.top/2023/10/22/2023-10-22/&pic=http://longzhiye.top/images/favicon.png&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://twitter.com/intent/tweet?text=android10.0(Q) user版本打开root权限&url=http://longzhiye.top/2023/10/22/2023-10-22/&via=龙之叶" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=http://longzhiye.top/2023/10/22/2023-10-22/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://plus.google.com/share?url=http://longzhiye.top/2023/10/22/2023-10-22/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://longzhiye.top/2023/10/22/2023-10-22/&title=android10.0(Q) user版本打开root权限" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://connect.qq.com/widget/shareqq/index.html?site=龙之叶的博客&title=android10.0(Q) user版本打开root权限&pics=http://longzhiye.top/images/favicon.png&url=http://longzhiye.top/2023/10/22/2023-10-22/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://telegram.me/share/url?url=http://longzhiye.top/2023/10/22/2023-10-22/&text=android10.0(Q) user版本打开root权限" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+            </li>
+          </ul>
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>个人玩家建议采用 magisk 方式直接修补 boot.img 实现 root 即可， 然后搭载 RE 文件管理器可操作 system 相关分区<br>源码玩家可直接修改 aosp 源码后自己编译 rom 直刷。</p>
+<h3 id="文件清单"><a href="#文件清单" class="headerlink" title="文件清单"></a>文件清单</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">aosp10\build\core\main.mk</span><br><span class="line">aosp10\system\sepolicy\definitions.mk</span><br><span class="line">aosp10\system\sepolicy\Android.mk</span><br><span class="line">aosp10\system\core\fs_mgr\Android.bp</span><br><span class="line">aosp10\system\core\adb\daemon\main.cpp</span><br><span class="line">aosp10\system\core\adb\Android.bp</span><br><span class="line">aosp10\system\core\init\selinux.cpp</span><br><span class="line">aosp10\system\core\init\Android.mk</span><br><span class="line">aosp10\system\core\init\Android.bp</span><br><span class="line">aosp10\device\google\marlin\xxx\BoardConfig.mk</span><br></pre></td></tr></table></figure>
+
+<h4 id="1、-让进程名称在-AS-Logcat-中可见，-通过修改-ro-adb-secure-和-ro-secure"><a href="#1、-让进程名称在-AS-Logcat-中可见，-通过修改-ro-adb-secure-和-ro-secure" class="headerlink" title="1、 让进程名称在 AS Logcat 中可见， 通过修改 ro.adb.secure 和 ro.secure"></a>1、 让进程名称在 AS Logcat 中可见， 通过修改 ro.adb.secure 和 ro.secure</h4><p><strong>ps： 这步不是必须的， 目的只是在 logcat 中可见进程 pid 和包名， 而且打开 USB 调试时默认授权， 不再弹授权框</strong><br><strong>build/make/core/main.mk</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">tags_to_install :=</span><br><span class="line">ifneq (,$(user_variant))</span><br><span class="line">    <span class="comment"># Target is secure in user builds.</span></span><br><span class="line">-   ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=1</span><br><span class="line">+   <span class="comment"># ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=1</span></span><br><span class="line">+   ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=0</span><br><span class="line">    ADDITIONAL_DEFAULT_PROPERTIES += security.perf_harden=1</span><br><span class="line">    ifeq ($(user_variant),user)</span><br><span class="line">-   ADDITIONAL_DEFAULT_PROPERTIES += ro.adb.secure=1</span><br><span class="line">+   <span class="comment"># ADDITIONAL_DEFAULT_PROPERTIES += ro.adb.secure=1</span></span><br><span class="line">+   ADDITIONAL_DEFAULT_PROPERTIES += ro.adb.secure=0</span><br><span class="line">    endif</span><br><span class="line">ifeq ($(user_variant),userdebug)</span><br><span class="line">@@ -251,7 +253,7 @@ ifneq (,$(user_variant))</span><br><span class="line">        tags_to_install += debug</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="comment"># Disable debugging in plain user builds.</span></span><br><span class="line">-       enable_target_debugging :=</span><br><span class="line">+       <span class="comment"># enable_target_debugging :=</span></span><br><span class="line">    endif</span><br><span class="line">    <span class="comment"># Disallow mock locations by default for user builds</span></span><br></pre></td></tr></table></figure>
+<h4 id="2、-修改-SELinux权限为-Permissive"><a href="#2、-修改-SELinux权限为-Permissive" class="headerlink" title="2、 修改 SELinux权限为 Permissive"></a>2、 修改 SELinux权限为 Permissive</h4><p>找到对应文件 BoardConfig.mk 增加 androidboot.selinux=permissive<br>d<strong>evice/google/marlin/xxx/BoardConfig.mk</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">BOARD_KERNEL_CMDLINE += console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=xxx</span><br></pre></td></tr></table></figure>
+<p>继续修改如下三个文件<br>ALLOW_PERMISSIVE_SELINUX=1<br><strong>system/core/init/Android.bp</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">cc_defaults &#123;</span><br><span class="line">    name: <span class="string">&quot;init_defaults&quot;</span>,</span><br><span class="line">    cpp_std: <span class="string">&quot;experimental&quot;</span>,</span><br><span class="line">    sanitize: &#123;</span><br><span class="line">        misc_undefined: [<span class="string">&quot;signed-integer-overflow&quot;</span>],</span><br><span class="line">    &#125;,</span><br><span class="line">    cflags: [</span><br><span class="line">        <span class="string">&quot;-DLOG_UEVENTS=0&quot;</span>,</span><br><span class="line">        <span class="string">&quot;-Wall&quot;</span>,</span><br><span class="line">        <span class="string">&quot;-Wextra&quot;</span>,</span><br><span class="line">        <span class="string">&quot;-Wno-unused-parameter&quot;</span>,</span><br><span class="line">        <span class="string">&quot;-Werror&quot;</span>,</span><br><span class="line">        <span class="string">&quot;-DALLOW_LOCAL_PROP_OVERRIDE=1&quot;</span>,</span><br><span class="line">        <span class="string">&quot;-DALLOW_PERMISSIVE_SELINUX=1&quot;</span>,</span><br><span class="line">        <span class="string">&quot;-DREBOOT_BOOTLOADER_ON_PANIC=1&quot;</span>,</span><br><span class="line">        <span class="string">&quot;-DWORLD_WRITABLE_KMSG=1&quot;</span>,</span><br><span class="line">        <span class="string">&quot;-DDUMP_ON_UMOUNT_FAILURE=1&quot;</span>,</span><br><span class="line">        <span class="string">&quot;-DSHUTDOWN_ZERO_TIMEOUT=0&quot;</span>,</span><br><span class="line">]   ,</span><br></pre></td></tr></table></figure>
+<p><strong>system/core/init/Android.mk</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">ifneq (,$(filter user userdebug eng,$(TARGET_BUILD_VARIANT)))</span><br><span class="line">init_options += \</span><br><span class="line">-DALLOW_LOCAL_PROP_OVERRIDE=1 \</span><br><span class="line">-DALLOW_PERMISSIVE_SELINUX=1 \</span><br><span class="line">-DREBOOT_BOOTLOADER_ON_PANIC=1 \</span><br><span class="line">-DWORLD_WRITABLE_KMSG=1 \</span><br><span class="line">-DDUMP_ON_UMOUNT_FAILURE=1</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">init_options += \</span><br><span class="line">-DALLOW_LOCAL_PROP_OVERRIDE=0 \</span><br><span class="line">-DALLOW_PERMISSIVE_SELINUX=0 \</span><br><span class="line">-DREBOOT_BOOTLOADER_ON_PANIC=0 \</span><br><span class="line">-DWORLD_WRITABLE_KMSG=0 \</span><br><span class="line">-DDUMP_ON_UMOUNT_FAILURE=0</span><br><span class="line">endif</span><br></pre></td></tr></table></figure>
+<p><strong>system/core/init/selinux.cpp</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">bool</span> <span class="title function_">IsEnforcing</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">if</span> (ALLOW_PERMISSIVE_SELINUX) &#123;</span><br><span class="line">        <span class="keyword">return</span> StatusFromCmdline() == SELINUX_ENFORCING;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="3、-允许-adb-关闭-verity"><a href="#3、-允许-adb-关闭-verity" class="headerlink" title="3、 允许 adb 关闭 verity"></a>3、 允许 adb 关闭 verity</h3><p><strong>system/core/adb/Android.bp</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">@@ -24,7 +24,7 @@ cc_defaults &#123;</span><br><span class="line">        <span class="string">&quot;-Wno-missing-field-initializers&quot;</span>,</span><br><span class="line">        <span class="string">&quot;-Wthread-safety&quot;</span>,</span><br><span class="line">        <span class="string">&quot;-Wvla&quot;</span>,</span><br><span class="line">        <span class="string">&quot;-DADB_HOST=1&quot;</span>,</span><br><span class="line">-       <span class="string">&quot;-DALLOW_ADBD_ROOT=0&quot;</span>,</span><br><span class="line">+       <span class="string">&quot;-DALLOW_ADBD_ROOT=1&quot;</span>,</span><br><span class="line">    ],</span><br><span class="line">    cpp_std: <span class="string">&quot;experimental&quot;</span>,</span><br><span class="line">@@ -76,7 +76,14 @@ cc_defaults &#123;</span><br><span class="line">cc_defaults &#123;</span><br><span class="line">    name: <span class="string">&quot;adbd_defaults&quot;</span>,</span><br><span class="line">    defaults: [<span class="string">&quot;adb_defaults&quot;</span>],</span><br><span class="line">    //cflags: [<span class="string">&quot;-UADB_HOST&quot;</span>, <span class="string">&quot;-DADB_HOST=0&quot;</span>],</span><br><span class="line">    cflags: [</span><br><span class="line">        <span class="string">&quot;-UADB_HOST&quot;</span>,</span><br><span class="line">        <span class="string">&quot;-DADB_HOST=0&quot;</span>,</span><br><span class="line">        <span class="string">&quot;-UALLOW_ADBD_ROOT&quot;</span>,</span><br><span class="line">        <span class="string">&quot;-DALLOW_ADBD_ROOT=1&quot;</span>,</span><br><span class="line">        <span class="string">&quot;-DALLOW_ADBD_DISABLE_VERITY&quot;</span>,</span><br><span class="line">        <span class="string">&quot;-DALLOW_ADBD_NO_AUTH&quot;</span>,</span><br><span class="line">    ],</span><br><span class="line">    product_variables: &#123;</span><br><span class="line">        debuggable: &#123;</span><br><span class="line">            cflags: [</span><br><span class="line">                <span class="string">&quot;-UALLOW_ADBD_ROOT&quot;</span>,</span><br><span class="line">                <span class="string">&quot;-DALLOW_ADBD_ROOT=1&quot;</span>,</span><br><span class="line">                <span class="string">&quot;-DALLOW_ADBD_DISABLE_VERITY&quot;</span>,</span><br><span class="line">                <span class="string">&quot;-DALLOW_ADBD_NO_AUTH&quot;</span>,</span><br><span class="line">            ],</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125; @</span><br><span class="line">@ -403,6 +410,8 @@ cc_library &#123;</span><br><span class="line">    required: [<span class="string">&quot;remount&quot;</span>,],</span><br><span class="line">    product_variables: &#123;</span><br><span class="line">        debuggable: &#123;</span><br><span class="line">            required: [</span><br><span class="line">                <span class="string">&quot;remount&quot;</span>,</span><br><span class="line">            ],</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
+<p><strong>system/core/adb/daemon/main.cpp</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">bool</span> <span class="title function_">should_drop_capabilities_bounding_set</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">if</span> (ALLOW_ADBD_ROOT || is_device_unlocked()) &#123;</span><br><span class="line">        <span class="keyword">if</span> (__android_log_is_debuggable()) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">static</span> <span class="type">bool</span> <span class="title function_">should_drop_privileges</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="comment">// &quot;adb root&quot; not allowed, always drop privileges.</span></span><br><span class="line">    <span class="keyword">if</span> (!ALLOW_ADBD_ROOT &amp;&amp; !is_device_unlocked()) <span class="keyword">return</span> <span class="literal">true</span>;</span><br></pre></td></tr></table></figure>
+<h4 id="4、-修改-adb-root-权限"><a href="#4、-修改-adb-root-权限" class="headerlink" title="4、 修改 adb root 权限"></a>4、 修改 adb root 权限</h4><p><strong>system/core/fs_mgr/Android.bp</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">whole_static_libs: [</span><br><span class="line">        <span class="string">&quot;liblogwrap&quot;</span>,</span><br><span class="line">        <span class="string">&quot;libdm&quot;</span>,</span><br><span class="line">        <span class="string">&quot;libfstab&quot;</span>,</span><br><span class="line">    ],</span><br><span class="line">    cppflags: [</span><br><span class="line">        <span class="string">&quot;-UALLOW_ADBD_DISABLE_VERITY&quot;</span>,</span><br><span class="line">        <span class="string">&quot;-DALLOW_ADBD_DISABLE_VERITY=1&quot;</span>,</span><br><span class="line">    ],</span><br><span class="line">    product_variables: &#123;</span><br><span class="line">        debuggable: &#123;</span><br><span class="line">            cppflags: [</span><br><span class="line">                <span class="string">&quot;-UALLOW_ADBD_DISABLE_VERITY&quot;</span>,</span><br><span class="line">                <span class="string">&quot;-DALLOW_ADBD_DISABLE_VERITY=1&quot;</span>,</span><br><span class="line">            ],</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">srcs: [</span><br><span class="line">        <span class="string">&quot;fs_mgr_remount.cpp&quot;</span>,</span><br><span class="line">    ],</span><br><span class="line">    cppflags: [</span><br><span class="line">        <span class="string">&quot;-UALLOW_ADBD_DISABLE_VERITY&quot;</span>,</span><br><span class="line">        <span class="string">&quot;-DALLOW_ADBD_DISABLE_VERITY=1&quot;</span>,</span><br><span class="line">    ],</span><br><span class="line">    product_variables: &#123;</span><br><span class="line">        debuggable: &#123;</span><br><span class="line">            cppflags: [</span><br><span class="line">                <span class="string">&quot;-UALLOW_ADBD_DISABLE_VERITY&quot;</span>,</span><br><span class="line">                <span class="string">&quot;-DALLOW_ADBD_DISABLE_VERITY=1&quot;</span>,</span><br><span class="line">            ],</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
+<p>user 版本启用 overlayfs 来装载 remount 对应分区 user 版本不允许 permissive domains<br><strong>system/sepolicy/Android.mk</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">ifneq ($(TARGET_BUILD_VARIANT), eng)</span><br><span class="line">    LOCAL_REQUIRED_MODULES += \</span><br><span class="line">        selinux_denial_metadata \</span><br><span class="line">@@ -978,7 +978,7 @@ $(built_sepolicy_neverallows)</span><br><span class="line">            @<span class="built_in">mkdir</span> -p $(<span class="built_in">dir</span> <span class="variable">$@</span>)</span><br><span class="line">            $(hide) $&lt; -m -M <span class="literal">true</span> -G -c $(POLICYVERS) $(PRIVATE_NEVERALLOW_ARG) $(PRIVATE_CIL_FILES) -o <span class="variable">$@</span>.tmp</span><br><span class="line">            $(hide) $(HOST_OUT_EXECUTABLES)/sepolicy-analyze <span class="variable">$@</span>.tmp permissive &gt; <span class="variable">$@</span>.permissivedomains</span><br><span class="line">-           $(hide) <span class="keyword">if</span> [ <span class="string">&quot;<span class="subst">$(TARGET_BUILD_VARIANT)</span>&quot;</span> = <span class="string">&quot;user&quot;</span> -a -s <span class="variable">$@</span>.permissivedomains ]; <span class="keyword">then</span> \</span><br><span class="line">+           $(hide) <span class="keyword">if</span> [ <span class="string">&quot;eng&quot;</span> = <span class="string">&quot;user&quot;</span> -a -s <span class="variable">$@</span>.permissivedomains ]; <span class="keyword">then</span> \</span><br><span class="line">                <span class="built_in">echo</span> <span class="string">&quot;==========&quot;</span> 1&gt;&amp;2; \</span><br><span class="line">                <span class="built_in">echo</span> <span class="string">&quot;ERROR: permissive domains not allowed in user builds&quot;</span> 1&gt;&amp;2; \</span><br><span class="line">e               cho <span class="string">&quot;List of invalid domains:&quot;</span> 1&gt;&amp;2; \</span><br><span class="line">@@ -1032,7 +1032,7 @@ $(LOCAL_BUILT_MODULE): $(sepolicy.recovery.conf) $(HOST_OUT_EXECUTABLES)/checkpo</span><br><span class="line">            $(hide) $(CHECKPOLICY_ASAN_OPTIONS) $(HOST_OUT_EXECUTABLES)/checkpolicy -M -c \</span><br><span class="line">                $(POLICYVERS) -o <span class="variable">$@</span>.tmp $&lt;</span><br><span class="line">            $(hide) $(HOST_OUT_EXECUTABLES)/sepolicy-analyze <span class="variable">$@</span>.tmp permissive &gt; <span class="variable">$@</span>.permissivedomains</span><br><span class="line">-           $(hide) <span class="keyword">if</span> [ <span class="string">&quot;<span class="subst">$(TARGET_BUILD_VARIANT)</span>&quot;</span> = <span class="string">&quot;user&quot;</span> -a -s <span class="variable">$@</span>.permissivedomains ]; <span class="keyword">then</span> \</span><br><span class="line">+           $(hide) <span class="keyword">if</span> [ <span class="string">&quot;eng&quot;</span> = <span class="string">&quot;user&quot;</span> -a -s <span class="variable">$@</span>.permissivedomains ]; <span class="keyword">then</span> \</span><br><span class="line">                <span class="built_in">echo</span> <span class="string">&quot;==========&quot;</span> 1&gt;&amp;2; \</span><br><span class="line">                <span class="built_in">echo</span> <span class="string">&quot;ERROR: permissive domains not allowed in user builds&quot;</span> 1&gt;&amp;2; \</span><br><span class="line">                <span class="built_in">echo</span> <span class="string">&quot;List of invalid domains:&quot;</span> 1&gt;&amp;2; \</span><br><span class="line">ifneq ($(filter address,$(SANITIZE_TARGET)),)</span><br><span class="line">    local_fc_files += $(wildcard $(addsuffix /file_contexts_asan, $(PLAT_PRIVATE_POLICY)))</span><br><span class="line">endif</span><br><span class="line">ifneq (,$(filter user userdebug eng,$(TARGET_BUILD_VARIANT)))</span><br><span class="line">    local_fc_files += $(wildcard $(addsuffix /file_contexts_overlayfs, $(PLAT_PRIVATE_POLICY)))</span><br><span class="line">endif</span><br><span class="line">ifneq ($(TARGET_BUILD_VARIANT), eng)</span><br><span class="line">include $(CLEAR_VARS)</span><br><span class="line">LOCAL_MODULE := selinux_denial_metadata</span><br><span class="line">LOCAL_MODULE_CLASS := ETC</span><br><span class="line">LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR)/etc/selinux</span><br></pre></td></tr></table></figure>
+<p><strong>system/sepolicy/definitions.mk</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">define transform-policy-to-conf</span><br><span class="line">@<span class="built_in">mkdir</span> -p $(<span class="built_in">dir</span> <span class="variable">$@</span>)</span><br><span class="line">$(hide) m4 --fatal-warnings $(PRIVATE_ADDITIONAL_M4DEFS) \</span><br><span class="line">    -D mls_num_sens=$(PRIVATE_MLS_SENS) -D mls_num_cats=$(PRIVATE_MLS_CATS) \</span><br><span class="line">    -D target_build_variant=eng \</span><br><span class="line">    -D target_with_dexpreopt=$(WITH_DEXPREOPT) \</span><br><span class="line">    -D target_arch=$(PRIVATE_TGT_ARCH) \</span><br><span class="line">    -D target_with_asan=$(PRIVATE_TGT_WITH_ASAN) \</span><br><span class="line">    -D target_with_native_coverage=$(PRIVATE_TGT_WITH_NATIVE_COVERAGE) \</span><br><span class="line">    -D target_full_treble=$(PRIVATE_SEPOLICY_SPLIT) \</span><br><span class="line">    -D target_compatible_property=$(PRIVATE_COMPATIBLE_PROPERTY) \</span><br><span class="line">    -D target_exclude_build_test=$(PRIVATE_EXCLUDE_BUILD_TEST) \</span><br><span class="line">    $(PRIVATE_TGT_RECOVERY) \</span><br><span class="line">-s $^ &gt; <span class="variable">$@</span></span><br><span class="line">endef</span><br><span class="line">.KATI_READONLY := transform-policy-to-conf</span><br></pre></td></tr></table></figure>
+
+      
+      <blockquote>
+        
+        <strong>本文链接：</strong><br><a href="http://longzhiye.top/2023/10/22/2023-10-22/">http://longzhiye.top/2023/10/22/2023-10-22/</a>
+      </blockquote>
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Android/" rel="tag">Android</a><a class="mdui-ripple article_tags-link" href="/tags/Framework/" rel="tag">Framework</a><a class="mdui-ripple article_tags-link" href="/tags/Java/" rel="tag">Java</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2023/10/23/2023-10-23/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        <span class="mdui-p-x-3" mdui-tooltip="{content: '底层全部重构，小米澎湃OS完整系统架构公布'}">上一篇</span>
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2023/10/21/2023-10-21/">
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Firefox无法访问localhost和127.0.0.1的问题与解决'}">下一篇</span>
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+
+
+
+</main>
+  <footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="http://github.com/longzhiye" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe7ab;</i></a>
+    
+    
+    
+      <a href="https://www.zhihu.com/people/long-zhi-xie-61" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe6c0;</i></a>
+    
+    
+    
+      <a href="tencent://tencent:////message/?uin=951898105&Menu=yes" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2022 - 2025 龙之叶<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>
+    <br>
+      <span id="busuanzi_container_site_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_site_pv"></span></span> &nbsp;&nbsp;
+      <span id="busuanzi_container_site_uv" style="display: none;"><i class="iconfont">&#xe601;</i> <span id="busuanzi_value_site_uv"></span></span>
+    
+  </div>
+</footer>
+
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+  
+<script src="/custom.js"></script>
+
+</body>
+</html>

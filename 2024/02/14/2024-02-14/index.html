@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>Android 14 PIP画中画模式系统流程解析 | 龙之叶的博客</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="alternate" href="/atom.xml" title="龙之叶的博客" type="application/atom+xml">
+  <meta name="description" content="Android 14 PIP画中画模式系统流程解析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 14 PIP画中画模式系统流程解析">
+<meta property="og:url" content="http://longzhiye.top/2024/02/14/2024-02-14/index.html">
+<meta property="og:site_name" content="龙之叶的博客">
+<meta property="og:description" content="Android 14 PIP画中画模式系统流程解析">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-02-13T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-04T08:39:58.967Z">
+<meta property="article:author" content="龙之叶">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="SystemUI">
+<meta property="article:tag" content="framework">
+<meta name="twitter:card" content="summary">
+
+  <meta name="keywords" content=",Android,SystemUI,framework">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="龙之叶的博客">
+  <meta name="msapplication-starturl" content="http://longzhiye.top/2024/02/14/2024-02-14/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="龙之叶的博客">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <link rel="canonical" href="http://longzhiye.top/2024/02/14/2024-02-14/">
+  
+
+  
+  
+
+  
+  
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/custom.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(!a){document.getElementsByTagName("body")[0].className+=" mdui-drawer-body-left"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">龙之叶的博客</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+	<!--
+    <a href="/atom.xml" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'RSS'}"><i class="mdui-icon material-icons">rss_feed</i></a>
+	-->
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(a){document.getElementById("sidebar").className+=" mdui-drawer-close"};</script>
+  <div class="mdui-grid-tile">
+    <img src="/images/banner.png" style="height: 160px;">
+    <img src="/images/avatar.png" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;background-color:#fff;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">龙之叶</div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>生命不息，折腾不止</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:longzhiye163@163.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'longzhiye163@163.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-0");if(a){document.getElementsByClassName("mdui-collapse-item")[0].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">archive</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2025/10/">十月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/09/">九月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/08/">八月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/07/">七月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/06/">六月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/03/">三月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/02/">二月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/01/">一月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/10/">十月 2024<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/09/">九月 2024<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/08/">八月 2024<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/03/">三月 2024<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/02/">二月 2024<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/01/">一月 2024<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/12/">十二月 2023<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/11/">十一月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/10/">十月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/09/">九月 2023<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/08/">八月 2023<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/06/">六月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/05/">五月 2023<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/04/">四月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/03/">三月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/02/">二月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/09/">九月 2022<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/04/">四月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/03/">三月 2017<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/02/">二月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/01/">一月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/12/">十二月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/11/">十一月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/10/">十月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/08/">八月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-1");if(a){document.getElementsByClassName("mdui-collapse-item")[1].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">class</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">108</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E8%B5%84%E8%AE%AF/">资讯<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E9%80%9A%E7%9F%A5/">通知<span class="mdui-ripple sidebar_archives-count">4</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-2");if(a){document.getElementsByClassName("mdui-collapse-item")[2].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/ANR/" rel="tag">ANR<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/APP/" rel="tag">APP<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android/" rel="tag">Android<span class="mdui-ripple sidebar_archives-count">98</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android12/" rel="tag">Android12<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android13/" rel="tag">Android13<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android14/" rel="tag">Android14<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android16/" rel="tag">Android16<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AndroidStudio/" rel="tag">AndroidStudio<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AutoDraw/" rel="tag">AutoDraw<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Build/" rel="tag">Build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Crash/" rel="tag">Crash<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Foxmail/" rel="tag">Foxmail<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Framework/" rel="tag">Framework<span class="mdui-ripple sidebar_archives-count">20</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GPS%E8%BD%A8%E8%BF%B9%E5%9B%BE/" rel="tag">GPS轨迹图<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Git/" rel="tag">Git<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GitHub/" rel="tag">GitHub<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Google/" rel="tag">Google<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Java/" rel="tag">Java<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Kernel/" rel="tag">Kernel<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Launcher/" rel="tag">Launcher<span class="mdui-ripple sidebar_archives-count">17</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Lib/" rel="tag">Lib<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Linux/" rel="tag">Linux<span class="mdui-ripple sidebar_archives-count">18</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Markdown/" rel="tag">Markdown<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Material-Design/" rel="tag">Material Design<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OS-X/" rel="tag">OS X<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OTA/" rel="tag">OTA<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/QuickTime/" rel="tag">QuickTime<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SSH/" rel="tag">SSH<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Settings/" rel="tag">Settings<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SystemUI/" rel="tag">SystemUI<span class="mdui-ripple sidebar_archives-count">19</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/UAC/" rel="tag">UAC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Ubuntu/" rel="tag">Ubuntu<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WPS/" rel="tag">WPS<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Wifi/" rel="tag">Wifi<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WindTerm/" rel="tag">WindTerm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows/" rel="tag">Windows<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows-11/" rel="tag">Windows 11<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/androidmk/" rel="tag">androidmk<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/blog/" rel="tag">blog<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/build/" rel="tag">build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/feel/" rel="tag">feel<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/framework/" rel="tag">framework<span class="mdui-ripple sidebar_archives-count">58</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/inotify/" rel="tag">inotify<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/life/" rel="tag">life<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/ninja/" rel="tag">ninja<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/rsync/" rel="tag">rsync<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/standard/" rel="tag">standard<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/test/" rel="tag">test<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1/" rel="tag">企业微信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E7%94%9F%E6%B4%BB%E6%84%9F%E6%82%9F/" rel="tag">生活感悟<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+      <a href="/timeline" class="mdui-list-item mdui-ripple">时间轴</a>
+    
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-3");if(a){document.getElementsByClassName("mdui-collapse-item")[3].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+          <a href="http://www.niemingzhao.top" target="_blank" class="mdui-list-item mdui-p-l-2 mdui-text-color-theme-accent mdui-ripple" style="justify-content: center;">聂明照的博客</a>
+        
+        
+      </div>
+    </div>
+  </div>
+</aside>
+
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <style>#main article .mdui-card-content .text-center{text-align:center!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-19.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">Android 14 PIP画中画模式系统流程解析</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2024-02-14 / <i class="iconfont">&#xe601;</i> 龙之叶 &nbsp;&nbsp; <span id="busuanzi_container_page_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_page_pv"></span></span></div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#qrcode', align: 'right'}"><i class="mdui-icon material-icons">devices</i></button>
+          <ul class="mdui-menu" id="qrcode">
+            
+              <li class="mdui-menu-item"><a class="mdui-text-center mdui-ripple">发送到手机</a></li>
+            
+            <li class="mdui-menu-item" disabled>
+              
+                <img src="//qr.liantu.com/api.php?w=246&m=10&text=http://longzhiye.top/2024/02/14/2024-02-14/">
+              
+            </li>
+          </ul>
+        
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="mdui-icon material-icons">share</i></button>
+          <ul class="mdui-menu" id="share_menu">
+            <li class="mdui-menu-item">
+              <a href="https://service.weibo.com/share/share.php?appkey=&title=Android 14 PIP画中画模式系统流程解析&url=http://longzhiye.top/2024/02/14/2024-02-14/&pic=http://longzhiye.top/images/favicon.png&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://twitter.com/intent/tweet?text=Android 14 PIP画中画模式系统流程解析&url=http://longzhiye.top/2024/02/14/2024-02-14/&via=龙之叶" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=http://longzhiye.top/2024/02/14/2024-02-14/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://plus.google.com/share?url=http://longzhiye.top/2024/02/14/2024-02-14/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://longzhiye.top/2024/02/14/2024-02-14/&title=Android 14 PIP画中画模式系统流程解析" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://connect.qq.com/widget/shareqq/index.html?site=龙之叶的博客&title=Android 14 PIP画中画模式系统流程解析&pics=http://longzhiye.top/images/favicon.png&url=http://longzhiye.top/2024/02/14/2024-02-14/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://telegram.me/share/url?url=http://longzhiye.top/2024/02/14/2024-02-14/&text=Android 14 PIP画中画模式系统流程解析" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+            </li>
+          </ul>
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>从 Android 8.0（API 级别 26）开始，Android 允许以画中画 (PiP) 模式启动 activity。画中画是一种特殊类型的多窗口模式，最常用于视频播放。使用该模式，用户可以通过固定到屏幕一角的小窗口观看视频，同时在应用之间进行导航或浏览主屏幕上的内容。</p>
+<h3 id="一-画中画创建"><a href="#一-画中画创建" class="headerlink" title="一. 画中画创建"></a>一. 画中画创建</h3><p>Activity调用系统api：<strong>ActivityTaskManagerService#enterPictureInPictureMode()</strong> 开始:</p>
+<p><strong>frameworks/base/services/core/java/com/android/server/wm/ActivityTaskManagerService.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">boolean</span> <span class="title function_">enterPictureInPictureMode</span><span class="params">(<span class="meta">@NonNull</span> ActivityRecord r, PictureInPictureParams params)</span> &#123;</span><br><span class="line">    <span class="comment">// 如果 activity 已经处于画中画模式，则返回</span></span><br><span class="line">    <span class="keyword">if</span> (r.inPinnedWindowingMode()) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Activity支持画中画，现在检查我们此时是否可以进入画中画，</span></span><br><span class="line">    <span class="keyword">if</span> (!r.checkEnterPictureInPictureState(<span class="string">&quot;enterPictureInPictureMode&quot;</span>,</span><br><span class="line">            <span class="literal">false</span> <span class="comment">/* beforeStopping */</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 创建了一个 Runnable，在下方将会被调用</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">Runnable</span> <span class="variable">enterPipRunnable</span> <span class="operator">=</span> () -&gt; &#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (mGlobalLock) &#123;</span><br><span class="line">            <span class="keyword">if</span> (r.getParent() == <span class="literal">null</span>) &#123;</span><br><span class="line">                Slog.e(TAG, <span class="string">&quot;Skip enterPictureInPictureMode, destroyed &quot;</span> + r);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            r.setPictureInPictureParams(params);</span><br><span class="line">            <span class="comment">// **--------重点关注-------------**</span></span><br><span class="line">            mRootWindowContainer.moveActivityToPinnedRootTask(r,</span><br><span class="line">                    <span class="literal">null</span> <span class="comment">/* launchIntoPipHostActivity */</span>, <span class="string">&quot;enterPictureInPictureMode&quot;</span>);</span><br><span class="line">            <span class="keyword">final</span> <span class="type">Task</span> <span class="variable">task</span> <span class="operator">=</span> r.getTask();</span><br><span class="line">            <span class="comment">// Continue the pausing process after entering pip.</span></span><br><span class="line">            <span class="keyword">if</span> (task.getPausingActivity() == r) &#123;</span><br><span class="line">                task.schedulePauseActivity(r, <span class="literal">false</span> <span class="comment">/* userLeaving */</span>,</span><br><span class="line">                        <span class="literal">false</span> <span class="comment">/* pauseImmediately */</span>, <span class="string">&quot;auto-pip&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">if</span> (r.isKeyguardLocked()) &#123;</span><br><span class="line">        <span class="comment">// 如果键盘锁正在显示或被遮挡，则在进入画中画之前尝试关闭它</span></span><br><span class="line">        <span class="comment">// 如果设备当前已锁定（有锁的情况），这将提示用户进行身份验证（即弹出bouncer）。</span></span><br><span class="line">        mActivityClientController.dismissKeyguard(r.token, <span class="keyword">new</span> <span class="title class_">KeyguardDismissCallback</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onDismissSucceeded</span><span class="params">()</span> &#123;</span><br><span class="line">                mH.post(enterPipRunnable);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;, <span class="literal">null</span> <span class="comment">/* message */</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 否则立即进入画中画</span></span><br><span class="line">        enterPipRunnable.run();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果activity现在处于画中画模式，则为 <strong>return true</strong> ；如果无法进入画中画模式，则为 <strong>return false</strong> 。<br>App 端 <strong>binder</strong> 回调到 <strong>ATMS</strong> 的方法，如果有 <strong>keyguard</strong> ，先 <strong>dismiss keyguard</strong> 再进入pip。<br>接着根据上述代码看 <strong>RootWindowContainer#moveActivityToPinnedRootTask()</strong>:</p>
+<p><strong>frameworks/base/services/core/java/com/android/server/wm/RootWindowContainer.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">moveActivityToPinnedRootTask</span><span class="params">(<span class="meta">@NonNull</span> ActivityRecord r,</span></span><br><span class="line"><span class="params">        <span class="meta">@Nullable</span> ActivityRecord launchIntoPipHostActivity, String reason)</span> &#123;</span><br><span class="line">    mService.deferWindowLayout();</span><br><span class="line">    <span class="keyword">final</span> <span class="type">TaskDisplayArea</span> <span class="variable">taskDisplayArea</span> <span class="operator">=</span> r.getDisplayArea();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// 获取任务栈</span></span><br><span class="line">        <span class="keyword">final</span> <span class="type">Task</span> <span class="variable">task</span> <span class="operator">=</span> r.getTask();</span><br><span class="line">        <span class="comment">// 现在创建一个转换控制器以收集当前关闭的任务栈。</span></span><br><span class="line">        <span class="comment">// 由于进入 PIP 的任务（触发器）尚未准备好，因此在此处进行创建。</span></span><br><span class="line">        <span class="keyword">final</span> <span class="type">TransitionController</span> <span class="variable">transitionController</span> <span class="operator">=</span> task.mTransitionController;</span><br><span class="line">        <span class="type">Transition</span> <span class="variable">newTransition</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (transitionController.isCollecting()) &#123;</span><br><span class="line">            transitionController.setReady(task, <span class="literal">false</span> <span class="comment">/* ready */</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (transitionController.getTransitionPlayer() != <span class="literal">null</span>) &#123;</span><br><span class="line">            newTransition = transitionController.createTransition(TRANSIT_PIP);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">Task</span> <span class="variable">rootPinnedTask</span> <span class="operator">=</span> taskDisplayArea.getRootPinnedTask();</span><br><span class="line">        <span class="keyword">if</span> (rootPinnedTask != <span class="literal">null</span>) &#123;</span><br><span class="line">            transitionController.collect(rootPinnedTask);</span><br><span class="line">            <span class="comment">// 新的ActivityRecord应该取代现有的PiP，因此旧的PiP消失而不是同时转到全屏，</span></span><br><span class="line">            <span class="comment">// 正如Task#diseasePip试图做的那样。</span></span><br><span class="line">            removeRootTasksInWindowingModes(WINDOWING_MODE_PINNED);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 设置过渡以确保我们不会立即尝试更新可见性，进入 PIP 的活动</span></span><br><span class="line">        r.getDisplayContent().prepareAppTransition(TRANSIT_NONE);</span><br><span class="line">        <span class="keyword">final</span> <span class="type">TaskFragment</span> <span class="variable">organizedTf</span> <span class="operator">=</span> r.getOrganizedTaskFragment();</span><br><span class="line">        <span class="keyword">final</span> <span class="type">boolean</span> <span class="variable">singleActivity</span> <span class="operator">=</span> task.getNonFinishingActivityCount() == <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">final</span> Task rootTask;</span><br><span class="line">        <span class="keyword">if</span> (singleActivity) &#123;</span><br><span class="line">            rootTask = task;</span><br><span class="line">            <span class="comment">// 对进入PIP的任务应用最近一次的动画牵引变换</span></span><br><span class="line">            rootTask.maybeApplyLastRecentsAnimationTransaction();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 在多个活动的情况下，我们将为其创建一个新任务，</span></span><br><span class="line">            <span class="comment">// 然后将PIP活动移动到任务中。</span></span><br><span class="line">            <span class="comment">// 注意，我们明确地延迟了正在发送的任务，并将这个新创建的任务标记为可见</span></span><br><span class="line">            rootTask = <span class="keyword">new</span> <span class="title class_">Task</span>.Builder(mService)</span><br><span class="line">                    .setActivityType(r.getActivityType())</span><br><span class="line">                    .setOnTop(<span class="literal">true</span>)</span><br><span class="line">                    .setActivityInfo(r.info)</span><br><span class="line">                    .setParent(taskDisplayArea)</span><br><span class="line">                    .setIntent(r.intent)</span><br><span class="line">                    .setDeferTaskAppear(<span class="literal">true</span>)</span><br><span class="line">                    .setHasBeenVisible(<span class="literal">true</span>)</span><br><span class="line">                    .build();</span><br><span class="line">            <span class="comment">// 在原始任务和固定任务之间建立双向链接。</span></span><br><span class="line">            r.setLastParentBeforePip(launchIntoPipHostActivity);</span><br><span class="line">            <span class="comment">// 进入 PIP 的任务可能是自由格式的，因此请保存最后一个非全屏边界。</span></span><br><span class="line">            <span class="comment">// 然后当这个新的 PIP 任务退出 PIP 时，它可以恢复到它以前的自由形式边界</span></span><br><span class="line">            rootTask.setLastNonFullscreenBounds(task.mLastNonFullscreenBounds);</span><br><span class="line">            rootTask.setBounds(task.getBounds());</span><br><span class="line">            <span class="comment">// 将最后一个最近的动画事务从原始任务移动到新任务</span></span><br><span class="line">            <span class="keyword">if</span> (task.mLastRecentsAnimationTransaction != <span class="literal">null</span>) &#123;</span><br><span class="line">                rootTask.setLastRecentsAnimationTransaction(</span><br><span class="line">                        task.mLastRecentsAnimationTransaction,</span><br><span class="line">                        task.mLastRecentsAnimationOverlay);</span><br><span class="line">                task.clearLastRecentsAnimationTransaction(<span class="literal">false</span> <span class="comment">/* forceRemoveOverlay */</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (organizedTf != <span class="literal">null</span> &amp;&amp; organizedTf.getNonFinishingActivityCount() == <span class="number">1</span></span><br><span class="line">                    &amp;&amp; organizedTf.getTopNonFinishingActivity() == r) &#123;</span><br><span class="line">                <span class="comment">// PIP 的状态，是否已清除 PIP 的TaskFragment。</span></span><br><span class="line">                <span class="comment">// 一旦有改变将在 ActivityTaskManagerService#onPictureInPictureStateChanged() 收到回调</span></span><br><span class="line">                organizedTf.mClearedTaskFragmentForPip = <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// Activity reparent 到新建的 task</span></span><br><span class="line">            r.reparent(rootTask, MAX_VALUE, reason);</span><br><span class="line">            <span class="comment">// 确保修复后新任务的约束与其当前边界同步。</span></span><br><span class="line">            rootTask.maybeApplyLastRecentsAnimationTransaction();</span><br><span class="line">            <span class="keyword">final</span> <span class="type">ActivityRecord</span> <span class="variable">oldTopActivity</span> <span class="operator">=</span> task.getTopMostActivity();</span><br><span class="line">            <span class="keyword">if</span> (oldTopActivity != <span class="literal">null</span> &amp;&amp; oldTopActivity.isState(STOPPED)</span><br><span class="line">                    &amp;&amp; task.getDisplayContent().mAppTransition.containsTransitRequest(</span><br><span class="line">                    TRANSIT_TO_BACK)) &#123;</span><br><span class="line">                task.getDisplayContent().mClosingApps.add(oldTopActivity);</span><br><span class="line">                oldTopActivity.mRequestForceTransition = <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">int</span> <span class="variable">intermediateWindowingMode</span> <span class="operator">=</span> rootTask.getWindowingMode();</span><br><span class="line">        <span class="keyword">if</span> (rootTask.getParent() != taskDisplayArea) &#123;</span><br><span class="line">            rootTask.reparent(taskDisplayArea, <span class="literal">true</span> <span class="comment">/* onTop */</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (newTransition != <span class="literal">null</span>) &#123;</span><br><span class="line">            transitionController.requestStartTransition(newTransition, rootTask,</span><br><span class="line">                    <span class="literal">null</span> <span class="comment">/* remoteTransition */</span>, <span class="literal">null</span> <span class="comment">/* displayChange */</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        transitionController.collect(rootTask);</span><br><span class="line">        r.setWindowingMode(intermediateWindowingMode);</span><br><span class="line">        r.mWaitForEnteringPinnedMode = <span class="literal">true</span>;</span><br><span class="line">        rootTask.forAllTaskFragments(tf -&gt; &#123;</span><br><span class="line">            <span class="keyword">if</span> (!tf.isOrganizedTaskFragment()) &#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            tf.resetAdjacentTaskFragment();</span><br><span class="line">            <span class="keyword">if</span> (tf.getTopNonFinishingActivity() != <span class="literal">null</span>) &#123;</span><br><span class="line">                tf.updateRequestedOverrideConfiguration(EMPTY);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        rootTask.setWindowingMode(WINDOWING_MODE_PINNED);</span><br><span class="line">        <span class="keyword">if</span> (r.getOptions() != <span class="literal">null</span> &amp;&amp; r.getOptions().isLaunchIntoPip()) &#123;</span><br><span class="line">            mWindowManager.mTaskSnapshotController.recordTaskSnapshot(</span><br><span class="line">                    task, <span class="literal">false</span> <span class="comment">/* allowSnapshotHome */</span>);</span><br><span class="line">            rootTask.setBounds(r.getOptions().getLaunchBounds());</span><br><span class="line">        &#125;</span><br><span class="line">        rootTask.setDeferTaskAppear(<span class="literal">false</span>);</span><br><span class="line">        r.supportsEnterPipOnTaskSwitch = <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">if</span> (organizedTf != <span class="literal">null</span> &amp;&amp; organizedTf.mClearedTaskFragmentForPip</span><br><span class="line">                &amp;&amp; organizedTf.isTaskVisibleRequested()) &#123;</span><br><span class="line">            mService.mTaskFragmentOrganizerController.dispatchPendingInfoChangedEvent(</span><br><span class="line">                    organizedTf);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        mService.continueWindowLayout();</span><br><span class="line">    &#125;</span><br><span class="line">        <span class="comment">// 显示</span></span><br><span class="line">    ensureActivitiesVisible(<span class="literal">null</span>, <span class="number">0</span>, <span class="literal">false</span> <span class="comment">/* preserveWindows */</span>);</span><br><span class="line">    resumeFocusedTasksTopActivities();</span><br><span class="line">    notifyActivityPipModeChanged(r.getTask(), r);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="二-退出PIP模式"><a href="#二-退出PIP模式" class="headerlink" title="二. 退出PIP模式"></a>二. 退出PIP模式</h3><p>当 PIP 状态改变，将会在 <strong>ActivityTaskManagerService#onPictureInPictureStateChanged()</strong> 收到回调：</p>
+<p><strong>frameworks/base/services/core/java/com/android/server/wm/ActivityTaskManagerService.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onPictureInPictureStateChanged</span><span class="params">(PictureInPictureUiState pipState)</span> &#123;</span><br><span class="line">    enforceTaskPermission(<span class="string">&quot;onPictureInPictureStateChanged&quot;</span>);</span><br><span class="line">    <span class="keyword">final</span> <span class="type">Task</span> <span class="variable">rootPinnedTask</span> <span class="operator">=</span> mRootWindowContainer.getDefaultTaskDisplayArea()</span><br><span class="line">            .getRootPinnedTask();</span><br><span class="line">    <span class="keyword">if</span> (rootPinnedTask != <span class="literal">null</span> &amp;&amp; rootPinnedTask.getTopMostActivity() != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 这里将会去提醒客户端状态发生改变；</span></span><br><span class="line">        mWindowManager.mAtmService.mActivityClientController.onPictureInPictureStateChanged(</span><br><span class="line">                rootPinnedTask.getTopMostActivity(), pipState);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>ActivityClientController#onPictureInPictureStateChanged()</strong> :<br><strong>frameworks/base/services/core/java/com/android/server/wm/ActivityClientController.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">onPictureInPictureStateChanged</span><span class="params">(<span class="meta">@NonNull</span> ActivityRecord r,</span></span><br><span class="line"><span class="params">        PictureInPictureUiState pipState)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!r.inPinnedWindowingMode()) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;Activity is not in PIP mode&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">ClientTransaction</span> <span class="variable">transaction</span> <span class="operator">=</span> ClientTransaction.obtain(</span><br><span class="line">                r.app.getThread(), r.token);</span><br><span class="line">        transaction.addCallback(PipStateTransactionItem.obtain(pipState));</span><br><span class="line">        mService.getLifecycleManager().scheduleTransaction(transaction);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        Slog.w(TAG, <span class="string">&quot;Failed to send pip state transaction item: &quot;</span></span><br><span class="line">                + r.intent.getComponent(), e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+      <blockquote>
+        
+        <strong>本文链接：</strong><br><a href="http://longzhiye.top/2024/02/14/2024-02-14/">http://longzhiye.top/2024/02/14/2024-02-14/</a>
+      </blockquote>
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Android/" rel="tag">Android</a><a class="mdui-ripple article_tags-link" href="/tags/SystemUI/" rel="tag">SystemUI</a><a class="mdui-ripple article_tags-link" href="/tags/framework/" rel="tag">framework</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2024/02/15/2024-02-15/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android 14 Launcher 基础认识(一)'}">上一篇</span>
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2024/02/13/2024-02-13/">
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android 14 双击power键唤起安全相机流程解析'}">下一篇</span>
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+
+
+
+</main>
+  <footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="http://github.com/longzhiye" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe7ab;</i></a>
+    
+    
+    
+      <a href="https://www.zhihu.com/people/long-zhi-xie-61" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe6c0;</i></a>
+    
+    
+    
+      <a href="tencent://tencent:////message/?uin=951898105&Menu=yes" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2022 - 2025 龙之叶<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>
+    <br>
+      <span id="busuanzi_container_site_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_site_pv"></span></span> &nbsp;&nbsp;
+      <span id="busuanzi_container_site_uv" style="display: none;"><i class="iconfont">&#xe601;</i> <span id="busuanzi_value_site_uv"></span></span>
+    
+  </div>
+</footer>
+
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+  
+<script src="/custom.js"></script>
+
+</body>
+</html>
