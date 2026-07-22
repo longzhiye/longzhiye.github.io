@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>Android出海系列-GMS认证介绍 | 龙之叶的博客</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="alternate" href="/atom.xml" title="龙之叶的博客" type="application/atom+xml">
+  <meta name="description" content="面向 Android 硬件厂商、ODM&#x2F;OEM 工程师及系统集成人员，系统梳理 Google Mobile Services（GMS）认证的核心概念、完整流程、测试要求与豁免机制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android出海系列-GMS认证介绍">
+<meta property="og:url" content="http://longzhiye.top/2026/07/05/2026-07-05/index.html">
+<meta property="og:site_name" content="龙之叶的博客">
+<meta property="og:description" content="面向 Android 硬件厂商、ODM&#x2F;OEM 工程师及系统集成人员，系统梳理 Google Mobile Services（GMS）认证的核心概念、完整流程、测试要求与豁免机制">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://longzhiye.top/images/20260705/001.png">
+<meta property="og:image" content="http://longzhiye.top/images/20260705/002.png">
+<meta property="og:image" content="http://longzhiye.top/images/20260705/003.png">
+<meta property="og:image" content="http://longzhiye.top/images/20260705/004.png">
+<meta property="og:image" content="http://longzhiye.top/images/20260705/005.png">
+<meta property="og:image" content="http://longzhiye.top/images/20260705/006.png">
+<meta property="article:published_time" content="2026-07-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-22T13:34:19.404Z">
+<meta property="article:author" content="龙之叶">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Android出海">
+<meta property="article:tag" content="GMS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://longzhiye.top/images/20260705/001.png">
+
+  <meta name="keywords" content=",Android,Android出海,GMS">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="龙之叶的博客">
+  <meta name="msapplication-starturl" content="http://longzhiye.top/2026/07/05/2026-07-05/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="龙之叶的博客">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <link rel="canonical" href="http://longzhiye.top/2026/07/05/2026-07-05/">
+  
+
+  
+  
+
+  
+  
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/custom.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(!a){document.getElementsByTagName("body")[0].className+=" mdui-drawer-body-left"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">龙之叶的博客</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+	<!--
+    <a href="/atom.xml" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'RSS'}"><i class="mdui-icon material-icons">rss_feed</i></a>
+	-->
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(a){document.getElementById("sidebar").className+=" mdui-drawer-close"};</script>
+  <div class="mdui-grid-tile">
+    <img src="/images/banner.png" style="height: 160px;">
+    <img src="/images/avatar.png" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;background-color:#fff;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">龙之叶</div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>生命不息，折腾不止</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:longzhiye163@163.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'longzhiye163@163.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-0");if(a){document.getElementsByClassName("mdui-collapse-item")[0].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">archive</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2026/07/">七月 2026<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2026/06/">六月 2026<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/12/">十二月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/11/">十一月 2025<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/10/">十月 2025<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/09/">九月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/08/">八月 2025<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/07/">七月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/06/">六月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/03/">三月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/02/">二月 2025<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2025/01/">一月 2025<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/10/">十月 2024<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/09/">九月 2024<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/08/">八月 2024<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/03/">三月 2024<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/02/">二月 2024<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2024/01/">一月 2024<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/12/">十二月 2023<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/11/">十一月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/10/">十月 2023<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/09/">九月 2023<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/08/">八月 2023<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/06/">六月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/05/">五月 2023<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/04/">四月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/03/">三月 2023<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2023/02/">二月 2023<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/09/">九月 2022<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/04/">四月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/03/">三月 2017<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/02/">二月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2017/01/">一月 2017<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/12/">十二月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/11/">十一月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/10/">十月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2016/08/">八月 2016<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-1");if(a){document.getElementsByClassName("mdui-collapse-item")[1].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">class</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">131</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E8%B5%84%E8%AE%AF/">资讯<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E9%80%9A%E7%9F%A5/">通知<span class="mdui-ripple sidebar_archives-count">4</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-2");if(a){document.getElementsByClassName("mdui-collapse-item")[2].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/A17/" rel="tag">A17<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/ANR/" rel="tag">ANR<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/APP/" rel="tag">APP<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android/" rel="tag">Android<span class="mdui-ripple sidebar_archives-count">119</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android-14/" rel="tag">Android 14<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android-16/" rel="tag">Android 16<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android-17/" rel="tag">Android 17<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android11/" rel="tag">Android11<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android12/" rel="tag">Android12<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android13/" rel="tag">Android13<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android14/" rel="tag">Android14<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android16/" rel="tag">Android16<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AndroidStudio/" rel="tag">AndroidStudio<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Android%E5%87%BA%E6%B5%B7/" rel="tag">Android出海<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Antigravity/" rel="tag">Antigravity<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/AutoDraw/" rel="tag">AutoDraw<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Build/" rel="tag">Build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Crash/" rel="tag">Crash<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Foxmail/" rel="tag">Foxmail<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Framework/" rel="tag">Framework<span class="mdui-ripple sidebar_archives-count">25</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GMS/" rel="tag">GMS<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GPS%E8%BD%A8%E8%BF%B9%E5%9B%BE/" rel="tag">GPS轨迹图<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Git/" rel="tag">Git<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/GitHub/" rel="tag">GitHub<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Google/" rel="tag">Google<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Java/" rel="tag">Java<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Kernel/" rel="tag">Kernel<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Launcher/" rel="tag">Launcher<span class="mdui-ripple sidebar_archives-count">20</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Lib/" rel="tag">Lib<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Linux/" rel="tag">Linux<span class="mdui-ripple sidebar_archives-count">18</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Login/" rel="tag">Login<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Markdown/" rel="tag">Markdown<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Material-Design/" rel="tag">Material Design<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Monkey/" rel="tag">Monkey<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OS-X/" rel="tag">OS X<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/OTA/" rel="tag">OTA<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/PackageManager/" rel="tag">PackageManager<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Provider/" rel="tag">Provider<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/QuickTime/" rel="tag">QuickTime<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SSH/" rel="tag">SSH<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Setting/" rel="tag">Setting<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Settings/" rel="tag">Settings<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Shell/" rel="tag">Shell<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/SystemUI/" rel="tag">SystemUI<span class="mdui-ripple sidebar_archives-count">23</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/UAC/" rel="tag">UAC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Ubuntu/" rel="tag">Ubuntu<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WPS/" rel="tag">WPS<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Wifi/" rel="tag">Wifi<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/WindTerm/" rel="tag">WindTerm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows/" rel="tag">Windows<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Windows-11/" rel="tag">Windows 11<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/adb/" rel="tag">adb<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/androidmk/" rel="tag">androidmk<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/blog/" rel="tag">blog<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/build/" rel="tag">build<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/feel/" rel="tag">feel<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/framework/" rel="tag">framework<span class="mdui-ripple sidebar_archives-count">60</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/inotify/" rel="tag">inotify<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/life/" rel="tag">life<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/ninja/" rel="tag">ninja<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/rsync/" rel="tag">rsync<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/standard/" rel="tag">standard<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/test/" rel="tag">test<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1/" rel="tag">企业微信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">操作系统<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E6%BA%90%E7%A0%81/" rel="tag">源码<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E7%94%9F%E6%B4%BB%E6%84%9F%E6%82%9F/" rel="tag">生活感悟<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+      <a href="/timeline" class="mdui-list-item mdui-ripple">时间轴</a>
+    
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-3");if(a){document.getElementsByClassName("mdui-collapse-item")[3].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+          <a href="http://www.niemingzhao.top" target="_blank" class="mdui-list-item mdui-p-l-2 mdui-text-color-theme-accent mdui-ripple" style="justify-content: center;">聂明照的博客</a>
+        
+        
+      </div>
+    </div>
+  </div>
+</aside>
+
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <style>#main article .mdui-card-content .text-center{text-align:center!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-11.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">Android出海系列-GMS认证介绍</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2026-07-05 / <i class="iconfont">&#xe601;</i> 龙之叶 &nbsp;&nbsp; <span id="busuanzi_container_page_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_page_pv"></span></span></div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#qrcode', align: 'right'}"><i class="mdui-icon material-icons">devices</i></button>
+          <ul class="mdui-menu" id="qrcode">
+            
+              <li class="mdui-menu-item"><a class="mdui-text-center mdui-ripple">发送到手机</a></li>
+            
+            <li class="mdui-menu-item" disabled>
+              
+                <img src="//qr.liantu.com/api.php?w=246&m=10&text=http://longzhiye.top/2026/07/05/2026-07-05/">
+              
+            </li>
+          </ul>
+        
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="mdui-icon material-icons">share</i></button>
+          <ul class="mdui-menu" id="share_menu">
+            <li class="mdui-menu-item">
+              <a href="https://service.weibo.com/share/share.php?appkey=&title=Android出海系列-GMS认证介绍&url=http://longzhiye.top/2026/07/05/2026-07-05/&pic=http://longzhiye.top/images/favicon.png&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://twitter.com/intent/tweet?text=Android出海系列-GMS认证介绍&url=http://longzhiye.top/2026/07/05/2026-07-05/&via=龙之叶" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=http://longzhiye.top/2026/07/05/2026-07-05/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://plus.google.com/share?url=http://longzhiye.top/2026/07/05/2026-07-05/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://longzhiye.top/2026/07/05/2026-07-05/&title=Android出海系列-GMS认证介绍" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://connect.qq.com/widget/shareqq/index.html?site=龙之叶的博客&title=Android出海系列-GMS认证介绍&pics=http://longzhiye.top/images/favicon.png&url=http://longzhiye.top/2026/07/05/2026-07-05/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://telegram.me/share/url?url=http://longzhiye.top/2026/07/05/2026-07-05/&text=Android出海系列-GMS认证介绍" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+            </li>
+          </ul>
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h2 id="一、什么是-GMS-认证？"><a href="#一、什么是-GMS-认证？" class="headerlink" title="一、什么是 GMS 认证？"></a>一、什么是 GMS 认证？</h2><p><strong>GMS 认证</strong>（Google Mobile Services Test Certification）是由 Google 面向全球 Android 硬件厂商提供的官方兼容性认证体系。其目标是确保基于 Android 开发的硬件产品，能够与 Google 提供的系统服务、预装应用及 GMS 套件稳定、合规地协同工作。</p>
+<p><img src="/images/20260705/001.png" alt="GMS 认证核心价值"></p>
+<h3 id="为什么-GMS-认证不可或缺？"><a href="#为什么-GMS-认证不可或缺？" class="headerlink" title="为什么 GMS 认证不可或缺？"></a>为什么 GMS 认证不可或缺？</h3><table>
+<thead>
+<tr>
+<th>价值维度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>兼容性与稳定性</strong></td>
+<td>确保 Android 系统产品符合 Google 兼容性标准，减少碎片化问题</td>
+</tr>
+<tr>
+<td><strong>GMS 服务授权</strong></td>
+<td>获得合法使用 GMS 服务及 Google Play Store 的资格</td>
+</tr>
+<tr>
+<td><strong>品牌与市场准入</strong></td>
+<td>取得 Android Logo 使用授权，产品可进入海外市场销售</td>
+</tr>
+<tr>
+<td><strong>应用生态保障</strong></td>
+<td>确保设备上 Android 应用正常运行，并抵御恶意软件侵害</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="二、GMS-认证完整流程"><a href="#二、GMS-认证完整流程" class="headerlink" title="二、GMS 认证完整流程"></a>二、GMS 认证完整流程</h2><p>GMS 认证并非单一测试环节，而是涵盖法律协议签署、产品送检、第三方实验室测试及 Google 授权的完整链路。</p>
+<p><img src="/images/20260705/002.png" alt="GMS 认证流程"></p>
+<h3 id="四步认证流程"><a href="#四步认证流程" class="headerlink" title="四步认证流程"></a>四步认证流程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">1. 申请与 Google 签署协议</span><br><span class="line">   └── MADA（移动应用发布协议）</span><br><span class="line">   └── AFA（反碎片化协议）</span><br><span class="line"></span><br><span class="line">2. 提交认证材料至 3PL 实验室</span><br><span class="line">   └── 产品本体</span><br><span class="line">   └── 外包装</span><br><span class="line">   └── 产品说明书</span><br><span class="line"></span><br><span class="line">3. 3PL 执行产品硬件测试</span><br><span class="line">   └── 运行各项测试套件</span><br><span class="line">   └── 提交测试报告给 Google</span><br><span class="line"></span><br><span class="line">4. 获取 Google 法律授权与保护</span><br></pre></td></tr></table></figure>
+
+<h3 id="关键术语说明"><a href="#关键术语说明" class="headerlink" title="关键术语说明"></a>关键术语说明</h3><ul>
+<li><strong>MADA</strong>（Mobile Application Distribution Agreement）：移动应用分发协议，授权设备预装和分发 Google 应用</li>
+<li><strong>AFA</strong>（Anti Fragmentation Agreement）：反碎片化协议，约束厂商不得破坏 Android 兼容性</li>
+<li><strong>3PL</strong>（Third Party Lab）：第三方认证实验室，主要提供软件认证、品牌认可、GMS 需求对接及预测试技术支持</li>
+</ul>
+<hr>
+<h2 id="三、认证项目体系：GMS-Express-家族"><a href="#三、认证项目体系：GMS-Express-家族" class="headerlink" title="三、认证项目体系：GMS Express 家族"></a>三、认证项目体系：GMS Express 家族</h2><p>Google 针对芯片厂商与 ODM/OEM 建立了分层认证项目，三者<strong>必须全部执行</strong>。</p>
+<p><img src="/images/20260705/003.png" alt="GMS Express 认证项目体系"></p>
+<h3 id="三大认证项目对比"><a href="#三大认证项目对比" class="headerlink" title="三大认证项目对比"></a>三大认证项目对比</h3><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>核心要求</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>GMS Express</strong></td>
+<td>Google 与芯片厂商合作完成验证的 Turnkey 基准版本；芯片厂商向 ODM 分发完整软件包（BSP + 经 Google 认证的 Android 软件及 GMS 套件）；准许设备厂商直接接收 Google 月度安全更新</td>
+</tr>
+<tr>
+<td><strong>GMS Express Plus</strong></td>
+<td>必须使用 GMS Express Build；核心程序 Category 的 default intents 不可被覆盖；浏览器以外 Category 不得预装同类应用</td>
+</tr>
+<tr>
+<td><strong>GMS Express 2.0</strong></td>
+<td>GMS Express 变体；SoC 构建的部分以二进制发布，其他分区以源代码形式发布</td>
+</tr>
+</tbody></table>
+<h3 id="软件交付链路"><a href="#软件交付链路" class="headerlink" title="软件交付链路"></a>软件交付链路</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Google ──► SoC 芯片厂商 ──► ODM ──► OEM ──► AOSP + GMS 最终版本</span><br><span class="line">              │</span><br><span class="line">              └── GMS Express Turnkey（Baseline 纯净 Android 体验）</span><br></pre></td></tr></table></figure>
+
+<h3 id="GMS-Express-Plus-认证费用报销"><a href="#GMS-Express-Plus-认证费用报销" class="headerlink" title="GMS Express Plus 认证费用报销"></a>GMS Express Plus 认证费用报销</h3><p><img src="/images/20260705/004.png" alt="GMS Express Plus 报销机制"></p>
+<p>对于支持原生 <strong>GMS Express Plus</strong> 的设备，在通过 3PL 认证后，若满足报销条件，<strong>Google 将报销认证费用</strong>：</p>
+<ul>
+<li><strong>报销范围</strong>：覆盖所有设备的 <strong>MR</strong>（维护版本）和 <strong>SMR</strong>（安全维护发行版本）</li>
+<li><strong>核心收益</strong>：<ul>
+<li>100% 设备通过 Google 认证</li>
+<li>缩短约 30% 认证时间</li>
+<li>显著提升用户体验</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="四、认证测试套件详解"><a href="#四、认证测试套件详解" class="headerlink" title="四、认证测试套件详解"></a>四、认证测试套件详解</h2><p>GMS 认证涉及大量自动化与半自动化测试套件，覆盖兼容性、安全性、性能及固件分析等多个维度。</p>
+<p><img src="/images/20260705/005.png" alt="GMS 认证测试套件全景"></p>
+<h3 id="核心测试套件一览"><a href="#核心测试套件一览" class="headerlink" title="核心测试套件一览"></a>核心测试套件一览</h3><table>
+<thead>
+<tr>
+<th>测试套件</th>
+<th>全称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>CTS</strong></td>
+<td>Compatibility Test Suite</td>
+<td>兼容性测试套件（自动化）</td>
+</tr>
+<tr>
+<td><strong>CTS Verifier</strong></td>
+<td>—</td>
+<td>CTS 补充，需手动验证</td>
+</tr>
+<tr>
+<td><strong>CTS on GSI</strong></td>
+<td>—</td>
+<td>与 CTS 使用同一测试套件，运行于 GSI 环境</td>
+</tr>
+<tr>
+<td><strong>VTS</strong></td>
+<td>Vendor Test Suite</td>
+<td>供应商测试套件（Treble 架构）</td>
+</tr>
+<tr>
+<td><strong>GTS</strong></td>
+<td>GMS Test Suite</td>
+<td>GMS 测试套件</td>
+</tr>
+<tr>
+<td><strong>GTS Verifier</strong></td>
+<td>—</td>
+<td>GTS 补充，手动验证（Android 13）</td>
+</tr>
+<tr>
+<td><strong>GTS Interactive</strong></td>
+<td>—</td>
+<td>GTS 补充，半自动化（Android 14+）</td>
+</tr>
+<tr>
+<td><strong>GTS Root</strong></td>
+<td>—</td>
+<td>GTS 补充（Android 15+）</td>
+</tr>
+<tr>
+<td><strong>STS</strong></td>
+<td>Security Test Suite</td>
+<td>安全测试套件</td>
+</tr>
+<tr>
+<td><strong>Firmware Analysis</strong></td>
+<td>—</td>
+<td>固件版本分析（原 BTS）</td>
+</tr>
+<tr>
+<td><strong>APTS</strong></td>
+<td>Android Performance Test Suite</td>
+<td>安卓性能测试套件</td>
+</tr>
+<tr>
+<td><strong>AACT</strong></td>
+<td>Android Auto Connectivity Tests</td>
+<td>安卓自动连接测试（2024 新增）</td>
+</tr>
+<tr>
+<td><strong>Connectivity Test</strong></td>
+<td>—</td>
+<td>连接测试，含 GtsBetocqAqtTests（2026/Android 17 新增）</td>
+</tr>
+</tbody></table>
+<h3 id="测试套件演进时间线"><a href="#测试套件演进时间线" class="headerlink" title="测试套件演进时间线"></a>测试套件演进时间线</h3><table>
+<thead>
+<tr>
+<th>年份</th>
+<th>变更</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2021</td>
+<td>新增针对 Go 设备的性能测试套件，取代 GOATS</td>
+</tr>
+<tr>
+<td>2022</td>
+<td>新增 Firmware Analysis，取代 BTS（Build Test Suite）</td>
+</tr>
+<tr>
+<td>2023</td>
+<td>新增 GTS Interactive，逐步取代 GTS Verifier</td>
+</tr>
+<tr>
+<td>2024</td>
+<td>新增 GTS Root 及 AACT 测试套件</td>
+</tr>
+<tr>
+<td>2026</td>
+<td>新增 Connectivity Test（Android 17 平台）</td>
+</tr>
+</tbody></table>
+<h3 id="不同版本类型的测试矩阵"><a href="#不同版本类型的测试矩阵" class="headerlink" title="不同版本类型的测试矩阵"></a>不同版本类型的测试矩阵</h3><p>以下为各软件版本类型（S/W Type）对应的<strong>强制性测试</strong>（✓ = 必测，- = 非必测）：</p>
+<h4 id="IR（Initial-Release，初始发布版本）"><a href="#IR（Initial-Release，初始发布版本）" class="headerlink" title="IR（Initial Release，初始发布版本）"></a>IR（Initial Release，初始发布版本）</h4><table>
+<thead>
+<tr>
+<th>构建类型</th>
+<th>CTS</th>
+<th>STS</th>
+<th>GTS</th>
+<th>GTS Root</th>
+<th>Treble</th>
+<th>CTS Verifier</th>
+<th>GTS Interactive</th>
+<th>Connectivity</th>
+<th>AACT</th>
+<th>BCR</th>
+<th>Firmware Analysis</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>User/GSI</td>
+<td>✓</td>
+<td>-</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>userdebug</td>
+<td>-</td>
+<td>✓</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<h4 id="MR-Representative（维护版本代表构建）"><a href="#MR-Representative（维护版本代表构建）" class="headerlink" title="MR Representative（维护版本代表构建）"></a>MR Representative（维护版本代表构建）</h4><table>
+<thead>
+<tr>
+<th>构建类型</th>
+<th>CTS</th>
+<th>STS</th>
+<th>GTS</th>
+<th>GTS Root</th>
+<th>Treble</th>
+<th>CTS Verifier</th>
+<th>GTS Interactive</th>
+<th>BCR</th>
+<th>Firmware Analysis</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>User/GSI</td>
+<td>✓</td>
+<td>-</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>-</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>userdebug</td>
+<td>-</td>
+<td>✓</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<h4 id="MR-Derived（派生维护版本）"><a href="#MR-Derived（派生维护版本）" class="headerlink" title="MR Derived（派生维护版本）"></a>MR Derived（派生维护版本）</h4><table>
+<thead>
+<tr>
+<th>构建类型</th>
+<th>CTS</th>
+<th>STS</th>
+<th>GTS</th>
+<th>GTS Root</th>
+<th>Treble</th>
+<th>CTS Verifier</th>
+<th>Firmware Analysis</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>User/GSI</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+</tbody></table>
+<h4 id="SMR-EMR-Representative（安全-紧急维护版本代表构建）"><a href="#SMR-EMR-Representative（安全-紧急维护版本代表构建）" class="headerlink" title="SMR/EMR Representative（安全/紧急维护版本代表构建）"></a>SMR/EMR Representative（安全/紧急维护版本代表构建）</h4><table>
+<thead>
+<tr>
+<th>构建类型</th>
+<th>CTS</th>
+<th>STS</th>
+<th>GTS</th>
+<th>GTS Root</th>
+<th>Treble</th>
+<th>CTS Verifier</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>User/GSI</td>
+<td>✓</td>
+<td>-</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>userdebug</td>
+<td>-</td>
+<td>✓</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<h4 id="SMR-EMR-Derived（派生安全维护版本）"><a href="#SMR-EMR-Derived（派生安全维护版本）" class="headerlink" title="SMR/EMR Derived（派生安全维护版本）"></a>SMR/EMR Derived（派生安全维护版本）</h4><table>
+<thead>
+<tr>
+<th>构建类型</th>
+<th>STS</th>
+<th>GTS (with GTS-SMR)</th>
+<th>CTS Verifier</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>User/GSI</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>说明</strong>：</p>
+<ul>
+<li><strong>Treble</strong> = VTS + CTS on GSI</li>
+<li><strong>GTS Root</strong> 适用于 Android 15 及后续版本</li>
+<li><strong>GTS Interactive</strong> 适用于 Android 14 及后续版本</li>
+<li><strong>Connectivity Test</strong> 适用于 Android 17 及后续版本</li>
+<li>详细测试要求请参考：<a target="_blank" rel="noopener" href="https://docs.partner.android.com/gms/testing/overview/launch-approval">Google Partner Android 测试文档</a></li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="五、豁免流程（Waiver）"><a href="#五、豁免流程（Waiver）" class="headerlink" title="五、豁免流程（Waiver）"></a>五、豁免流程（Waiver）</h2><p>Google 的百万级测试用例中，部分案例可能存在测试代码本身的 Bug。对此，Google 提供了正式的<strong>豁免流程（Waiver）</strong>。</p>
+<p><img src="/images/20260705/006.png" alt="GMS 测试豁免流程"></p>
+<h3 id="豁免适用场景"><a href="#豁免适用场景" class="headerlink" title="豁免适用场景"></a>豁免适用场景</h3><ol>
+<li><strong>芯片厂商基准版本已通过认证</strong>：若客户对基准版本进行修改导致测试失败，经调查确认是 Google 测试代码问题，可向 Google 提交 Issue 和 Report 申请豁免</li>
+<li><strong>最新测试包已通过</strong>：若失败案例在 Google 发布的最新测试包中已通过，直接提交测试通过报告至 <strong>APA</strong>，无需单独申请豁免</li>
+</ol>
+<h3 id="豁免申请流程"><a href="#豁免申请流程" class="headerlink" title="豁免申请流程"></a>豁免申请流程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">OEM/ODM 侧：</span><br><span class="line">  安装启用软件</span><br><span class="line">    → 运行 CTS / CTS Verifier / GTS / STS</span><br><span class="line">    → 定位并分析所有失败案例</span><br><span class="line">    → 上传报告并联系技术客户经理（TAM）</span><br><span class="line"></span><br><span class="line">Google 侧：</span><br><span class="line">  核查所有报告</span><br><span class="line">    → 豁免 或 拒绝</span><br><span class="line">    → 反馈结果</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="六、附录：关键术语速查"><a href="#六、附录：关键术语速查" class="headerlink" title="六、附录：关键术语速查"></a>六、附录：关键术语速查</h2><table>
+<thead>
+<tr>
+<th>缩写</th>
+<th>全称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>IR</strong></td>
+<td>Initial Release</td>
+<td>初始发布版本</td>
+</tr>
+<tr>
+<td><strong>MR</strong></td>
+<td>Maintenance Release</td>
+<td>维护版本</td>
+</tr>
+<tr>
+<td><strong>SMR</strong></td>
+<td>Security MR</td>
+<td>安全维护发行版本</td>
+</tr>
+<tr>
+<td><strong>EMR</strong></td>
+<td>Emergency MR</td>
+<td>紧急维护发行版本</td>
+</tr>
+<tr>
+<td><strong>Treble</strong></td>
+<td>—</td>
+<td>包含 VTS 和 CTS on GSI</td>
+</tr>
+<tr>
+<td><strong>MADA</strong></td>
+<td>Mobile Application Distribution Agreement</td>
+<td>移动应用分发协议</td>
+</tr>
+<tr>
+<td><strong>AFA</strong></td>
+<td>Anti Fragmentation Agreement</td>
+<td>反碎片化协议</td>
+</tr>
+<tr>
+<td><strong>BCR</strong></td>
+<td>Biometric Report</td>
+<td>生物识别报告</td>
+</tr>
+<tr>
+<td><strong>Representative Product SKU</strong></td>
+<td>—</td>
+<td>经批准、具有完整测试报告集、不依赖其他代表性构建的构建版本</td>
+</tr>
+<tr>
+<td><strong>Derived Product SKU</strong></td>
+<td>—</td>
+<td>使用相同 SoC，声明相同或 <code>android.hardware.*</code> 子集特性，并设置 <code>ro.build.representative</code> 属性指向代表性版本的派生构建</td>
+</tr>
+</tbody></table>
+<h3 id="Derived-Product-SKU-判定条件"><a href="#Derived-Product-SKU-判定条件" class="headerlink" title="Derived Product SKU 判定条件"></a>Derived Product SKU 判定条件</h3><p>一个构建被认定为 <strong>Derived（派生）</strong>，需同时满足：</p>
+<ol>
+<li>使用<strong>相同的 SoC</strong></li>
+<li>声明<strong>相同或子集</strong>的 <code>android.hardware.*</code> features</li>
+<li>设置 <code>ro.build.representative</code> 属性值为代表性构建的 fingerprint</li>
+</ol>
+<hr>
+<h2 id="七、工程师实战建议"><a href="#七、工程师实战建议" class="headerlink" title="七、工程师实战建议"></a>七、工程师实战建议</h2><h3 id="认证前准备清单"><a href="#认证前准备清单" class="headerlink" title="认证前准备清单"></a>认证前准备清单</h3><ul>
+<li><input disabled="" type="checkbox"> 确认已与 Google 签署 MADA、AFA 协议</li>
+<li><input disabled="" type="checkbox"> 基于芯片厂商 GMS Express Turnkey 基准版本进行开发，避免破坏 default intents</li>
+<li><input disabled="" type="checkbox"> 在 userdebug 版本上完成 STS 等调试向测试</li>
+<li><input disabled="" type="checkbox"> 在 User/GSI 版本上完成 CTS、GTS、VTS 等正式认证测试</li>
+<li><input disabled="" type="checkbox"> 提前整理产品本体、外包装、说明书送检材料</li>
+</ul>
+<h3 id="常见踩坑点"><a href="#常见踩坑点" class="headerlink" title="常见踩坑点"></a>常见踩坑点</h3><ol>
+<li><strong>修改核心 Category 的 default intents</strong> — 将导致 GMS Express Plus 资格丧失及报销失效</li>
+<li><strong>预装同类 Category 应用</strong> — 浏览器以外 Category 不得有重复预装</li>
+<li><strong>Derived 构建未正确设置 <code>ro.build.representative</code></strong> — 将无法享受 Representative 构建的测试减免</li>
+<li><strong>忽略 Android 版本对应的测试套件变更</strong> — 如 Android 14 需用 GTS Interactive 替代 GTS Verifier</li>
+<li><strong>SMR 版本遗漏 GTS-SMR 测试</strong> — Derived SMR 构建需额外执行 GTS-SMR</li>
+</ol>
+
+      
+      <blockquote>
+        
+        <strong>本文链接：</strong><br><a href="http://longzhiye.top/2026/07/05/2026-07-05/">http://longzhiye.top/2026/07/05/2026-07-05/</a>
+      </blockquote>
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Android/" rel="tag">Android</a><a class="mdui-ripple article_tags-link" href="/tags/Android%E5%87%BA%E6%B5%B7/" rel="tag">Android出海</a><a class="mdui-ripple article_tags-link" href="/tags/GMS/" rel="tag">GMS</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2026/07/04/2026-07-04/">
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'Android16 SystemUI 屏幕录制功能优化'}">下一篇</span>
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+
+
+
+</main>
+  <footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="http://github.com/longzhiye" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe7ab;</i></a>
+    
+    
+    
+      <a href="https://www.zhihu.com/people/long-zhi-xie-61" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe6c0;</i></a>
+    
+    
+    
+      <a href="tencent://tencent:////message/?uin=951898105&Menu=yes" target="_blank" class="mdui-btn mdui-btn-icon mdui-text-color-theme-a100"><i class="mdui-icon iconfont">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2022 - 2026 龙之叶<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>
+    <br>
+      <span id="busuanzi_container_site_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_site_pv"></span></span> &nbsp;&nbsp;
+      <span id="busuanzi_container_site_uv" style="display: none;"><i class="iconfont">&#xe601;</i> <span id="busuanzi_value_site_uv"></span></span>
+    
+  </div>
+</footer>
+
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+  
+<script src="/custom.js"></script>
+
+</body>
+</html>
